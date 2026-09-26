@@ -51,6 +51,7 @@ set(CPP_SOURCE_FILES
   src/NodePort.cpp
   src/NodeModule.cpp
   src/ConnectionData.cpp
+  src/xml/Serializer.cpp
 )
 
 set(HPP_HEADER_FILES
@@ -60,6 +61,8 @@ set(HPP_HEADER_FILES
     include/node--js/NodePort.hpp
     include/node--js/NodeModule.hpp
     include/node--js/ConnectionData.hpp
+    include/node--js/Serializer.hpp
+    include/node--js/xml/Serializer.hpp
 )
 
 # If we want to give the option to build a static library,
