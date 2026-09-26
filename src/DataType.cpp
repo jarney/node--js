@@ -2,9 +2,17 @@
 
 using namespace NodeJS::core;
 
-DataType::DataType(std::string tag)
-    : mName(tag)
+DataType::DataType(
+    std::string id,
+    std::string name
+    )
+    : mId(id)
+    , mName(name)
 {}
+
+const std::string &
+DataType::getId() const
+{ return mId; }
 
 const std::string &
 DataType::getName() const
@@ -13,6 +21,6 @@ DataType::getName() const
 bool
 DataType::operator==(const DataType & other) const
 {
-    return other.mName == mName;
+    return other.mId == mId;
 }
 

@@ -15,7 +15,7 @@ namespace NodeJS {
 	    /**
 	     * Constructor is private because we are a singleton.
 	     */
-	    Serializer();
+	    Serializer() = default;
 	    ~Serializer() = default;
 	public:
 	    /**

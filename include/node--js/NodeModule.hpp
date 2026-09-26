@@ -41,7 +41,7 @@ namespace NodeJS {
 	    /**
 	     * This returns a map of data types in the module.
 	     */
-	    const std::map<std::string, DataType> & getDataTypes();
+	    const std::map<std::string, DataType> & getDataTypes() const;
 
 	    /**
 	     * Returns true if the given data type is registered in this module.

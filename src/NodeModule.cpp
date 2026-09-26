@@ -5,7 +5,7 @@ using namespace NodeJS::core;
 void
 NodeModule::addDataType(DataType dataType)
 {
-    mDataTypes.insert(std::make_pair(dataType.getName(), dataType));
+    mDataTypes.insert(std::make_pair(dataType.getId(), dataType));
 }
 
 void
@@ -16,7 +16,7 @@ NodeModule::removeDataType(std::string name)
 
 const
 std::map<std::string, DataType> &
-NodeModule::getDataTypes()
+NodeModule::getDataTypes() const
 {
     return mDataTypes;
 }

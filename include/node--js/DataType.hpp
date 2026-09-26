@@ -14,14 +14,16 @@ namespace NodeJS {
 	 */
 	class DataType {
 	public:
-	    DataType(std::string tag);
+	    DataType(std::string id, std::string name);
 	    DataType(const DataType & other) = default;
 	    DataType & operator=(const DataType & other) = default;
 	    ~DataType() = default;
+	    const std::string & getId() const;
 	    const std::string & getName() const;
 
 	    bool operator==(const DataType & other) const;
 	private:
+	    std::string mId;
 	    std::string mName;
 	};
     }

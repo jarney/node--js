@@ -1,48 +1,22 @@
-#include <stdio.h>
 #include <iostream>
-#include "example.hpp"
-//#include "Scope.hpp"
+#include <fstream>
+#include "node--js/NodeModule.hpp"
+#include "node--js/xml/Serializer.hpp"
+
+using namespace NodeJS::core;
 
 int main(int argc, char **argv)
 {
-//    Registry builtins;
-//    builtins.registerType(Type{"sphere"});
-//    builtins.registerType(Type{"cube"});
-//    builtins.dump();
-//
-//    Scope graphScope;
+    const Serializer & ser = NodeJS::xml::Serializer::instance();
+
+    NodeModule mod;
+
+    std::string fname(argv[1]);
+    std::ifstream input_stream(fname);
     
-    lib_main(argc, argv);
+    ser.read(mod, input_stream, std::cerr);
+    ser.write(mod, std::cout, std::cerr);
+    
+    return 0;
 }
 
-#if 0
-Type::Type(std::string name)
-    : _name(name)
-{}
-
-void
-Type::dump()
-{
-    std::cout << _name << std::endl;
-}
-std::string
-Type::getName(void)
-{
-    return _name;
-}
-
-
-void
-Registry::registerType(Type t)
-{
-    _typeMap[t.getName()] = t;
-}
-
-void
-Registry::dump(void)
-{
-    for (const auto & it : _typeMap) {
-	std::cout << it.first << std::endl;
-    }
-}
-#endif
