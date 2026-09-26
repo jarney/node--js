@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<node-modules xmlns="http://jarney.github.io/nodejs-schema">
+  <!--
+      - This is the interface to OpenSCAD.
+      - This consists of a bunch of nodes that are designed
+      - mimic the OpenSCAD declaration language.  With a suitable
+      - node processor, it is possible to convert programs
+      - in OpenSCAD to NodeJS language and vice-versa.
+  -->
+  <package id="org.ensor.nodejs.openscad"/>
+  <data-types>
+    <data-type id="variable" name="OpenSCAD Variable"/>
+    <data-type id="geometry" name="OpenSCAD Geometry"/>
+  </data-types>
+  <node-types>
+    <node-type id="sphere" visibility="export" type="native">
+      <inputs>
+	<port id="r" description="r" data-type="variable"/>
+	<port id="d" description="d" data-type="variable"/>
+      </inputs>
+      <outputs>
+	<port id="Geometry" description="Geometry" data-type="geometry"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_true" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_false" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_int" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_float" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_string" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <node-type id="const_undef" visibility="export" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+	<port id="value" description="Value" data-type="variable"/>
+      </outputs>
+    </node-type>
+    <!-- more nodes will follow -->
+  </node-types>
+</node-modules>

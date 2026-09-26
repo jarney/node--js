@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<node-program xmlns="http://www.nodejs.org/node-program-schema/">
+  <namespace id="org.ensor.nodejs.example"/>
+  <!--
+      This is the set of publicly available entry-points
+      accessible to other programs.  Think of this as 'public'
+      methods exposed as interfaces (nodes) to other programs,
+      much like the public methods of a class in object-oriented
+      programming.
+      Each export consists of the graph which is its own node type,
+      the set of imports it uses for its implementation.
+
+      But what if we just export the node types and not the graphs.
+      Then each node type can mark its implementation as either native
+      or not.  If it's native, we look for the runtime to register
+      an implementation and if it's not native, we express a graph
+      for its implementation and the graph itself doesn't need to
+      express its type.
+   -->
+  <exports>
+    <export id="main"/>
+  </exports>
+  <graph id="main">
+    <metadata>
+      <!-- Any user-specified metadata may lie here including
+	   but not limited to:
+	   * Vendor-specific extensions to programs
+	   * Authorship, version, or other semantics
+        -->
+    </metadata>
+    <inputs>
+      <!--
+	  This defines the set of inputs and outputs
+	  from the standpoint of the graph itself.
+	  In this way, the graph itself can be viewed as
+	  a kind-of node.
+      -->
+    </inputs>
+    <outputs>
+      <port>
+      </port>
+    </outputs>
+    <scope id="0" parent-scope="">
+      <imports>
+	<scope program="other-namespace" graph="other-graph"/>
+	<!--
+	     This section brings in node and data
+	     definitions from other sources.  For example,
+	     this allows you to use nodes in this program
+	     that were defined elsewhere.
+	     These scopes are defined by referencing the
+	     graphs that declared them, or by imports.
+          -->
+      </imports>
+      <data-types>
+	<data-type
+	    id="openscad-variable"
+	    name="OpenSCAD Variable"
+	    />
+      </data-types>
+
+      <node-types>
+        <!--
+	  Nodes have a type.
+	  The type dictates how the node's data flows
+	  and what type of data moves.  Data is opaque
+	  and abstract at this level.
+	  Types that are marked 'native' indicate that they require
+	  the underlying platform to provide an implementation on bare-metal.
+	  Types that are marked as graphs have an implementation in terms of
+	  another graph (i.e. calling a graph from another graph).  These can be
+	  resolved later during a 'link' stage of program generation.
+        -->
+	<node-type id="function_output" implementation="org.ensor.nodejs.builtin" type="native">
+	  <inputs>
+	    <port name="value" data-type="openscad-variable">
+	      <!--
+		  some specific data associated with this port such as an editor widget or other impl detail.
+		  Note that there can probably be only finitely many of these because we don't have
+		  a mechanism for specifying them across implementations.
+	        -->
+	    </port>
+	  </inputs>
+	  <outputs>
+	  </outputs>
+	</node-type>
+	<node-type id="read-variable" implementation="read-variable" type="native">
+	  <inputs>
+	  </inputs>
+	  <outputs>
+	    <port name="value" type="openscad-variable"/>
+	  </outputs>
+	  <internal-state>
+	    <!-- This is what the internal state of the
+		 node will track.  Think of this as what
+		 data the specific node instances carry around
+		 as their configuration.  Very often, there is none,
+		 but sometimes each node can carry its own data internally.
+		 The internal data may be structured in any way that an implementation
+		 chooses.  Should we nail this down a la Java or leave this
+		 completely abstract?  If we nail it down, it will probably be
+		 as good as Java, so maybe that's ok as long as we use standards-oriented
+		 data.  Implementations may be creative with how this is represented
+		 by clients and programs.
+             -->
+	  </internal-state>
+	</node-type>
+      </node-types>
+    </scope>
+    <nodes>
+      <node id="oscd" node-type="org.openscad.builtins.sphere">
+      </node>
+      <node id="var" node-type="variable">
+	<data>
+	  <value name="variable" value="foovar"/>
+	</data>
+	<position x="0" y="0"/>
+      </node>
+      <node id="ret" node-type="function_output">
+	<data>
+	  <!--
+	      This is where specific name-value pairs for the node go.
+	      Any node-specific data goes here.
+	  -->
+	</data>
+	<position x="0" y="0"/>
+      </node>
+    </nodes>
+    <connections>
+      <connection from-node="var" from-port="value" to-node="ret" to-port="value"/>
+    </connections>
+  </graph>
+</node-program>
+

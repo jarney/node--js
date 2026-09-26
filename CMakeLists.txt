@@ -46,6 +46,8 @@ endif()
 
 set(CPP_SOURCE_FILES
   src/main.cpp
+  src/NodePort.cpp
+  src/ConnectionData.cpp
 )
 
 set(HPP_HEADER_FILES
@@ -64,10 +66,10 @@ add_library(NodeJS::NodeJS ALIAS NodeJS)
 target_include_directories(NodeJS
   PUBLIC
     $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/node2>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/node2>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
 )
 
 target_link_libraries(NodeJS
@@ -81,6 +83,11 @@ if(MSVC)
 endif()
 
 #target_compile_options(NodeJS )
+
+find_package(LibXml2 2.9 REQUIRED QUIET)
+message(STATUS "LibXml2: ${LIBXML2_VERSION_STRING}")
+target_link_libraries(NodeJS PUBLIC LibXml2::LibXml2)
+
 
 if(NOT "${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
   # Clang-Cl on MSVC identifies as "Clang" but behaves more like MSVC:
@@ -111,8 +118,11 @@ if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
+##################
+# Doxygen/documentation
+##
 if(BUILD_DOCS)
-  add_subdirectory(docs)
+  add_subdirectory(doc)
 endif()
 
 ##################

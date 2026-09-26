@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<node-program xmlns="http://www.nodejs.org/node-program-schema/">
+  <package id="org.ensor.nodejs.example"/>
+  <metadata>
+    <!-- Any user-specified metadata may lie here including
+	 but not limited to:
+	 * Vendor-specific extensions to programs
+	 * Authorship, version, or other semantics
+    -->
+  </metadata>
+
+  <!--
+    - These are the things that form
+    - edges between nodes.
+   -->
+  <data-types>
+    <data-type
+	id="openscad-variable"
+	name="OpenSCAD Variable"
+	/>
+  </data-types>
+  <!--
+      Nodes have a type.
+      The type dictates how the node's data flows
+      and what type of data moves.  Data is opaque
+      and abstract at this level.
+      Types that are marked 'native' indicate that they require
+      the underlying platform to provide an implementation on bare-metal.
+      Types that are marked as graphs have an implementation in terms of
+      another graph (i.e. calling a graph from another graph).  These can be
+      resolved later during a 'link' stage of program generation.
+  -->
+  <node-types>
+    <node-type
+	id="function_output"
+	visibility="public"
+	type="native"
+	>
+      <inputs>
+	<port name="value" data-type="openscad-variable" multi-input="false"/>
+      </inputs>
+      <outputs>
+	<port name="value" data-type="openscad-variable" multi-connect="true"/>
+      </outputs>
+    </node-type>
+  </node-types>
+
+  <scope id="main">
+  </scope>
+  
+  <graphs>
+    <graph id="main">
+      <scope>
+	<import id="openscad-builtins"/> <!-- import an exported registry -->
+        <define-type id="foo"/> <!-- define a specific type in this registry (but probably not export it) -->
+      </scope>
+    </graph>
+    <graph id="foo">
+      <scope>
+        <inherit-scope id="main"/>
+	<define-type id="bar"/>
+      </scope>
+    </graph>
+
+    export main.foo (Lifts foo definition to global scope)
+    
+    main() {
+        // main's scope: define foo, import builtins.
+        foo() {
+	    // foo scope: define bar, inherit main's scope.
+            bar() {
+            }
+        }
+    }
+
+    
+  </graphs>
+</node-program>

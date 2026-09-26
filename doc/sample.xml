@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<node-modules xmlns="http://jarney.github.io/nodejs-schema">
+  <!--
+      - This is the interface to OpenSCAD.
+      - This consists of a bunch of nodes that are designed
+      - mimic the OpenSCAD declaration language.  With a suitable
+      - node processor, it is possible to convert programs
+      - in OpenSCAD to NodeJS language and vice-versa.
+  -->
+  <package id="example"/>
+  <data-types><!-- We don't define any types in this program --></data-types>
+  
+  <node-types>
+    <node-type id="main" visibility="export" type="graph">
+      <inputs>
+	<port id="argc" description="argc" data-type="variable"/>
+	<port id="argv" description="argv" data-type="variable"/>
+      </inputs>
+      <outputs>
+	<port id="Geometry" description="Geometry" data-type="geometry"/>
+      </outputs>
+      <graph>
+	<scope>
+	  <!-- Import the openscad package so we have access to those nodes. -->
+	  <import package="openscad"/>
+	  <!-- Import this specific node type as a function so we can call it. -->
+	  <import node-type="fn"/>
+	</scope>
+	<nodes>
+	  <node id="0" type="const_true"/>
+	  <node id="1" type="fn"/>
+	  <node id="2" type="sphere"/>
+	</nodes>
+	<connections>
+	  <connection input-node="0" input-port="0" output-node="1" output-port="0"/>
+	  <connection input-node="1" input-port="0" output-node="2" output-port="0"/>
+	</connections>
+      </graph>
+    </node-type>
+    <node-type id="fn" visibility="private" type="graph">
+      <inputs>
+	<port id="value" description="value" data-type="variable"/>
+      </inputs>
+      <outputs>
+	<port id="square" description="Square value" data-type="variable"/>
+      </outputs>
+      <graph>
+	<scope>
+	  <import scope="main"/>
+	</scope>
+      </graph>
+    </node-type>
+  </node-types>
+</node-modules>
