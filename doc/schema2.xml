@@ -45,9 +45,6 @@
     </node-type>
   </node-types>
 
-  <scope id="main">
-  </scope>
-  
   <graphs>
     <graph id="main">
       <scope>

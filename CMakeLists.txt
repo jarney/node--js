@@ -46,12 +46,20 @@ endif()
 
 set(CPP_SOURCE_FILES
   src/main.cpp
+  src/DataType.cpp
+  src/NodeType.cpp
   src/NodePort.cpp
+  src/NodeModule.cpp
   src/ConnectionData.cpp
 )
 
 set(HPP_HEADER_FILES
-    include/node2/main.hpp
+    include/node--js/main.hpp
+    include/node--js/DataType.hpp
+    include/node--js/NodeType.hpp
+    include/node--js/NodePort.hpp
+    include/node--js/NodeModule.hpp
+    include/node--js/ConnectionData.hpp
 )
 
 # If we want to give the option to build a static library,
