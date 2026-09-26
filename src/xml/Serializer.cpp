@@ -10,6 +10,42 @@ using namespace NodeJS::xml;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
+class XmlNodeWrapper {
+public:
+    XmlNodeWrapper(xmlNodePtr node);
+    ~XmlNodeWrapper() = default;
+    std::string getAttribute(const std::string & name) const;
+    void setAttribute(const std::string & name, const std::string & value);
+    void addChild(const XmlNodeWrapper & other);
+private:
+    xmlNodePtr _node;
+};
+
+XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node)
+    : _node(node)
+{}
+
+std::string
+XmlNodeWrapper::getAttribute(const std::string & name) const
+{
+    const xmlChar *id = xmlGetProp(_node, BAD_CAST name.c_str());
+    std::string str((const char *)id);
+    xmlFree((void*)id);
+    return str;
+}
+void
+XmlNodeWrapper::setAttribute(const std::string & name, const std::string & value)
+{
+    xmlSetProp(_node, BAD_CAST name.c_str(), BAD_CAST value.c_str());
+}
+
+void
+XmlNodeWrapper::addChild(const XmlNodeWrapper & other)
+{
+    xmlAddChild(_node, other._node);
+}
+
+
 const Serializer &
 Serializer::instance()
 {
@@ -18,26 +54,22 @@ Serializer::instance()
 }
 
 static void
-readDataType(NodeJS::core::NodeModule & node_module, xmlNodePtr node)
+readDataType(NodeJS::core::NodeModule & node_module, XmlNodeWrapper node)
 {
-    const xmlChar *name = xmlGetProp(node, BAD_CAST "name");
-    const xmlChar *id = xmlGetProp(node, BAD_CAST "id");
-    NodeJS::core::DataType dataType(
-	std::string((const char*) id),
-	std::string((const char*) name)
-	);
-    free((void*)name);
-    free((void*)id);
+    std::string id = node.getAttribute("id");
+    std::string name = node.getAttribute("name");
+    NodeJS::core::DataType dataType(id, name);
     node_module.addDataType(dataType);
 }
 
 static void
-writeDataType(const std::string & id, const NodeJS::core::DataType & data_type, xmlNodePtr dataTypesNode)
+writeDataType(const std::string & id, const NodeJS::core::DataType & data_type, XmlNodeWrapper dataTypesNode)
 {
     xmlNodePtr dataTypeNode = xmlNewNode(nullptr, BAD_CAST "data-type");
-    xmlSetProp(dataTypeNode, BAD_CAST "id", BAD_CAST id.c_str());
-    xmlSetProp(dataTypeNode, BAD_CAST "name", BAD_CAST data_type.getName().c_str());
-    xmlAddChild(dataTypesNode, dataTypeNode);
+    XmlNodeWrapper node(dataTypeNode);
+    node.setAttribute("id", id);
+    node.setAttribute("name", data_type.getName());
+    dataTypesNode.addChild(dataTypeNode);
 }
 
 static void
@@ -46,23 +78,23 @@ readDataTypes(NodeJS::core::NodeModule & node_module, xmlNodePtr dataTypesNode)
     xmlNodePtr child = xmlFirstElementChild(dataTypesNode);
     while (child != nullptr) {
 	if (!strcmp((const char *)child->name, "data-type")) {
-	    readDataType(node_module, child);
+	    readDataType(node_module, XmlNodeWrapper(child));
 	}
 	child = xmlNextElementSibling(child);
     }
 }
 
 static void
-writeDataTypes(const NodeJS::core::NodeModule & node_module, xmlNodePtr root)
+writeDataTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
 {
-    xmlNodePtr dataTypesNode = xmlNewNode(nullptr, BAD_CAST "data-types");
-
+    xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "data-types");
+    XmlNodeWrapper dataTypesNode(node);
     std::vector<std::string> strings{"hello", "world"};
     for (const auto & it : node_module.getDataTypes()) {
 	writeDataType(it.first, it.second, dataTypesNode);
     }
     
-    xmlAddChild(root, dataTypesNode);
+    root.addChild(dataTypesNode);
 }
 
 bool
@@ -75,7 +107,7 @@ Serializer::write(const NodeJS::core::NodeModule & node_module, std::ostream & o
     xmlSetProp(root, BAD_CAST "xmlns", BAD_CAST NODEJS_XML_NAMESPACE);
     xmlDocSetRootElement(doc, root);
 
-    writeDataTypes(node_module, root);
+    writeDataTypes(node_module, XmlNodeWrapper(root));
     
     xmlChar *output_mem = nullptr;
     int output_size = 0;
