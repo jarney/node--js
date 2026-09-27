@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 #include "node--js/DataType.hpp"
 #include "node--js/NodeType.hpp"
@@ -26,6 +27,16 @@ namespace NodeJS {
 	public:
 	    NodeModule() = default;
 	    ~NodeModule() = default;
+
+	    /**
+	     * Sets the fully-qualified package name.
+	     */
+	    void setPackage(std::string package);
+	    
+	    /**
+	     * Returns the fully-qualified package name.
+	     */
+	    std::string getPackage(void) const;
 	    
 	    /**
 	     * This method adds a data type to the module.
@@ -56,9 +67,14 @@ namespace NodeJS {
 	     */
 	    const DataType *getDataType(std::string & name) const;
 
+	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
+
+	    void addNodeType(std::string id, std::unique_ptr<NodeType> nodeType);
+	    
 	private:
+	    std::string mPackage;
 	    std::map<std::string, DataType> mDataTypes;
-	    std::map<std::string, NodeType> mNodeTypes;
+	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	};
     }
 }

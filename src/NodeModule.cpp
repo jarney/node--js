@@ -3,6 +3,19 @@
 using namespace NodeJS::core;
 
 void
+NodeModule::setPackage(std::string package)
+{
+    mPackage = package;
+}
+
+std::string
+NodeModule::getPackage(void) const
+{
+    return mPackage;
+}
+	    
+
+void
 NodeModule::addDataType(DataType dataType)
 {
     mDataTypes.insert(std::make_pair(dataType.getId(), dataType));
@@ -35,5 +48,18 @@ NodeModule::getDataType(std::string & name) const
 	return nullptr;
     }
     return &it->second;
+}
+/////////////////////////////////////
+
+const
+std::map<std::string, std::unique_ptr<NodeType>> &
+NodeModule::getNodeTypes() const
+{
+    return mNodeTypes;
+}
+void
+NodeModule::addNodeType(std::string id, std::unique_ptr<NodeType> nodeType)
+{
+    mNodeTypes.insert(std::make_pair(id, std::move(nodeType)));
 }
 

@@ -10,20 +10,86 @@ using namespace NodeJS::xml;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
+class XmlNodeWrapper;
+
+
 class XmlNodeWrapper {
 public:
+
+    struct Iterator {
+	// Iterator tags here...
+	using iterator_category = std::forward_iterator_tag;
+	using difference_type   = std::ptrdiff_t;
+	using value_type        = xmlNode;
+	using pointer           = xmlNodePtr;  // or also value_type*
+	using reference         = xmlNode&;  // or also value_type&
+	
+	// Iterator constructors here...
+	Iterator(pointer node) : m_node(node) {}
+	
+	reference operator*() const { return *m_node; }
+	pointer operator->() { return m_node; }
+	XmlNodeWrapper get();// { return m_node; }
+	
+	// Prefix increment
+	Iterator& operator++() {
+	    m_node = xmlNextElementSibling(m_node);
+	    return *this;
+	}
+	
+	// Postfix increment
+	Iterator operator++(int) {
+	    Iterator tmp = *this;
+	    ++(*this);
+	    return tmp;
+	}
+	
+	friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_node == b.m_node; };
+	friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_node != b.m_node; };     
+	
+    private:
+	pointer m_node;
+    };
+
     XmlNodeWrapper(xmlNodePtr node);
     ~XmlNodeWrapper() = default;
+    std::string getName(void) const;
     std::string getAttribute(const std::string & name) const;
+    bool hasAttribute(const std::string & name) const;
     void setAttribute(const std::string & name, const std::string & value);
     void addChild(const XmlNodeWrapper & other);
+    
+    Iterator begin();
+    Iterator end();
 private:
     xmlNodePtr _node;
 };
 
+XmlNodeWrapper
+XmlNodeWrapper::Iterator::get() {
+    return XmlNodeWrapper(m_node);
+}
+
+XmlNodeWrapper::Iterator
+XmlNodeWrapper::begin()
+{
+    return Iterator(xmlFirstElementChild(_node));
+}
+XmlNodeWrapper::Iterator
+XmlNodeWrapper::end()
+{
+    return Iterator(nullptr);
+}
+
 XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node)
     : _node(node)
 {}
+
+std::string
+XmlNodeWrapper::getName(void) const
+{
+    return std::string((const char *)_node->name);
+}
 
 std::string
 XmlNodeWrapper::getAttribute(const std::string & name) const
@@ -33,6 +99,14 @@ XmlNodeWrapper::getAttribute(const std::string & name) const
     xmlFree((void*)id);
     return str;
 }
+bool
+XmlNodeWrapper::hasAttribute(const std::string & name) const
+{
+    const xmlAttr *attr = xmlHasProp(_node, BAD_CAST name.c_str());
+    return attr != nullptr;
+}
+
+
 void
 XmlNodeWrapper::setAttribute(const std::string & name, const std::string & value)
 {
@@ -73,14 +147,14 @@ writeDataType(const std::string & id, const NodeJS::core::DataType & data_type, 
 }
 
 static void
-readDataTypes(NodeJS::core::NodeModule & node_module, xmlNodePtr dataTypesNode)
+readDataTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper dataTypesNode)
 {
-    xmlNodePtr child = xmlFirstElementChild(dataTypesNode);
-    while (child != nullptr) {
-	if (!strcmp((const char *)child->name, "data-type")) {
-	    readDataType(node_module, XmlNodeWrapper(child));
+    for (XmlNodeWrapper::Iterator it = dataTypesNode.begin(); it != dataTypesNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	if (child.getName() != std::string("data-type")) {
+	    continue;
 	}
-	child = xmlNextElementSibling(child);
+	readDataType(node_module, child);
     }
 }
 
@@ -89,12 +163,68 @@ writeDataTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root
 {
     xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "data-types");
     XmlNodeWrapper dataTypesNode(node);
-    std::vector<std::string> strings{"hello", "world"};
     for (const auto & it : node_module.getDataTypes()) {
 	writeDataType(it.first, it.second, dataTypesNode);
     }
     
     root.addChild(dataTypesNode);
+}
+
+static void
+readPackage(NodeJS::core::NodeModule & node_module, XmlNodeWrapper packageNode)
+{
+    if (packageNode.hasAttribute("id")) {
+	std::string id = packageNode.getAttribute("id");
+	node_module.setPackage(id);
+    }
+}
+
+static void
+writePackage(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
+{
+    xmlNodePtr packageNode = xmlNewNode(nullptr, BAD_CAST "package");
+    XmlNodeWrapper package(packageNode);
+    package.setAttribute("id", node_module.getPackage());
+    root.addChild(packageNode);
+}
+
+static void
+readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
+{
+    for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName != std::string("node-type")) {
+	    continue;
+	}
+	if (!child.hasAttribute("id")) {
+	    fprintf(stderr, "Invalid file: no node type id\n");
+	    continue;
+	}
+	std::string id = child.getAttribute("id");
+	std::unique_ptr<NodeJS::core::NodeType> nodeType = std::make_unique<NodeJS::core::NodeType>();
+	node_module.addNodeType(id, std::move(nodeType));
+    }
+}
+
+static void
+writeNodeType(const std::string & id, const NodeJS::core::NodeType & node_type, XmlNodeWrapper nodeTypesNode)
+{
+    xmlNodePtr nodeTypeNode = xmlNewNode(nullptr, BAD_CAST "node-types");
+    XmlNodeWrapper nodeType(nodeTypeNode);
+    nodeType.setAttribute("id", id);
+    nodeTypesNode.addChild(nodeTypeNode);
+}
+
+static void
+writeNodeTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
+{
+    xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "node-types");
+    XmlNodeWrapper nodeTypesNode(node);
+    for (const auto & it : node_module.getNodeTypes()) {
+	writeNodeType(it.first, *it.second, nodeTypesNode);
+    }
+    root.addChild(nodeTypesNode);
 }
 
 bool
@@ -107,7 +237,10 @@ Serializer::write(const NodeJS::core::NodeModule & node_module, std::ostream & o
     xmlSetProp(root, BAD_CAST "xmlns", BAD_CAST NODEJS_XML_NAMESPACE);
     xmlDocSetRootElement(doc, root);
 
-    writeDataTypes(node_module, XmlNodeWrapper(root));
+    XmlNodeWrapper rootNode(root);
+    writePackage(node_module, rootNode);
+    writeDataTypes(node_module, rootNode);
+    writeNodeTypes(node_module, rootNode);
     
     xmlChar *output_mem = nullptr;
     int output_size = 0;
@@ -139,16 +272,37 @@ Serializer::read(NodeJS::core::NodeModule & node_module, std::istream & input_st
     }
 
     /*Get the root element node */
-    xmlNodePtr root = xmlDocGetRootElement(doc);
-    
-    xmlNodePtr dataTypesChild = xmlFirstElementChild(root);
-    while (dataTypesChild != nullptr) {
-	if (!strcmp((const char *)dataTypesChild->name, "data-types")) {
-	    readDataTypes(node_module, dataTypesChild);
+    XmlNodeWrapper root(xmlDocGetRootElement(doc));
+
+    // The package needs to be read first because that determines where
+    // other data is registered.
+    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName == std::string("package")) {
+	    readPackage(node_module, child);
 	}
-	dataTypesChild = xmlNextElementSibling(dataTypesChild);
     }
 
+    // Data types need to be read before node types
+    // even if they appear later in the file.
+    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName == std::string("data-types")) {
+	    readDataTypes(node_module, child);
+	}
+    }
+
+    // Finally, we have enough qualified metadata
+    // the node types and graphs from the file.
+    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName == std::string("node-types")) {
+	    readNodeTypes(node_module, child);
+	}
+    }
     
     xmlFreeDoc(doc);
     return true;
