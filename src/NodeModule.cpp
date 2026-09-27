@@ -16,9 +16,9 @@ NodeModule::getPackage(void) const
 	    
 
 void
-NodeModule::addDataType(DataType dataType)
+NodeModule::addDataType(std::unique_ptr<DataType> dataType)
 {
-    mDataTypes.insert(std::make_pair(dataType.getId(), dataType));
+    mDataTypes.insert(std::make_pair(dataType->getId(), std::move(dataType)));
 }
 
 void
@@ -28,7 +28,7 @@ NodeModule::removeDataType(std::string name)
 }
 
 const
-std::map<std::string, DataType> &
+std::map<std::string, std::unique_ptr<DataType>> &
 NodeModule::getDataTypes() const
 {
     return mDataTypes;
@@ -47,7 +47,7 @@ NodeModule::getDataType(std::string & name) const
     if (it == mDataTypes.end()) {
 	return nullptr;
     }
-    return &it->second;
+    return it->second.get();
 }
 /////////////////////////////////////
 
@@ -58,8 +58,8 @@ NodeModule::getNodeTypes() const
     return mNodeTypes;
 }
 void
-NodeModule::addNodeType(std::string id, std::unique_ptr<NodeType> nodeType)
+NodeModule::addNodeType(std::unique_ptr<NodeType> nodeType)
 {
-    mNodeTypes.insert(std::make_pair(id, std::move(nodeType)));
+    mNodeTypes.insert(std::make_pair(nodeType->getId(), std::move(nodeType)));
 }
 

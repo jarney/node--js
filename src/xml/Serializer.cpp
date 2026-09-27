@@ -132,8 +132,8 @@ readDataType(NodeJS::core::NodeModule & node_module, XmlNodeWrapper node)
 {
     std::string id = node.getAttribute("id");
     std::string name = node.getAttribute("name");
-    NodeJS::core::DataType dataType(id, name);
-    node_module.addDataType(dataType);
+    std::unique_ptr<NodeJS::core::DataType> dataType = std::make_unique<NodeJS::core::DataType>(id, name);
+    node_module.addDataType(std::move(dataType));
 }
 
 static void
@@ -164,7 +164,7 @@ writeDataTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root
     xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "data-types");
     XmlNodeWrapper dataTypesNode(node);
     for (const auto & it : node_module.getDataTypes()) {
-	writeDataType(it.first, it.second, dataTypesNode);
+	writeDataType(it.first, *it.second.get(), dataTypesNode);
     }
     
     root.addChild(dataTypesNode);
@@ -201,18 +201,49 @@ readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNo
 	    fprintf(stderr, "Invalid file: no node type id\n");
 	    continue;
 	}
+
+	NodeJS::core::NodeType::Visibility visibility = NodeJS::core::NodeType::Visibility::PRIVATE;
+	if (child.hasAttribute("visibility")) {
+	    std::string visibilityStr = child.getAttribute("visibility");
+	    if (visibilityStr == std::string("public")) {
+		visibility = NodeJS::core::NodeType::Visibility::PUBLIC;
+	    }
+	}
+	NodeJS::core::NodeType::Implementation impl = NodeJS::core::NodeType::Implementation::GRAPH;
+	if (child.hasAttribute("type")) {
+	    std::string implStr = child.getAttribute("type");
+	    if (implStr == std::string("native")) {
+		impl = NodeJS::core::NodeType::Implementation::NATIVE;
+	    }
+	}
+	
 	std::string id = child.getAttribute("id");
 	std::unique_ptr<NodeJS::core::NodeType> nodeType = std::make_unique<NodeJS::core::NodeType>();
-	node_module.addNodeType(id, std::move(nodeType));
+	nodeType->setId(id);
+	nodeType->setVisibility(visibility);
+	nodeType->setImplementation(impl);
+	node_module.addNodeType(std::move(nodeType));
     }
 }
 
 static void
 writeNodeType(const std::string & id, const NodeJS::core::NodeType & node_type, XmlNodeWrapper nodeTypesNode)
 {
-    xmlNodePtr nodeTypeNode = xmlNewNode(nullptr, BAD_CAST "node-types");
+    xmlNodePtr nodeTypeNode = xmlNewNode(nullptr, BAD_CAST "node-type");
     XmlNodeWrapper nodeType(nodeTypeNode);
     nodeType.setAttribute("id", id);
+    if (node_type.getVisibility() == NodeJS::core::NodeType::Visibility::PUBLIC) {
+	nodeType.setAttribute("visibility", "public");
+    }
+    else {
+	nodeType.setAttribute("visibility", "private");
+    }
+    if (node_type.getImplementation() == NodeJS::core::NodeType::Implementation::GRAPH) {
+	nodeType.setAttribute("type", "graph");
+    }
+    else {
+	nodeType.setAttribute("type", "native");
+    }
     nodeTypesNode.addChild(nodeTypeNode);
 }
 

@@ -23,6 +23,10 @@ namespace NodeJS {
 	    NodeType() = default;
 	    ~NodeType() = default;
 
+	    const std::string & getId() const;
+	    void setId(std::string id);
+	    
+	    
 	    /**
 	     * Returns the visibility of this node type.
 	     * This determines whether the node type is
@@ -31,7 +35,9 @@ namespace NodeJS {
 	     * code into modules where part of the
 	     * impelementation is hidden.
 	     */
-	    Visibility getVisibility(void) const;
+	    NodeJS::core::NodeType::Visibility getVisibility(void) const;
+
+	    void setVisibility(NodeJS::core::NodeType::Visibility visibility);
 
 	    /**
 	     * This returns the implementation type
@@ -40,9 +46,13 @@ namespace NodeJS {
 	     * rather than being implemented in terms
 	     * of other nodes as a graph.
 	     */
-	    Implementation getImplementation(void) const;
+	    NodeJS::core::NodeType::Implementation getImplementation(void) const;
+	    void setImplementation(NodeJS::core::NodeType::Implementation impl);
 	    
 	private:
+	    std::string mId;
+	    Visibility mVisibility;
+	    Implementation mImplementation;
 	    std::map<std::string, NodePort> mInputs;
 	    std::map<std::string, NodePort> mOutputs;
 	};

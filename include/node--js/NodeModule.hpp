@@ -41,7 +41,7 @@ namespace NodeJS {
 	    /**
 	     * This method adds a data type to the module.
 	     */
-	    void addDataType(DataType dataType);
+	    void addDataType(std::unique_ptr<DataType> dataType);
 	    /**
 	     * This method removes a data type from a module.
 	     * This will refuse to act if the data type is still
@@ -52,7 +52,7 @@ namespace NodeJS {
 	    /**
 	     * This returns a map of data types in the module.
 	     */
-	    const std::map<std::string, DataType> & getDataTypes() const;
+	    const std::map<std::string, std::unique_ptr<DataType>> & getDataTypes() const;
 
 	    /**
 	     * Returns true if the given data type is registered in this module.
@@ -69,11 +69,11 @@ namespace NodeJS {
 
 	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
 
-	    void addNodeType(std::string id, std::unique_ptr<NodeType> nodeType);
+	    void addNodeType(std::unique_ptr<NodeType> nodeType);
 	    
 	private:
 	    std::string mPackage;
-	    std::map<std::string, DataType> mDataTypes;
+	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	};
     }

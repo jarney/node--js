@@ -13,7 +13,7 @@
     <data-type id="geometry" name="OpenSCAD Geometry"/>
   </data-types>
   <node-types>
-    <node-type id="sphere" visibility="export" type="native">
+    <node-type id="sphere" visibility="public" type="native">
       <inputs>
 	<port id="r" description="r" data-type="variable"/>
 	<port id="d" description="d" data-type="variable"/>
@@ -22,42 +22,42 @@
 	<port id="Geometry" description="Geometry" data-type="geometry"/>
       </outputs>
     </node-type>
-    <node-type id="const_true" visibility="export" type="native">
+    <node-type id="const_true" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_false" visibility="export" type="native">
+    <node-type id="const_false" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_int" visibility="export" type="native">
+    <node-type id="const_int" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_float" visibility="export" type="native">
+    <node-type id="const_float" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_string" visibility="export" type="native">
+    <node-type id="const_string" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_undef" visibility="export" type="native">
+    <node-type id="const_undef" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
