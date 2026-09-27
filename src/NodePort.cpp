@@ -3,18 +3,18 @@
 using namespace NodeJS::core;
 
 NodePort::NodePort(
-    const NodeDataType & type,
+    const DataType & type,
     NodePort::ConnectionPolicy policy
     )
     : mType(type)
     , mConnectionPolicy(policy)
 {}
 
-NodePort::NodePort(const NodeDataType & type)
+NodePort::NodePort(const DataType & type)
     : NodePort(type, NodePort::ConnectionPolicy::One)
 {}
 
-const NodeDataType &
+const DataType &
 NodePort::getDataType() const
 { return mType; }
 

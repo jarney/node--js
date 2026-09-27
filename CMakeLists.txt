@@ -52,6 +52,7 @@ set(CPP_SOURCE_FILES
   src/NodeModule.cpp
   src/ConnectionData.cpp
   src/xml/Serializer.cpp
+  src/xml/XmlNodeWrapper.cpp
 )
 
 set(HPP_HEADER_FILES
@@ -63,6 +64,7 @@ set(HPP_HEADER_FILES
     include/node--js/ConnectionData.hpp
     include/node--js/Serializer.hpp
     include/node--js/xml/Serializer.hpp
+    include/node--js/xml/XmlNodeWrapper.hpp
 )
 
 # If we want to give the option to build a static library,

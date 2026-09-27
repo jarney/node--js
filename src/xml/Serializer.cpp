@@ -1,4 +1,5 @@
 #include "node--js/xml/Serializer.hpp"
+#include "node--js/xml/XmlNodeWrapper.hpp"
 #include <istream>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -9,116 +10,6 @@
 using namespace NodeJS::xml;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
-
-class XmlNodeWrapper;
-
-
-class XmlNodeWrapper {
-public:
-
-    struct Iterator {
-	// Iterator tags here...
-	using iterator_category = std::forward_iterator_tag;
-	using difference_type   = std::ptrdiff_t;
-	using value_type        = xmlNode;
-	using pointer           = xmlNodePtr;  // or also value_type*
-	using reference         = xmlNode&;  // or also value_type&
-	
-	// Iterator constructors here...
-	Iterator(pointer node) : m_node(node) {}
-	
-	reference operator*() const { return *m_node; }
-	pointer operator->() { return m_node; }
-	XmlNodeWrapper get();// { return m_node; }
-	
-	// Prefix increment
-	Iterator& operator++() {
-	    m_node = xmlNextElementSibling(m_node);
-	    return *this;
-	}
-	
-	// Postfix increment
-	Iterator operator++(int) {
-	    Iterator tmp = *this;
-	    ++(*this);
-	    return tmp;
-	}
-	
-	friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_node == b.m_node; };
-	friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_node != b.m_node; };     
-	
-    private:
-	pointer m_node;
-    };
-
-    XmlNodeWrapper(xmlNodePtr node);
-    ~XmlNodeWrapper() = default;
-    std::string getName(void) const;
-    std::string getAttribute(const std::string & name) const;
-    bool hasAttribute(const std::string & name) const;
-    void setAttribute(const std::string & name, const std::string & value);
-    void addChild(const XmlNodeWrapper & other);
-    
-    Iterator begin();
-    Iterator end();
-private:
-    xmlNodePtr _node;
-};
-
-XmlNodeWrapper
-XmlNodeWrapper::Iterator::get() {
-    return XmlNodeWrapper(m_node);
-}
-
-XmlNodeWrapper::Iterator
-XmlNodeWrapper::begin()
-{
-    return Iterator(xmlFirstElementChild(_node));
-}
-XmlNodeWrapper::Iterator
-XmlNodeWrapper::end()
-{
-    return Iterator(nullptr);
-}
-
-XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node)
-    : _node(node)
-{}
-
-std::string
-XmlNodeWrapper::getName(void) const
-{
-    return std::string((const char *)_node->name);
-}
-
-std::string
-XmlNodeWrapper::getAttribute(const std::string & name) const
-{
-    const xmlChar *id = xmlGetProp(_node, BAD_CAST name.c_str());
-    std::string str((const char *)id);
-    xmlFree((void*)id);
-    return str;
-}
-bool
-XmlNodeWrapper::hasAttribute(const std::string & name) const
-{
-    const xmlAttr *attr = xmlHasProp(_node, BAD_CAST name.c_str());
-    return attr != nullptr;
-}
-
-
-void
-XmlNodeWrapper::setAttribute(const std::string & name, const std::string & value)
-{
-    xmlSetProp(_node, BAD_CAST name.c_str(), BAD_CAST value.c_str());
-}
-
-void
-XmlNodeWrapper::addChild(const XmlNodeWrapper & other)
-{
-    xmlAddChild(_node, other._node);
-}
-
 
 const Serializer &
 Serializer::instance()
@@ -209,11 +100,11 @@ readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNo
 		visibility = NodeJS::core::NodeType::Visibility::PUBLIC;
 	    }
 	}
-	NodeJS::core::NodeType::Implementation impl = NodeJS::core::NodeType::Implementation::GRAPH;
+	NodeJS::core::NodeType::Type type = NodeJS::core::NodeType::Type::GRAPH;
 	if (child.hasAttribute("type")) {
 	    std::string implStr = child.getAttribute("type");
 	    if (implStr == std::string("native")) {
-		impl = NodeJS::core::NodeType::Implementation::NATIVE;
+		type = NodeJS::core::NodeType::Type::NATIVE;
 	    }
 	}
 	
@@ -221,7 +112,7 @@ readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNo
 	std::unique_ptr<NodeJS::core::NodeType> nodeType = std::make_unique<NodeJS::core::NodeType>();
 	nodeType->setId(id);
 	nodeType->setVisibility(visibility);
-	nodeType->setImplementation(impl);
+	nodeType->setType(type);
 	node_module.addNodeType(std::move(nodeType));
     }
 }
@@ -238,7 +129,7 @@ writeNodeType(const std::string & id, const NodeJS::core::NodeType & node_type, 
     else {
 	nodeType.setAttribute("visibility", "private");
     }
-    if (node_type.getImplementation() == NodeJS::core::NodeType::Implementation::GRAPH) {
+    if (node_type.getType() == NodeJS::core::NodeType::Type::GRAPH) {
 	nodeType.setAttribute("type", "graph");
     }
     else {

@@ -35,13 +35,19 @@ NodeModule::getDataTypes() const
 }
 
 bool
-NodeModule::hasDataType(std::string name) const
+NodeModule::hasDataType(const std::string & name) const
 {
     return mDataTypes.count(name) != 0;
 }
 
+bool
+NodeModule::hasNodeType(const std::string & name) const
+{
+    return mNodeTypes.count(name) != 0;
+}
+
 const DataType *
-NodeModule::getDataType(std::string & name) const
+NodeModule::getDataType(const std::string & name) const
 {
     const auto & it = mDataTypes.find(name);
     if (it == mDataTypes.end()) {

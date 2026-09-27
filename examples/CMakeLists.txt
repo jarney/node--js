@@ -3,7 +3,7 @@ set(CALC_SOURCE_FILES
 )
 
 set(CALC_HEADER_FILES
-  example.hpp
+
 )
 
 add_executable(example

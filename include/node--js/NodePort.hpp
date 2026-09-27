@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node--js/NodeDataType.hpp"
+#include "node--js/DataType.hpp"
 
 #include <string>
 
@@ -46,13 +46,13 @@ namespace NodeJS {
 	     *
 	     * Node ports are immutable once created.
 	     */
-	    NodePort(const NodeDataType & type, ConnectionPolicy policy);
+	    NodePort(const DataType & type, ConnectionPolicy policy);
 
 	    /**
 	     * Creates a port with the most common connection
 	     * policy of 'One'.
 	     */
-	    NodePort(const NodeDataType & type);
+	    NodePort(const DataType & type);
 
 	    /**
 	     * Destroys a port.  Note that this destructor does not
@@ -63,7 +63,7 @@ namespace NodeJS {
 	    /**
 	     * Returns the type of data carried by this port.
 	     */
-	    const NodeDataType & getDataType() const;
+	    const DataType & getDataType() const;
 
 	    /**
 	     * Returns the connection policy associated with this port.
@@ -71,7 +71,7 @@ namespace NodeJS {
 	    const ConnectionPolicy & getConnectionPolicy() const;
 	    
 	private:
-	    const NodeDataType & mType;
+	    const DataType & mType;
 	    ConnectionPolicy mConnectionPolicy;
 	};
     } // End core

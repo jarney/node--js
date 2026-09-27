@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include "node--js/NodePort.hpp"
 
@@ -18,7 +19,7 @@ namespace NodeJS {
 	    typedef enum {
 		NATIVE,
 		GRAPH
-	    } Implementation;
+	    } Type;
 	    
 	    NodeType() = default;
 	    ~NodeType() = default;
@@ -46,15 +47,54 @@ namespace NodeJS {
 	     * rather than being implemented in terms
 	     * of other nodes as a graph.
 	     */
-	    NodeJS::core::NodeType::Implementation getImplementation(void) const;
-	    void setImplementation(NodeJS::core::NodeType::Implementation impl);
+	    NodeJS::core::NodeType::Type getType(void) const;
+
+	    /**
+	     * This sets the implementation as either graph
+	     * or native.
+	     */
+	    void setType(NodeJS::core::NodeType::Type impl);
+
+	    /**
+	     * Adds a new port to the node type.
+	     * This returns false if the node already existed.
+	     */
+	    bool addInputPort(std::string name, std::unique_ptr<NodePort> port);
+
+	    const NodePort *getInputPortByName(std::string name) const;
+	    const NodePort *getInputPortByIndex(int index) const;
+	    bool hasInputPort(std::string name) const;
+	    std::string getInputPortName(int index) const;
+	    int getInputPortCount() const;
+
+	    /**
+	     * Adds a new port to the node type.
+	     * This returns false if the node already existed.
+	     */
+	    bool addOutputPort(std::string name, std::unique_ptr<NodePort> port);
+
+	    const NodePort *getOutputPortByName(std::string name) const;
+	    const NodePort *getOutputPortByIndex(int index) const;
+	    bool hasOutputPort(std::string name) const;
+	    std::string getOutputPortName(int index) const;
+	    int getOutputPortCount() const;
 	    
 	private:
 	    std::string mId;
 	    Visibility mVisibility;
-	    Implementation mImplementation;
-	    std::map<std::string, NodePort> mInputs;
-	    std::map<std::string, NodePort> mOutputs;
+	    Type mType;
+
+	    // Ports by name
+	    std::map<std::string, std::unique_ptr<NodePort>> mInputsByName;
+	    std::map<std::string, std::unique_ptr<NodePort>> mOutputsByName;
+
+	    // Ports by index (in order)
+	    std::vector<NodePort*> mInputs;
+	    std::vector<NodePort*> mOutputs;
+
+	    // Port names by index (in order)
+	    std::vector<std::string> mInputNames;
+	    std::vector<std::string> mOutputNames;
 	};
     }
 }

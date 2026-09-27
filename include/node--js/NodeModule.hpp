@@ -57,7 +57,7 @@ namespace NodeJS {
 	    /**
 	     * Returns true if the given data type is registered in this module.
 	     */
-	    bool hasDataType(std::string name) const;
+	    bool hasDataType(const std::string & name) const;
 
 	    /**
 	     * C++ does not provide an optional reference
@@ -65,11 +65,13 @@ namespace NodeJS {
 	     * This returns the data type if it exists and nullptr
 	     * if it does not.
 	     */
-	    const DataType *getDataType(std::string & name) const;
+	    const DataType *getDataType(const std::string & name) const;
 
 	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
 
 	    void addNodeType(std::unique_ptr<NodeType> nodeType);
+
+	    bool hasNodeType(const std::string & name) const;
 	    
 	private:
 	    std::string mPackage;
