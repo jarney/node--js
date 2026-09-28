@@ -1,4 +1,3 @@
-# TODO: Eventually build the unit tests here...
 
 find_package(Catch2 3 QUIET)
 
@@ -24,3 +23,13 @@ add_test(
   COMMAND
     $<TARGET_FILE:nodejs_tests>
 )
+
+#########################
+# Code coverage report
+#########################
+if (BUILD_CODE_COVERAGE)
+    add_custom_target(gcov-report
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/gcov-report.sh ${PROJECT_BINARY_DIR}
+    )
+endif()

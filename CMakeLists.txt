@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES  ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_ENABLE_CODE_COVERAGE ON)
 
 # Enable AUTOMOC globally for all targets (needed for examples with Q_OBJECT)
 #set(CMAKE_AUTOMOC ON)
@@ -24,11 +25,12 @@ endif()
 
 set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default settings for development of NodeJS")
 
-option(BUILD_TESTING "Build tests" "${NODEJS_DEVELOPER_DEFAULTS}")
-option(BUILD_EXAMPLES "Build Examples" "${NODEJS_DEVELOPER_DEFAULTS}")
-option(BUILD_DOCS "Build Documentation" "${NODEJS_DEVELOPER_DEFAULTS}")
+option(BUILD_TESTING "Build tests" ON)
+option(BUILD_EXAMPLES "Build Examples" ON)
+option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DEBUG_POSTFIX_D "Append d suffix to debug libraries" OFF)
+option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
 
 if(QT_NODES_DEVELOPER_DEFAULTS)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -126,7 +128,6 @@ set_target_properties(NodeJS
 ###########
 # Examples
 ##
-
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
@@ -135,16 +136,23 @@ endif()
 # Doxygen/documentation
 ##
 if(BUILD_DOCS)
+  message("Enabling doxygen output")
   add_subdirectory(doc)
 endif()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-function -fno-exceptions")
+
+if (BUILD_CODE_COVERAGE)
+    message("Enabling code-coverage options")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
+endif()
+
 ##################
-# Automated Tests
+# Unit tests
 ##
-enable_testing()
-
-
 if(BUILD_TESTING)
+  message("Enabling unit-testing")
+  enable_testing()
   add_subdirectory(test)
 endif()
 

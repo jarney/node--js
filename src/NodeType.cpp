@@ -67,7 +67,7 @@ NodeType::hasInputPort(std::string name) const
 }
 
 const NodePort *
-NodeType::getInputPortByIndex(int index) const
+NodeType::getInputPortByIndex(unsigned int index) const
 {
     if (index >= mInputs.size()) {
 	return nullptr;
@@ -77,7 +77,7 @@ NodeType::getInputPortByIndex(int index) const
 }
 
 std::string
-NodeType::getInputPortName(int index) const
+NodeType::getInputPortName(unsigned int index) const
 {
     if (index >= mInputNames.size()) {
 	return std::string();
@@ -120,7 +120,7 @@ NodeType::hasOutputPort(std::string name) const
 }
 
 const NodePort *
-NodeType::getOutputPortByIndex(int index) const
+NodeType::getOutputPortByIndex(unsigned int index) const
 {
     if (index >= mOutputs.size()) {
 	return nullptr;
@@ -130,7 +130,7 @@ NodeType::getOutputPortByIndex(int index) const
 }
 
 std::string
-NodeType::getOutputPortName(int index) const
+NodeType::getOutputPortName(unsigned int index) const
 {
     if (index >= mOutputNames.size()) {
 	return std::string();

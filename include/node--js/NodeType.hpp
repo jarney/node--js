@@ -62,9 +62,9 @@ namespace NodeJS {
 	    bool addInputPort(std::string name, std::unique_ptr<NodePort> port);
 
 	    const NodePort *getInputPortByName(std::string name) const;
-	    const NodePort *getInputPortByIndex(int index) const;
+	    const NodePort *getInputPortByIndex(unsigned int index) const;
 	    bool hasInputPort(std::string name) const;
-	    std::string getInputPortName(int index) const;
+	    std::string getInputPortName(unsigned int index) const;
 	    int getInputPortCount() const;
 
 	    /**
@@ -74,9 +74,9 @@ namespace NodeJS {
 	    bool addOutputPort(std::string name, std::unique_ptr<NodePort> port);
 
 	    const NodePort *getOutputPortByName(std::string name) const;
-	    const NodePort *getOutputPortByIndex(int index) const;
+	    const NodePort *getOutputPortByIndex(unsigned int index) const;
 	    bool hasOutputPort(std::string name) const;
-	    std::string getOutputPortName(int index) const;
+	    std::string getOutputPortName(unsigned int index) const;
 	    int getOutputPortCount() const;
 	    
 	private:
