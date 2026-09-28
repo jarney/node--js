@@ -31,7 +31,15 @@ namespace NodeJS {
 	     * or arrival may not be predictable.
 	     */
 	    typedef enum {
+		/**
+		 * This value indicates that the port supports only
+		 * a single connection.
+		 */
 		One,
+		/**
+		 * This value indicates that the port supports
+		 * multiple connections.
+		 */
 		Multiple
 	    } ConnectionPolicy;
 
@@ -61,10 +69,18 @@ namespace NodeJS {
 	    ~NodePort() = default;
 
 	    /**
-	     * Returns the type of data carried by this port.
+	     * Returns the type of data carried by this port.  Data types are
+	     * identified by this value and are completely abstract.  The underlying
+	     * implementation of each node type governs the specific interpretation
+	     * of the data being carried at this connection.  It is completely up to
+	     * node implementors to ensure that the data types are appropriately
+	     * namespaced to avoid ambiguities and to correctly handle data types.
 	     */
 	    const std::string & getDataType() const;
 
+	    /**
+	     * Returns the description of this port's data.
+	     */
 	    const std::string & getDescription() const;
 	    
 	    /**
