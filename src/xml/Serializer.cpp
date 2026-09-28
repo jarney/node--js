@@ -9,6 +9,11 @@
 
 using namespace NodeJS::xml;
 
+using NodeJS::core::NodePort;
+using NodeJS::core::NodeType;
+using NodeJS::core::NodeModule;
+using NodeJS::core::DataType;
+
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
 const Serializer &
@@ -19,26 +24,25 @@ Serializer::instance()
 }
 
 static void
-readDataType(NodeJS::core::NodeModule & node_module, XmlNodeWrapper node)
+readDataType(NodeModule & node_module, XmlNodeWrapper node)
 {
     std::string id = node.getAttribute("id");
     std::string name = node.getAttribute("name");
-    std::unique_ptr<NodeJS::core::DataType> dataType = std::make_unique<NodeJS::core::DataType>(id, name);
+    std::unique_ptr<DataType> dataType = std::make_unique<DataType>(id, name);
     node_module.addDataType(std::move(dataType));
 }
 
 static void
-writeDataType(const std::string & id, const NodeJS::core::DataType & data_type, XmlNodeWrapper dataTypesNode)
+writeDataType(const std::string & id, const DataType & data_type, XmlNodeWrapper dataTypesNode)
 {
-    xmlNodePtr dataTypeNode = xmlNewNode(nullptr, BAD_CAST "data-type");
-    XmlNodeWrapper node(dataTypeNode);
+    XmlNodeWrapper node("data-type");
     node.setAttribute("id", id);
     node.setAttribute("name", data_type.getName());
-    dataTypesNode.addChild(dataTypeNode);
+    dataTypesNode.addChild(node);
 }
 
 static void
-readDataTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper dataTypesNode)
+readDataTypes(NodeModule & node_module, XmlNodeWrapper dataTypesNode)
 {
     for (XmlNodeWrapper::Iterator it = dataTypesNode.begin(); it != dataTypesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
@@ -50,10 +54,9 @@ readDataTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper dataTypesNo
 }
 
 static void
-writeDataTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
+writeDataTypes(const NodeModule & node_module, XmlNodeWrapper root)
 {
-    xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "data-types");
-    XmlNodeWrapper dataTypesNode(node);
+    XmlNodeWrapper dataTypesNode("data-types");
     for (const auto & it : node_module.getDataTypes()) {
 	writeDataType(it.first, *it.second.get(), dataTypesNode);
     }
@@ -62,7 +65,7 @@ writeDataTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root
 }
 
 static void
-readPackage(NodeJS::core::NodeModule & node_module, XmlNodeWrapper packageNode)
+readPackage(NodeModule & node_module, XmlNodeWrapper packageNode)
 {
     if (packageNode.hasAttribute("id")) {
 	std::string id = packageNode.getAttribute("id");
@@ -71,16 +74,165 @@ readPackage(NodeJS::core::NodeModule & node_module, XmlNodeWrapper packageNode)
 }
 
 static void
-writePackage(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
+writePackage(const NodeModule & node_module, XmlNodeWrapper root)
 {
-    xmlNodePtr packageNode = xmlNewNode(nullptr, BAD_CAST "package");
-    XmlNodeWrapper package(packageNode);
+    XmlNodeWrapper package("package");
     package.setAttribute("id", node_module.getPackage());
-    root.addChild(packageNode);
+    root.addChild(package);
 }
 
 static void
-readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
+readInputs(NodeType & node_type, XmlNodeWrapper inputsNode)
+{
+    for (XmlNodeWrapper::Iterator it = inputsNode.begin(); it != inputsNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName != "port") continue;
+
+	std::string id = child.getAttribute("id");
+	std::string description = child.getAttribute("description");
+	std::string dataType = child.getAttribute("data-type");
+	NodePort::ConnectionPolicy connectionPolicy = NodePort::ConnectionPolicy::One;
+	if (child.hasAttribute("connection-policy")) {
+	    std::string connectionPolicyStr = child.getAttribute("connection-policy");
+	    if (connectionPolicyStr == "multi") {
+		connectionPolicy = NodePort::ConnectionPolicy::Multiple;
+	    }
+	}
+
+	node_type.addInputPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
+	
+    }
+}
+
+static void
+readOutputs(NodeType & node_type, XmlNodeWrapper outputsNode)
+{
+    for (XmlNodeWrapper::Iterator it = outputsNode.begin(); it != outputsNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName != "port") continue;
+
+	std::string id = child.getAttribute("id");
+	std::string description = child.getAttribute("description");
+	std::string dataType = child.getAttribute("data-type");
+	NodePort::ConnectionPolicy connectionPolicy = NodePort::ConnectionPolicy::One;
+	if (child.hasAttribute("connection-policy")) {
+	    std::string connectionPolicyStr = child.getAttribute("connection-policy");
+	    if (connectionPolicyStr == "multi") {
+		connectionPolicy = NodePort::ConnectionPolicy::Multiple;
+	    }
+	}
+
+	node_type.addOutputPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
+	
+    }
+}
+
+static void
+readNodeType(NodeModule & node_module, XmlNodeWrapper nodeTypeNode)
+{
+    NodeType::Visibility visibility = NodeType::Visibility::PRIVATE;
+    if (nodeTypeNode.hasAttribute("visibility")) {
+	std::string visibilityStr = nodeTypeNode.getAttribute("visibility");
+	if (visibilityStr == std::string("public")) {
+	    visibility = NodeType::Visibility::PUBLIC;
+	}
+    }
+    NodeType::Type type = NodeType::Type::GRAPH;
+    if (nodeTypeNode.hasAttribute("type")) {
+	std::string implStr = nodeTypeNode.getAttribute("type");
+	if (implStr == std::string("native")) {
+	    type = NodeType::Type::NATIVE;
+	}
+    }
+    
+    std::string id = nodeTypeNode.getAttribute("id");
+    std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
+    nodeType->setId(id);
+    nodeType->setVisibility(visibility);
+    nodeType->setType(type);
+
+    for (XmlNodeWrapper::Iterator it = nodeTypeNode.begin(); it != nodeTypeNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName == "inputs") {
+	    readInputs(*nodeType.get(), child);
+	}
+	else if (tagName == "outputs") {
+	    readOutputs(*nodeType.get(), child);
+	}
+	else {
+	    // Nothing to do, this is extraneous.
+	}
+    
+    }
+    
+    node_module.addNodeType(std::move(nodeType));
+}
+
+static void
+writeInputs(const NodeType & node_type, XmlNodeWrapper inputsNode)
+{
+    for (int i = 0; i < node_type.getInputPortCount(); i++) {
+	std::string id = node_type.getInputPortName(i);
+	const NodePort *port = node_type.getInputPortByIndex(i);
+	XmlNodeWrapper portNode("port");
+	portNode.setAttribute("id", id);
+	portNode.setAttribute("description", port->getDescription());
+	portNode.setAttribute("data-type", port->getDataType());
+	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
+	inputsNode.addChild(portNode);
+    }
+
+}
+
+static void
+writeOutputs(const NodeType & node_type, XmlNodeWrapper outputsNode)
+{
+    for (int i = 0; i < node_type.getOutputPortCount(); i++) {
+	std::string id = node_type.getOutputPortName(i);
+	const NodePort *port = node_type.getOutputPortByIndex(i);
+	XmlNodeWrapper portNode("port");
+	portNode.setAttribute("id", id);
+	portNode.setAttribute("description", port->getDescription());
+	portNode.setAttribute("data-type", port->getDataType());
+	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
+	outputsNode.addChild(portNode);
+    }
+}
+
+static void
+writeNodeType(const std::string & id, const NodeType & node_type, XmlNodeWrapper nodeTypesNode)
+{
+    XmlNodeWrapper nodeType("node-type");
+    nodeType.setAttribute("id", id);
+    if (node_type.getVisibility() == NodeType::Visibility::PUBLIC) {
+	nodeType.setAttribute("visibility", "public");
+    }
+    else {
+	nodeType.setAttribute("visibility", "private");
+    }
+    if (node_type.getType() == NodeType::Type::GRAPH) {
+	nodeType.setAttribute("type", "graph");
+    }
+    else {
+	nodeType.setAttribute("type", "native");
+    }
+
+    XmlNodeWrapper inputsNode("inputs");
+    writeInputs(node_type, inputsNode);
+    nodeType.addChild(inputsNode);
+    
+    XmlNodeWrapper outputsNode("outputs");
+    writeOutputs(node_type, outputsNode);
+    nodeType.addChild(outputsNode);
+    
+    nodeTypesNode.addChild(nodeType);
+}
+
+static void
+readNodeTypes(NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
 {
     for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
@@ -92,57 +244,14 @@ readNodeTypes(NodeJS::core::NodeModule & node_module, XmlNodeWrapper nodeTypesNo
 	    fprintf(stderr, "Invalid file: no node type id\n");
 	    continue;
 	}
-
-	NodeJS::core::NodeType::Visibility visibility = NodeJS::core::NodeType::Visibility::PRIVATE;
-	if (child.hasAttribute("visibility")) {
-	    std::string visibilityStr = child.getAttribute("visibility");
-	    if (visibilityStr == std::string("public")) {
-		visibility = NodeJS::core::NodeType::Visibility::PUBLIC;
-	    }
-	}
-	NodeJS::core::NodeType::Type type = NodeJS::core::NodeType::Type::GRAPH;
-	if (child.hasAttribute("type")) {
-	    std::string implStr = child.getAttribute("type");
-	    if (implStr == std::string("native")) {
-		type = NodeJS::core::NodeType::Type::NATIVE;
-	    }
-	}
-	
-	std::string id = child.getAttribute("id");
-	std::unique_ptr<NodeJS::core::NodeType> nodeType = std::make_unique<NodeJS::core::NodeType>();
-	nodeType->setId(id);
-	nodeType->setVisibility(visibility);
-	nodeType->setType(type);
-	node_module.addNodeType(std::move(nodeType));
+	readNodeType(node_module, child);
     }
 }
 
 static void
-writeNodeType(const std::string & id, const NodeJS::core::NodeType & node_type, XmlNodeWrapper nodeTypesNode)
+writeNodeTypes(const NodeModule & node_module, XmlNodeWrapper root)
 {
-    xmlNodePtr nodeTypeNode = xmlNewNode(nullptr, BAD_CAST "node-type");
-    XmlNodeWrapper nodeType(nodeTypeNode);
-    nodeType.setAttribute("id", id);
-    if (node_type.getVisibility() == NodeJS::core::NodeType::Visibility::PUBLIC) {
-	nodeType.setAttribute("visibility", "public");
-    }
-    else {
-	nodeType.setAttribute("visibility", "private");
-    }
-    if (node_type.getType() == NodeJS::core::NodeType::Type::GRAPH) {
-	nodeType.setAttribute("type", "graph");
-    }
-    else {
-	nodeType.setAttribute("type", "native");
-    }
-    nodeTypesNode.addChild(nodeTypeNode);
-}
-
-static void
-writeNodeTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root)
-{
-    xmlNodePtr node = xmlNewNode(nullptr, BAD_CAST "node-types");
-    XmlNodeWrapper nodeTypesNode(node);
+    XmlNodeWrapper nodeTypesNode("inputs");
     for (const auto & it : node_module.getNodeTypes()) {
 	writeNodeType(it.first, *it.second, nodeTypesNode);
     }
@@ -150,20 +259,19 @@ writeNodeTypes(const NodeJS::core::NodeModule & node_module, XmlNodeWrapper root
 }
 
 bool
-Serializer::write(const NodeJS::core::NodeModule & node_module, std::ostream & output_stream, std::ostream & err) const
+Serializer::write(const NodeModule & node_module, std::ostream & output_stream, std::ostream & err) const
 {
-
     xmlDocPtr doc;
     doc = xmlNewDoc(BAD_CAST "1.0");
-    xmlNodePtr root = xmlNewNode(nullptr, BAD_CAST "node-module");
-    xmlSetProp(root, BAD_CAST "xmlns", BAD_CAST NODEJS_XML_NAMESPACE);
-    xmlDocSetRootElement(doc, root);
+    XmlNodeWrapper rootNode("node-module");
+    rootNode.setAttribute("xmlns", NODEJS_XML_NAMESPACE);
 
-    XmlNodeWrapper rootNode(root);
     writePackage(node_module, rootNode);
     writeDataTypes(node_module, rootNode);
     writeNodeTypes(node_module, rootNode);
     
+    xmlDocSetRootElement(doc, rootNode.releasePointer());
+
     xmlChar *output_mem = nullptr;
     int output_size = 0;
     
@@ -175,14 +283,15 @@ Serializer::write(const NodeJS::core::NodeModule & node_module, std::ostream & o
     free(output_mem);
     
     xmlFreeDoc(doc);
+    fprintf(stderr, "Done write\n");
     
     return true;
 }
 
 bool
-Serializer::read(NodeJS::core::NodeModule & node_module, std::istream & input_stream, std::ostream & err) const
+Serializer::read(NodeModule & node_module, std::istream & input_stream, std::ostream & err) const
 {
-
+    fprintf(stderr, "Starting read\n");
     xmlDocPtr doc; /* the resulting document tree */
 
     std::string json_string(std::istreambuf_iterator<char>(input_stream), {});
@@ -194,7 +303,7 @@ Serializer::read(NodeJS::core::NodeModule & node_module, std::istream & input_st
     }
 
     /*Get the root element node */
-    XmlNodeWrapper root(xmlDocGetRootElement(doc));
+    XmlNodeWrapper root(xmlDocGetRootElement(doc), false);
 
     // The package needs to be read first because that determines where
     // other data is registered.
@@ -227,5 +336,6 @@ Serializer::read(NodeJS::core::NodeModule & node_module, std::istream & input_st
     }
     
     xmlFreeDoc(doc);
+    fprintf(stderr, "Done read\n");
     return true;
 }

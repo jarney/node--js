@@ -19,3 +19,8 @@ target_include_directories(nodejs_tests
 
 target_link_libraries(nodejs_tests PRIVATE NodeJS Catch2::Catch2WithMain)
 
+add_test(
+  NAME test_nodes
+  COMMAND
+    $<TARGET_FILE:nodejs_tests>
+)

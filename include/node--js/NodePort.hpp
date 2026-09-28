@@ -46,13 +46,13 @@ namespace NodeJS {
 	     *
 	     * Node ports are immutable once created.
 	     */
-	    NodePort(const DataType & type, ConnectionPolicy policy);
+	    NodePort(std::string data_type, std::string description, ConnectionPolicy policy);
 
 	    /**
 	     * Creates a port with the most common connection
 	     * policy of 'One'.
 	     */
-	    NodePort(const DataType & type);
+	    NodePort(std::string data_type, std::string description);
 
 	    /**
 	     * Destroys a port.  Note that this destructor does not
@@ -63,15 +63,18 @@ namespace NodeJS {
 	    /**
 	     * Returns the type of data carried by this port.
 	     */
-	    const DataType & getDataType() const;
+	    const std::string & getDataType() const;
 
+	    const std::string & getDescription() const;
+	    
 	    /**
 	     * Returns the connection policy associated with this port.
 	     */
 	    const ConnectionPolicy & getConnectionPolicy() const;
 	    
 	private:
-	    const DataType & mType;
+	    std::string mType;
+	    std::string mDescription;
 	    ConnectionPolicy mConnectionPolicy;
 	};
     } // End core

@@ -5,7 +5,7 @@
 
 XmlNodeWrapper
 XmlNodeWrapper::Iterator::get() {
-    return XmlNodeWrapper(m_node);
+    return XmlNodeWrapper(m_node, false);
 }
 
 XmlNodeWrapper::Iterator
@@ -21,7 +21,44 @@ XmlNodeWrapper::end()
 
 XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node)
     : _node(node)
+    , _is_owning(true)
 {}
+
+XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node, bool is_owning)
+    : _node(node)
+    , _is_owning(is_owning)
+{}
+
+XmlNodeWrapper::XmlNodeWrapper(std::string elementName)
+    : _node(xmlNewNode(nullptr, BAD_CAST elementName.c_str()))
+    , _is_owning(true)
+{}
+
+xmlNodePtr
+XmlNodeWrapper::releasePointer()
+{
+    xmlNodePtr toRelease = _node;
+    _node = nullptr;
+    return toRelease;
+}
+
+XmlNodeWrapper::XmlNodeWrapper(const XmlNodeWrapper & source)
+    : _node(source._node)
+    , _is_owning(false)
+{}
+
+XmlNodeWrapper::~XmlNodeWrapper()
+{
+    if (_node != nullptr && _is_owning) {
+	// If we still have this
+	// pointer when we leave scope,
+	// we are responsible for it.
+	// We own it until it has been passed off
+	// to another node.
+	xmlFree((void*)_node);
+	_node = nullptr;
+    }
+}
 
 std::string
 XmlNodeWrapper::getName(void) const
@@ -52,9 +89,10 @@ XmlNodeWrapper::setAttribute(const std::string & name, const std::string & value
 }
 
 void
-XmlNodeWrapper::addChild(const XmlNodeWrapper & other)
+XmlNodeWrapper::addChild(XmlNodeWrapper & other)
 {
     xmlAddChild(_node, other._node);
+    other._node = nullptr;
 }
 
 

@@ -42,16 +42,29 @@ public:
     };
 
     XmlNodeWrapper(xmlNodePtr node);
-    ~XmlNodeWrapper() = default;
+    XmlNodeWrapper(xmlNodePtr node, bool is_owning);
+    XmlNodeWrapper(std::string elementName);
+    XmlNodeWrapper(const XmlNodeWrapper & other);
+    ~XmlNodeWrapper();
+    xmlNodePtr releasePointer();
     std::string getName(void) const;
     std::string getAttribute(const std::string & name) const;
     bool hasAttribute(const std::string & name) const;
     void setAttribute(const std::string & name, const std::string & value);
-    void addChild(const XmlNodeWrapper & other);
+
+    /**
+     * The child argument is not const
+     * because the parent takes away
+     * the child's pointer so that it
+     * is no longer responsible for it
+     * when it becomes our child.
+     */
+    void addChild(XmlNodeWrapper & child);
     
     Iterator begin();
     Iterator end();
 private:
     xmlNodePtr _node;
+    bool _is_owning;
 };
 

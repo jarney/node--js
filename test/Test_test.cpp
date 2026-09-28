@@ -12,7 +12,7 @@ TEST_CASE("NodeModule main", "[NodeJS][NodeModule]")
 
     auto newNodeType = std::make_unique<NodeType>();
     newNodeType->setId("fooNewNode");
-    newNodeType->addInputPort("input0", std::make_unique<NodePort>(*nodeModule.getDataType("abc"), NodePort::ConnectionPolicy::One));
+    newNodeType->addInputPort("input0", std::make_unique<NodePort>("abc", "Something Wild", NodePort::ConnectionPolicy::One));
     nodeModule.addNodeType(std::move(newNodeType));
 
     CHECK(nodeModule.hasDataType("abc"));
@@ -31,10 +31,8 @@ TEST_CASE("Node Type preserves ID", "[NodeJS][NodeType]")
 }
 TEST_CASE("Node Type Input Ports", "[NodeJS][NodeType]")
 {
-    DataType dataType("abc", "def");
-    
     NodeType nodeType;
-    nodeType.addInputPort("input0", std::make_unique<NodePort>(dataType, NodePort::ConnectionPolicy::One));
+    nodeType.addInputPort("input0", std::make_unique<NodePort>("abc", "Something Wild", NodePort::ConnectionPolicy::One));
     CHECK(nodeType.getInputPortCount() == 1);
     CHECK(nodeType.hasInputPort("input0"));
     CHECK(!nodeType.hasOutputPort("input0"));

@@ -8,7 +8,21 @@
       - in OpenSCAD to NodeJS language and vice-versa.
   -->
   <package id="example"/>
-  <data-types><!-- We don't define any types in this program --></data-types>
+  <data-types>
+    <!--
+	We don't define any types in this program.
+	We need to know, though, where to import them from,
+	so we need to declare "openscad.xml" as the source for them.
+	Do we need to define data types at all?
+	Can they just remain abstract and be defined implicitly
+	by the nodes?
+	Revalation: Do we even need to resolve node types in order
+	to load a valid program?  Do we only need to verify that the data
+	type IDs match?  Presumably we can just leave it to the node implementers
+	to make sure that they allocate a global namespace for their variables.
+    -->
+    <import package="openscad"/>
+  </data-types>
   
   <node-types>
     <node-type id="main" visibility="export" type="graph">
@@ -23,6 +37,7 @@
 	<scope>
 	  <!-- Import the openscad package so we have access to those nodes. -->
 	  <import package="openscad"/>
+	  <!-- Is this redundant with the import above? -->
 	  <!-- Import this specific node type as a function so we can call it. -->
 	  <import node-type="fn"/>
 	</scope>

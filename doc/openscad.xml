@@ -9,6 +9,12 @@
   -->
   <package id="org.ensor.nodejs.openscad"/>
   <data-types>
+    <!--
+	These are (for now) purely documentary.
+	There is no 'hard' validation of data types,
+	their origin, or function at this level.  They
+	exist purely as identifiers that tie ports together.
+    -->
     <data-type id="variable" name="OpenSCAD Variable"/>
     <data-type id="geometry" name="OpenSCAD Geometry"/>
   </data-types>
