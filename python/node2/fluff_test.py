@@ -1,6 +1,4 @@
-# content of test_sysexit.py
 import pytest
-
 
 def f():
     raise SystemExit(1)
