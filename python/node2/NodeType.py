@@ -30,8 +30,8 @@ class NodeType:
     def getVisibility(self):
         return self.mVisibility
 
-    def setVisibility(self, visibility):
-        self.mVisibility = visibility
+    def setVisibility(self, aVisibility):
+        self.mVisibility = aVisibility
 
     def getType(self):
         return self.mType
@@ -54,11 +54,10 @@ class NodeType:
         return aName in self.mInputsByName
     
     def getInputPortName(self, aIndex):
-        return aInputNames[aIndex]
+        return self.mInputNames[aIndex]
     
     def getInputPortCount(self):
         return len(self.mInputs)
-
 
     def getOutputPortByName(self, aName):
         return self.mOutputsByName[aName]
@@ -70,7 +69,7 @@ class NodeType:
         return aName in self.mOutputsByName
     
     def getOutputPortName(self, aIndex):
-        return aOutputNames[aIndex]
+        return self.mOutputNames[aIndex]
     
     def getOutputPortCount(self):
         return len(self.mOutputs)

@@ -3,15 +3,7 @@ from xml.etree import ElementTree as ET
 from ..DataType import DataType
 from ..NodeModule import NodeModule
 from ..NodeType import NodeType
-
-#
-#dt = DataType("a", "b")
-#dt.print()
-#
-#nm = NodeModule()
-#
-#nm.addDataType(dt)
-
+from ..NodePort import NodePort
 
 class Serializer:
     def __init__(self):
@@ -55,12 +47,35 @@ class Serializer:
             dataTypeNode.set("name", dataType.getName())
             dataTypesNode.append(dataTypeNode)
 
+    def readInputs(self, nodeType: NodeType, inputsNode):
+        for portNode in inputsNode:
+            if not self.isTag(portNode.tag, "port"):
+                continue
+            port = NodePort()
+            port.setDataType(portNode.get("data-type"))
+            port.setDescription(portNode.get("description"))
+            policy = NodePort.ConnectionPolicy.One
+            if portNode.get("connection-policy", "") == "multi":
+                policy = NodePort.ConnectionPolicy.Multiple
+            port.setConnectionPolicy(policy)
+            nodeType.addInputPort(portNode.get("id"), port)
+        pass
+
+    def readOutputs(self, node_type: NodeType, outputsNode):
+        pass
+            
     def readNodeType(self, node_module: NodeModule, nodeTypeNode):
         nodeType = NodeType()
         nodeType.setId(nodeTypeNode.get("id", ""))
+
+        for portsNode in nodeTypeNode:
+            if self.isTag(portsNode.tag, "inputs"):
+                self.readInputs(nodeType, portsNode)
+            elif self.isTag(portsNode.tag, "outputs"):
+                self.readOutputs(nodeType, portsNode)
+
         node_module.addNodeType(nodeType)
-        pass
-            
+
     def readNodeTypes(self, node_module: NodeModule, nodeTypesNode):
         for nodeTypeNode in nodeTypesNode:
             if not self.isTag(nodeTypeNode.tag, "node-type"):
@@ -72,6 +87,20 @@ class Serializer:
         nodeTypeNode.set("id", nodeType.getId())
         nodeTypeNode.set("visibility", nodeType.getVisibility())
         nodeTypesNode.append(nodeTypeNode)
+
+        inputsNode = ET.Element("inputs")
+        for i in range(0, nodeType.getInputPortCount()):
+            portNode = ET.Element("port")
+            port = nodeType.getInputPortByIndex(i)
+            portNode.set("id", nodeType.getInputPortName(i))
+            portNode.set("data-type", port.getDataType())
+            inputsNode.append(portNode)
+        nodeTypeNode.append(inputsNode)
+        
+        outputsNode = ET.Element("outputs")
+        nodeTypeNode.append(outputsNode)
+        
+        
             
     def writeNodeTypes(self, node_module: NodeModule, root):
         nodeTypesNode = ET.Element("node-types")

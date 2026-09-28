@@ -3,29 +3,29 @@
 using namespace NodeJS::core;
 
 NodePort::NodePort(
-    std::string type,
-    std::string description,
-    NodePort::ConnectionPolicy policy
+    std::string aDataType,
+    std::string aDescription,
+    NodePort::ConnectionPolicy aPolicy
     )
-    : mType(type)
-    , mDescription(description)
-    , mConnectionPolicy(policy)
+    : mDataType(aDataType)
+    , mDescription(aDescription)
+    , mConnectionPolicy(aPolicy)
 {}
 
 NodePort::NodePort(
-    std::string type,
-    std::string description
+    std::string aDataType,
+    std::string aDescription
     )
     : NodePort(
-	type,
-	description,
+	aDataType,
+	aDescription,
 	NodePort::ConnectionPolicy::One
 	)
 {}
 
 const std::string &
 NodePort::getDataType() const
-{ return mType; }
+{ return mDataType; }
 
 const std::string &
 NodePort::getDescription() const

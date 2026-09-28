@@ -73,7 +73,7 @@ namespace NodeJS {
 	    const ConnectionPolicy & getConnectionPolicy() const;
 	    
 	private:
-	    std::string mType;
+	    std::string mDataType;
 	    std::string mDescription;
 	    ConnectionPolicy mConnectionPolicy;
 	};
