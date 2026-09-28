@@ -251,7 +251,7 @@ readNodeTypes(NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
 static void
 writeNodeTypes(const NodeModule & node_module, XmlNodeWrapper root)
 {
-    XmlNodeWrapper nodeTypesNode("inputs");
+    XmlNodeWrapper nodeTypesNode("node-types");
     for (const auto & it : node_module.getNodeTypes()) {
 	writeNodeType(it.first, *it.second, nodeTypesNode);
     }

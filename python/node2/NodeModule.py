@@ -31,3 +31,15 @@ class NodeModule:
     def getDataType(self, id):
         return self.dataTypes[id]
 
+    def addNodeType(self, nodeType: NodeType):
+        self.nodeTypes[nodeType.getId()] = nodeType
+
+    def getNodeTypes(self):
+        return self.nodeTypes;
+
+    def hasNodeType(self, id):
+        return (id in self.nodeTypes)
+
+    def getNodeType(self, id):
+        return self.nodeTypes[id]
+    

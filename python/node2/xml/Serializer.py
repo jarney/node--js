@@ -2,6 +2,8 @@ from xml.etree import ElementTree as ET
 
 from ..DataType import DataType
 from ..NodeModule import NodeModule
+from ..NodeType import NodeType
+
 #
 #dt = DataType("a", "b")
 #dt.print()
@@ -53,6 +55,32 @@ class Serializer:
             dataTypeNode.set("name", dataType.getName())
             dataTypesNode.append(dataTypeNode)
 
+    def readNodeType(self, node_module: NodeModule, nodeTypeNode):
+        nodeType = NodeType()
+        nodeType.setId(nodeTypeNode.get("id", ""))
+        node_module.addNodeType(nodeType)
+        pass
+            
+    def readNodeTypes(self, node_module: NodeModule, nodeTypesNode):
+        for nodeTypeNode in nodeTypesNode:
+            if not self.isTag(nodeTypeNode.tag, "node-type"):
+                continue
+            self.readNodeType(node_module, nodeTypeNode)
+
+    def writeNodeType(self, nodeType: NodeType, nodeTypesNode):
+        nodeTypeNode = ET.Element("node-type")
+        nodeTypeNode.set("id", nodeType.getId())
+        nodeTypeNode.set("visibility", nodeType.getVisibility())
+        nodeTypesNode.append(nodeTypeNode)
+            
+    def writeNodeTypes(self, node_module: NodeModule, root):
+        nodeTypesNode = ET.Element("node-types")
+        root.append(nodeTypesNode);
+
+        for nodeTypeId in node_module.getNodeTypes():
+            nodeType = node_module.getNodeType(nodeTypeId)
+            self.writeNodeType(nodeType, nodeTypesNode)
+            
     def isTag(self, tag, matchTag):
         return tag == "{"+ self._NAMESPACE + "}" + matchTag
  
@@ -69,6 +97,11 @@ class Serializer:
                 continue
             self.readDataTypes(node_module, dataTypesNode)
 
+        for nodeTypesNode in root:
+            if not self.isTag(nodeTypesNode.tag, "node-types"):
+                continue
+            self.readNodeTypes(node_module, nodeTypesNode)
+
         pass
 
 
@@ -78,6 +111,7 @@ class Serializer:
 
         self.writePackage(node_module, root)
         self.writeDataTypes(node_module, root)
+        self.writeNodeTypes(node_module, root)
 
         tree = ET.ElementTree(root)
         ET.indent(tree, space="    ", level=0)
