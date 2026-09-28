@@ -59,6 +59,11 @@ class NodeType:
     def getInputPortCount(self):
         return len(self.mInputs)
 
+    def addOutputPort(self, aName, aPort):
+        self.mOutputsByName[aName] = aPort
+        self.mOutputs.append(aPort)
+        self.mOutputNames.append(aName)
+
     def getOutputPortByName(self, aName):
         return self.mOutputsByName[aName]
 

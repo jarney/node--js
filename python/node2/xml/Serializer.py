@@ -59,10 +59,19 @@ class Serializer:
                 policy = NodePort.ConnectionPolicy.Multiple
             port.setConnectionPolicy(policy)
             nodeType.addInputPort(portNode.get("id"), port)
-        pass
 
-    def readOutputs(self, node_type: NodeType, outputsNode):
-        pass
+    def readOutputs(self, nodeType: NodeType, outputsNode):
+        for portNode in outputsNode:
+            if not self.isTag(portNode.tag, "port"):
+                continue
+            port = NodePort()
+            port.setDataType(portNode.get("data-type"))
+            port.setDescription(portNode.get("description"))
+            policy = NodePort.ConnectionPolicy.One
+            if portNode.get("connection-policy", "") == "multi":
+                policy = NodePort.ConnectionPolicy.Multiple
+            port.setConnectionPolicy(policy)
+            nodeType.addOutputPort(portNode.get("id"), port)
             
     def readNodeType(self, node_module: NodeModule, nodeTypeNode):
         nodeType = NodeType()
@@ -94,13 +103,21 @@ class Serializer:
             port = nodeType.getInputPortByIndex(i)
             portNode.set("id", nodeType.getInputPortName(i))
             portNode.set("data-type", port.getDataType())
+            connectionPolicy = "multi" if port.getConnectionPolicy() == NodePort.ConnectionPolicy.Multiple else "one"
+            portNode.set("connection-policy", connectionPolicy);
             inputsNode.append(portNode)
         nodeTypeNode.append(inputsNode)
         
         outputsNode = ET.Element("outputs")
+        for i in range(0, nodeType.getOutputPortCount()):
+            portNode = ET.Element("port")
+            port = nodeType.getOutputPortByIndex(i)
+            portNode.set("id", nodeType.getOutputPortName(i))
+            portNode.set("data-type", port.getDataType())
+            connectionPolicy = "multi" if port.getConnectionPolicy() == NodePort.ConnectionPolicy.Multiple else "one"
+            portNode.set("connection-policy", connectionPolicy);
+            outputsNode.append(portNode)
         nodeTypeNode.append(outputsNode)
-        
-        
             
     def writeNodeTypes(self, node_module: NodeModule, root):
         nodeTypesNode = ET.Element("node-types")

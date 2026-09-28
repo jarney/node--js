@@ -25,4 +25,5 @@ class NodePort:
     def setConnectionPolicy(self, aConnectionPolicy):
         self.mConnectionPolicy = aConnectionPolicy
 
-    
+    def getConnectionPolicy(self):
+        return self.mConnectionPolicy
