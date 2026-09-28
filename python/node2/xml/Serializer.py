@@ -30,6 +30,13 @@ class Serializer:
 
     def write(self, node_module: NodeModule, stream):
         stream.write("Writing it back out to the stdout port\n");
+
+        root = ET.Element('QuoteWerksXML')
+        dataType = ET.Element("data-types")
+        root.append(dataType)
+        
+        tree = ET.ElementTree(root)
+        tree.write(stream, xml_declaration=True, encoding="unicode");
         pass
     
 _instance = Serializer()
