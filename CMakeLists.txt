@@ -26,6 +26,7 @@ endif()
 set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default settings for development of NodeJS")
 
 option(BUILD_TESTING "Build tests" ON)
+option(BUILD_PYTHON "Python Module" ON)
 option(BUILD_EXAMPLES "Build Examples" ON)
 option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
@@ -154,6 +155,15 @@ if(BUILD_TESTING)
   message("Enabling unit-testing")
   enable_testing()
   add_subdirectory(test)
+endif()
+
+
+if(BUILD_PYTHON)
+    add_custom_target(python-module
+        ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/python
+        COMMAND bash ${PROJECT_SOURCE_DIR}/python/build.sh ${PROJECT_BINARY_DIR}
+    )
 endif()
 
 ###############
