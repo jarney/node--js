@@ -13,6 +13,4 @@ nm = NodeModule();
 fname = "../doc/openscad.xml"
 stream = open(fname, "r");
 s.read(nm, stream)
-
-#os = open("foo", "w")
 s.write(nm, sys.stdout)

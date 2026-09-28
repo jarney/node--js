@@ -2,9 +2,19 @@
 
 class NodeModule:
     def __init__(self):
+        self.package = ""
         self.dataTypes = {}
         self.nodeTypes = {}
 
+    def setPackage(self, package):
+        """
+        Sets the fully-qualified package name.
+        """
+        self.package = package
+
+    def getPackage(self):
+        return self.package
+        
     def addDataType(self, dataType: DataType):
         self.dataTypes[dataType.getId()] = dataType
         pass
@@ -20,3 +30,4 @@ class NodeModule:
 
     def getDataType(self, id):
         return self.dataTypes[id]
+
