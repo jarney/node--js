@@ -11,20 +11,20 @@ class DataType:
     """
     Data types are cool, man.
     """
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+    def __init__(self, aId, aName):
+        self.mId = aId
+        self.mName = aName
         pass
 
     def getId(self):
-        return self.id
+        return self.mId
     
     def getName(self):
-        return self.name
+        return self.mName
 
     def __eq__(a,b):
         """
         Two data-types are considered equal if they both have
         the same ID.
         """
-        return a.id == b.id
+        return a.mId == b.mId
