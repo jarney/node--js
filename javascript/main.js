@@ -1,3 +1,5 @@
+import {UnitTests} from './modules/unit-tests.js';
+
 import { create, createReportList } from './modules/canvas.js';
 import { name, draw, reportArea, reportPerimeter } from './modules/square.js';
 import randomSquare from './modules/square.js';
@@ -11,3 +13,7 @@ reportPerimeter(square1.length, reportList);
 
 // Use the default
 let square2 = randomSquare(myCanvas.ctx);
+
+
+let unitTests = new UnitTests();
+unitTests.run();
