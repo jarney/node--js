@@ -1,4 +1,6 @@
-import {UnitTests} from './modules/unit-tests.js';
+import {UnitTests} from './tests/UnitTests.js';
+import {} from './tests/test_DataType.js';
+import {} from './tests/test_NodePort.js';
+import {} from './tests/test_NodeType.js';
 
-let unitTests = new UnitTests();
-unitTests.run();
+UnitTests.RUN();
