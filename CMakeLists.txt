@@ -26,7 +26,7 @@ endif()
 set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default settings for development of NodeJS")
 
 option(BUILD_TESTING "Build tests" ON)
-option(BUILD_PYTHON "Python Module" OFF)
+option(BUILD_PYTHON "Python Module" ON)
 option(BUILD_EXAMPLES "Build Examples" ON)
 option(BUILD_DOCS "Build Documentation" ON)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
@@ -159,6 +159,7 @@ endif()
 
 
 if(BUILD_PYTHON)
+    message("Enabling python module")
     add_custom_target(python-module
         ALL
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/python

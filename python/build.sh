@@ -13,7 +13,27 @@ fi
 
 . ${CMAKE_BINARY_DIR}/python/venv/bin/activate
 
-
+# Build the main package
 pip install -r requirements.txt
+
+# Build the developer stuff
+pip install -r requirements-dev.txt
+
+# Run the unit-tests
 coverage run -m pytest
 coverage html -d ${CMAKE_BINARY_DIR}/python/htmlcov
+
+# Build the pydoc
+sphinx-apidoc \
+    -o docs \
+    -H 'API Documentation' \
+    node2
+
+sphinx-build \
+    -c docs \
+    -b html \
+    -W \
+    ${PWD}/docs \
+    ${CMAKE_BINARY_DIR}/python/docs \
+
+

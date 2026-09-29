@@ -1,8 +1,27 @@
 from enum import Enum
 
 class NodeType:
-
+    """
+	 * This class represents a type of node in a node program.
+	 * Node types are characterized by a unique identifier.
+	 * Node types carry a visibility field indicating whether
+	 * nodes outside this package are allowed to access it or not.
+	 * In addition, a node may be marked as 'native', indicating that
+	 * its implementation is provided by the underlying
+	 * runtime, or as 'graph' indicating that the implementation
+	 * is provided by a graph of other nodes.
+	 *
+	 * In addition, each node declares input and output ports
+	 * which may carry data.  Each input and output port are
+	 * associated with a data type.
+    """
+    
     class Visibility(Enum):
+        """
+	     * This enum represents the visibility of a node type.
+	     * This determines whether graphs outside this package are
+	     * permitted to access it.
+        """
         PUBLIC = 0
         PRIVATE = 1
         
