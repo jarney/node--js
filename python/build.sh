@@ -25,15 +25,11 @@ coverage html -d ${CMAKE_BINARY_DIR}/python/htmlcov
 
 # Build the pydoc
 sphinx-apidoc \
-    -o docs \
+    -o docs2 \
     -H 'API Documentation' \
     node2
 
 sphinx-build \
-    -c docs \
-    -b html \
-    -W \
+    -M html \
     ${PWD}/docs \
-    ${CMAKE_BINARY_DIR}/python/docs \
-
-
+    ${CMAKE_BINARY_DIR}/python/docs/
