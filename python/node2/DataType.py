@@ -22,6 +22,9 @@ class DataType:
     def getName(self):
         return self.name
 
-    def print(self):
-        print("id: " + self.id + " name: " + self.name)
-
+    def __eq__(a,b):
+        """
+        Two data-types are considered equal if they both have
+        the same ID.
+        """
+        return a.id == b.id

@@ -21,11 +21,13 @@ pip install -r requirements-dev.txt
 
 # Run the unit-tests
 coverage run -m pytest
-coverage html -d ${CMAKE_BINARY_DIR}/python/htmlcov
+coverage html \
+	 --omit='*/test/*' \
+	 -d ${CMAKE_BINARY_DIR}/python/htmlcov
 
 # Build the pydoc
 sphinx-apidoc \
-    -o docs2 \
+    -o docs/api \
     -H 'API Documentation' \
     node2
 

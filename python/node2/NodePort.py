@@ -5,25 +5,16 @@ class NodePort:
         One = 0
         Multiple = 1
 
-    def __init__(self):
-        self.mType = ""
-        self.mDescription = ""
-        self.mConnectionPolicy = NodePort.ConnectionPolicy.One
-
-    def setDataType(self, aDataType):
+    def __init__(self, aDataType, aDescription, aConnectionPolicy = ConnectionPolicy.One):
         self.mDataType = aDataType
+        self.mDescription = aDescription
+        self.mConnectionPolicy = aConnectionPolicy
 
     def getDataType(self):
         return self.mDataType
         
-    def setDescription(self, aDescription):
-        self.mDescription = aDescription
-
     def getDescription(self):
         return self.mDescription
-
-    def setConnectionPolicy(self, aConnectionPolicy):
-        self.mConnectionPolicy = aConnectionPolicy
 
     def getConnectionPolicy(self):
         return self.mConnectionPolicy

@@ -51,26 +51,24 @@ class Serializer:
         for portNode in inputsNode:
             if not self.isTag(portNode.tag, "port"):
                 continue
-            port = NodePort()
-            port.setDataType(portNode.get("data-type"))
-            port.setDescription(portNode.get("description"))
             policy = NodePort.ConnectionPolicy.One
             if portNode.get("connection-policy", "") == "multi":
                 policy = NodePort.ConnectionPolicy.Multiple
-            port.setConnectionPolicy(policy)
+            port = NodePort(portNode.get("data-type"),
+                            portNode.get("description"),
+                            policy)
             nodeType.addInputPort(portNode.get("id"), port)
 
     def readOutputs(self, nodeType: NodeType, outputsNode):
         for portNode in outputsNode:
             if not self.isTag(portNode.tag, "port"):
                 continue
-            port = NodePort()
-            port.setDataType(portNode.get("data-type"))
-            port.setDescription(portNode.get("description"))
             policy = NodePort.ConnectionPolicy.One
             if portNode.get("connection-policy", "") == "multi":
                 policy = NodePort.ConnectionPolicy.Multiple
-            port.setConnectionPolicy(policy)
+            port = NodePort(portNode.get("data-type"),
+                            portNode.get("description"),
+                            policy)
             nodeType.addOutputPort(portNode.get("id"), port)
             
     def readNodeType(self, node_module: NodeModule, nodeTypeNode):

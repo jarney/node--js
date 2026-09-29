@@ -37,6 +37,7 @@ TEST_CASE("NodeType some ports", "[NodeJS][NodeType]")
     CHECK(nodeType.getInputPortByName("first")->getDescription() == "First Argument");
     CHECK(nodeType.getInputPortName(0) == "first");
     CHECK(nodeType.getInputPortByIndex(0)->getDescription() == "First Argument");
+    CHECK(nodeType.hasInputPort("first"));
     
     CHECK(nodeType.getInputPortByName("second")->getDescription() == "Second Argument");
     CHECK(nodeType.getInputPortName(1) == "second");
@@ -45,10 +46,13 @@ TEST_CASE("NodeType some ports", "[NodeJS][NodeType]")
     CHECK(nodeType.getOutputPortByName("output")->getDescription() == "Result");
     CHECK(nodeType.getOutputPortName(0) == "output");
     CHECK(nodeType.getOutputPortByIndex(0)->getDescription() == "Result");
+    CHECK(nodeType.hasOutputPort("output"));
 
     // Now, some edge cases:
     CHECK(nodeType.getInputPortByName("non-existent") == nullptr);
     CHECK(nodeType.getOutputPortByName("non-existent") == nullptr);
+    CHECK(!nodeType.hasInputPort("non-existent"));
+    CHECK(!nodeType.hasOutputPort("non-existent"));
     CHECK(nodeType.getInputPortName(99) == "");
     CHECK(nodeType.getOutputPortName(99) == "");
     CHECK(nodeType.getInputPortByIndex(99) == nullptr);

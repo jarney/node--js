@@ -59,40 +59,58 @@ class NodeType:
         self.mType = aType
 
     def addInputPort(self, aName, aPort):
+        if aName in self.mInputsByName:
+            return False
         self.mInputsByName[aName] = aPort
         self.mInputs.append(aPort)
         self.mInputNames.append(aName)
+        return True
 
     def getInputPortByName(self, aName):
+        if not aName in self.mInputsByName:
+            return None
         return self.mInputsByName[aName]
 
     def getInputPortByIndex(self, aIndex):
+        if aIndex >= len(self.mInputs):
+            return None
         return self.mInputs[aIndex]
     
     def hasInputPort(self, aName):
         return aName in self.mInputsByName
     
     def getInputPortName(self, aIndex):
+        if aIndex >= len(self.mInputNames):
+            return ""
         return self.mInputNames[aIndex]
     
     def getInputPortCount(self):
         return len(self.mInputs)
 
     def addOutputPort(self, aName, aPort):
+        if aName in self.mOutputsByName:
+            return False
         self.mOutputsByName[aName] = aPort
         self.mOutputs.append(aPort)
         self.mOutputNames.append(aName)
+        return True
 
     def getOutputPortByName(self, aName):
+        if not aName in self.mOutputsByName:
+            return None
         return self.mOutputsByName[aName]
 
     def getOutputPortByIndex(self, aIndex):
+        if aIndex >= len(self.mOutputs):
+            return None
         return self.mOutputs[aIndex]
     
     def hasOutputPort(self, aName):
         return aName in self.mOutputsByName
     
     def getOutputPortName(self, aIndex):
+        if aIndex >= len(self.mOutputNames):
+            return ""
         return self.mOutputNames[aIndex]
     
     def getOutputPortCount(self):
