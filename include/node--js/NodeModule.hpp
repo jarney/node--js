@@ -67,9 +67,13 @@ namespace NodeJS {
 	     */
 	    const DataType *getDataType(const std::string & name) const;
 
-	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
-
 	    void addNodeType(std::unique_ptr<NodeType> nodeType);
+
+	    void removeNodeType(std::string name);
+
+	    const NodeType *getNodeType(const std::string & name) const;
+
+	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
 
 	    bool hasNodeType(const std::string & name) const;
 	    

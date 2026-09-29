@@ -14,13 +14,49 @@ namespace NodeJS {
 	 */
 	class DataType {
 	public:
+	    /**
+	     * Creates a new data type.
+	     *
+	     * @param id Unique identifier
+	     * @param name Name which is human-readable.
+	     */
 	    DataType(std::string id, std::string name);
+	    
+	    /**
+	     * This makes a copy of a data type.  This is
+	     * needed in order to hold the DataType objects
+	     * in an STL container.
+	     */
 	    DataType(const DataType & other) = default;
+
+	    /**
+	     * It is possible to copy one data type into another.
+	     * This is important in order to allow DataType objects
+	     * to be held in STL containers.
+	     */
 	    DataType & operator=(const DataType & other) = default;
+
+	    /**
+	     * Destructor, nothing to see here.
+	     */
 	    ~DataType() = default;
+
+	    /**
+	     * Returns the unique identifier for this data type.
+	     */
 	    const std::string & getId() const;
+
+	    /**
+	     * Returns the human-readable name for this data type.
+	     */
 	    const std::string & getName() const;
 
+	    /**
+	     * Two data types compare as equal if and only if
+	     * their unique IDs are the same.  Note that their
+	     * names are permitted to differ and still be
+	     * considered the same.
+	     */
 	    bool operator==(const DataType & other) const;
 	private:
 	    std::string mId;

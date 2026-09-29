@@ -53,6 +53,14 @@ namespace NodeJS {
 	     * node types that refer to it have alredy been destroyed.
 	     *
 	     * Node ports are immutable once created.
+	     *
+	     * @param data_type Unique ID of the data type this
+	     *                  port supports.
+	     * @param description Human-readable description of
+	     *                    this port, for instance, the parameter name.
+	     * @param policy This indicates whether only one
+	     *               connection is permitted or whether
+	     *               multiple connections can be supported.
 	     */
 	    NodePort(std::string data_type, std::string description, ConnectionPolicy policy);
 

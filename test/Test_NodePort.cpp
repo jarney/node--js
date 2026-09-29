@@ -1,7 +1,6 @@
 #include <catch2/catch_all.hpp>
 
-#include "node--js/NodeType.hpp"
-#include "node--js/NodeModule.hpp"
+#include "node--js/NodePort.hpp"
 
 using namespace NodeJS::core;
 

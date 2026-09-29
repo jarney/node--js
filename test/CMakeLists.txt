@@ -4,6 +4,9 @@ find_package(Catch2 3 QUIET)
 set(TEST_SOURCES
     Test_test.cpp
     Test_NodePort.cpp
+    Test_DataType.cpp
+    Test_NodeType.cpp
+    Test_NodeModule.cpp
     )
 
 add_executable(nodejs_tests ${TEST_SOURCES})

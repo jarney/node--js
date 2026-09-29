@@ -55,17 +55,34 @@ NodeModule::getDataType(const std::string & name) const
     }
     return it->second.get();
 }
+
 /////////////////////////////////////
+void
+NodeModule::addNodeType(std::unique_ptr<NodeType> nodeType)
+{
+    mNodeTypes.insert(std::make_pair(nodeType->getId(), std::move(nodeType)));
+}
+
+void
+NodeModule::removeNodeType(std::string name)
+{
+    mNodeTypes.erase(name);
+}
+
+const NodeType *
+NodeModule::getNodeType(const std::string & name) const
+{
+    const auto & it = mNodeTypes.find(name);
+    if (it == mNodeTypes.end()) {
+	return nullptr;
+    }
+    return it->second.get();
+}
 
 const
 std::map<std::string, std::unique_ptr<NodeType>> &
 NodeModule::getNodeTypes() const
 {
     return mNodeTypes;
-}
-void
-NodeModule::addNodeType(std::unique_ptr<NodeType> nodeType)
-{
-    mNodeTypes.insert(std::make_pair(nodeType->getId(), std::move(nodeType)));
 }
 
