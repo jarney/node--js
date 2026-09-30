@@ -2,6 +2,7 @@
 find_package(Catch2 3 QUIET)
 
 set(TEST_SOURCES
+    main.cpp
     Test_test.cpp
     Test_NodePort.cpp
     Test_DataType.cpp
@@ -20,12 +21,12 @@ target_include_directories(nodejs_tests
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>
 )
 
-target_link_libraries(nodejs_tests PRIVATE NodeJS Catch2::Catch2WithMain)
+target_link_libraries(nodejs_tests PRIVATE NodeJS Catch2::Catch2)
 
 add_test(
   NAME test_nodes
   COMMAND
-    $<TARGET_FILE:nodejs_tests>
+    <TARGET_FILE:nodejs_tests> someplace
 )
 
 #########################

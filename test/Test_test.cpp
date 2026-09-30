@@ -29,6 +29,7 @@ TEST_CASE("Node Type preserves ID", "[NodeJS][NodeType]")
     
     fprintf(stderr, "Doing some testing\n");
 }
+
 TEST_CASE("Node Type Input Ports", "[NodeJS][NodeType]")
 {
     NodeType nodeType;
