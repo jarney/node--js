@@ -1,12 +1,16 @@
 #pragma once
 
 #include "node--js/NodeModule.hpp"
+#include "node--js/SerializerError.hpp"
 #include <istream>
 #include <ostream>
 
 namespace NodeJS {
     namespace core {
 
+
+	class SerializerSerializerErrorReporter;
+	
         /**
          * This is the base class for serializing node programs
          * to various formats.  This is typically implemented
@@ -30,7 +34,7 @@ namespace NodeJS {
 	    virtual bool write(
 		const NodeJS::core::NodeModule &node_module,
 		std::ostream & output_stream,
-		std::ostream & error_stream
+		SerializerErrorReporter & error_reporter
 		) const = 0;
 
 	    /**
@@ -45,9 +49,9 @@ namespace NodeJS {
 	    virtual bool read(
 		NodeJS::core::NodeModule & node_module,
 		std::istream & input_stream,
-		std::ostream & error_stream
+		SerializerErrorReporter & error_reporter
 		) const = 0;
 	};
-	
+
     } // End core
 } // End NodeJS

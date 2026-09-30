@@ -28,7 +28,7 @@ set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default 
 option(BUILD_TESTING "Build tests" ON)
 option(BUILD_PYTHON "Python Module" OFF)
 option(BUILD_EXAMPLES "Build Examples" ON)
-option(BUILD_DOCS "Build Documentation" ON)
+option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DEBUG_POSTFIX_D "Append d suffix to debug libraries" OFF)
 option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
@@ -54,6 +54,7 @@ set(CPP_SOURCE_FILES
   src/NodePort.cpp
   src/NodeModule.cpp
   src/ConnectionData.cpp
+  src/SerializerError.cpp
   src/xml/Serializer.cpp
   src/xml/XmlNodeWrapper.cpp
 )

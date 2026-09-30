@@ -259,7 +259,11 @@ writeNodeTypes(const NodeModule & node_module, XmlNodeWrapper root)
 }
 
 bool
-Serializer::write(const NodeModule & node_module, std::ostream & output_stream, std::ostream & err) const
+Serializer::write(
+    const NodeModule & node_module,
+    std::ostream & output_stream,
+    NodeJS::core::SerializerErrorReporter & err
+    ) const
 {
     xmlDocPtr doc;
     doc = xmlNewDoc(BAD_CAST "1.0");
@@ -289,16 +293,20 @@ Serializer::write(const NodeModule & node_module, std::ostream & output_stream, 
 }
 
 bool
-Serializer::read(NodeModule & node_module, std::istream & input_stream, std::ostream & err) const
+Serializer::read(
+    NodeModule & node_module,
+    std::istream & input_stream,
+    NodeJS::core::SerializerErrorReporter & err
+    ) const
 {
     fprintf(stderr, "Starting read\n");
     xmlDocPtr doc; /* the resulting document tree */
 
     std::string json_string(std::istreambuf_iterator<char>(input_stream), {});
 
-    doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", 0);
+    doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
     if (doc == nullptr) {
-        err << "Failed to parse xml document" << std::endl;
+        err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
 	return false;
     }
 

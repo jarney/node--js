@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "node--js/xml/Serializer.hpp"
+#include "node--js/SerializerError.hpp"
 #include "TestData.h"
 
 using namespace NodeJS::core;
@@ -14,17 +15,57 @@ TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
     const auto & ser = ::NodeJS::xml::Serializer::instance();
 
     std::ifstream in(testFilename("Test-Serializer-Basic.xml"));
+
+    SerializerErrorReporterStream err(std::cerr);
     
     NodeModule nodeModule;
     bool rc = ser.read(
 	nodeModule,
 	in,
-	std::cerr);
+	err);
     CHECK(rc);
 
     rc = ser.write(
 	nodeModule,
 	std::cout,
-	std::cerr);
+	err);
     CHECK(rc);
+
+}
+
+TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
+{
+    const auto & ser = ::NodeJS::xml::Serializer::instance();
+
+    std::ifstream in(testFilename("Test-xml-Serializer-parse-error.xml"));
+
+    SerializerErrorReporterByCode err;
+    NodeModule nodeModule;
+    bool rc = ser.read(
+	nodeModule,
+	in,
+	err);
+    CHECK(!rc);
+    CHECK(err.size() == 1);
+    CHECK(err.getErrors(::NodeJS::xml::Serializer::ERROR_XML_PARSE).size() == 1);
+
+}
+
+TEST_CASE("xml::Serializer xml parse error with stream reporting", "[NodeJS][xml][Serializer]")
+{
+    const auto & ser = ::NodeJS::xml::Serializer::instance();
+
+    std::ifstream in(testFilename("Test-xml-Serializer-parse-error.xml"));
+
+    std::ostringstream ostring;
+    SerializerErrorReporterStream err(ostring);
+    NodeModule nodeModule;
+    bool rc = ser.read(
+	nodeModule,
+	in,
+	err);
+    CHECK(!rc);
+
+    std::string ostr = ostring.str();
+    CHECK(ostr.find("Failed to parse xml document") != std::string::npos);
 }

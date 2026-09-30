@@ -39,7 +39,7 @@ namespace NodeJS {
 	    bool write(
 		const NodeJS::core::NodeModule &program,
 		std::ostream & output_stream,
-		std::ostream & err
+		NodeJS::core::SerializerErrorReporter & error_reporter
 		) const override;
 	    /**
 	     * Reads the input stream and fills in the (assumed empty)
@@ -48,8 +48,11 @@ namespace NodeJS {
 	    bool read(
 		NodeJS::core::NodeModule & program,
 		std::istream & input_stream,
-		std::ostream & err
+		NodeJS::core::SerializerErrorReporter & error_reporter
 		) const override;
+
+	    static const unsigned long ERROR_XML_PARSE = 1;
+	    
 	};
     }
 }
