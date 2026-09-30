@@ -9,6 +9,7 @@ fi
 mkdir -p ${CMAKE_BUILD_DIRECTORY}/gcov
 
 gcovr \
-     --exclude 'test/.*.cpp' \
+    --exclude 'test/.*.cpp' \
+    --exclude 'src/main.cpp' \
      --html ${CMAKE_BUILD_DIRECTORY}/gcov/report.html \
      --html-details

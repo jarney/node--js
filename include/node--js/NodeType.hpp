@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <memory>
 
 #include "node--js/NodePort.hpp"
 
@@ -22,6 +23,8 @@ namespace NodeJS {
 	 * which may carry data.  Each input and output port are
 	 * associated with a data type.
 	 */
+	typedef std::string PortId;
+	
 	class NodeType {
 	public:
 
@@ -64,8 +67,8 @@ namespace NodeJS {
 	    NodeType() = default;
 	    ~NodeType() = default;
 
-	    const std::string & getId() const;
-	    void setId(std::string id);
+	    const PortId & getId() const;
+	    void setId(PortId id);
 	    
 	    
 	    /**

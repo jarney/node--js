@@ -53,6 +53,8 @@ set(CPP_SOURCE_FILES
   src/NodeType.cpp
   src/NodePort.cpp
   src/NodeModule.cpp
+  src/Node.cpp
+  src/NodeGraph.cpp
   src/ConnectionData.cpp
   src/SerializerError.cpp
   src/xml/Serializer.cpp
