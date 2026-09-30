@@ -19,11 +19,6 @@ XmlNodeWrapper::end()
     return Iterator(nullptr);
 }
 
-XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node)
-    : _node(node)
-    , _is_owning(true)
-{}
-
 XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node, bool is_owning)
     : _node(node)
     , _is_owning(is_owning)

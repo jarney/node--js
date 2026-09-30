@@ -8,25 +8,23 @@ set(TEST_SOURCES
     Test_DataType.cpp
     Test_NodeType.cpp
     Test_NodeModule.cpp
+    Test_xml_Serializer.cpp
     )
 
-add_executable(nodejs_tests ${TEST_SOURCES})
+add_executable(nodejs_core_tests ${TEST_SOURCES})
 
-target_include_directories(nodejs_tests
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>
+target_include_directories(nodejs_core_tests
   PRIVATE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/test/>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>
 )
 
-target_link_libraries(nodejs_tests PRIVATE NodeJS Catch2::Catch2)
+target_link_libraries(nodejs_core_tests PRIVATE NodeJS Catch2::Catch2)
 
 add_test(
-  NAME test_nodes
+  NAME nodejs_core_tests
   COMMAND
-    <TARGET_FILE:nodejs_tests> someplace
+    $<TARGET_FILE:nodejs_core_tests> --data-directory ${PROJECT_SOURCE_DIR}/test-data/
 )
 
 #########################

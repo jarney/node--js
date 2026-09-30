@@ -41,7 +41,6 @@ public:
 	pointer m_node;
     };
 
-    XmlNodeWrapper(xmlNodePtr node);
     XmlNodeWrapper(xmlNodePtr node, bool is_owning);
     XmlNodeWrapper(std::string elementName);
     XmlNodeWrapper(const XmlNodeWrapper & other);
