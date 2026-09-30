@@ -16,10 +16,11 @@ namespace NodeJS {
 	class Connection {
 	public:
 	    NodeId fromNode;
-	    PortId fromPortId;
+	    PortId fromPort;
 	    NodeId toNode;
-	    PortId toPortId;
-	    bool operator==(const Connection & other);
+	    PortId toPort;
+	    bool operator==(const Connection & other) const;
+	    bool operator!=(const Connection & other) const;
 	};
 	
     }

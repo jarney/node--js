@@ -9,6 +9,7 @@ set(TEST_SOURCES
     Test_NodeType.cpp
     Test_NodeModule.cpp
     Test_NodeGraph.cpp
+    Test_Connection.cpp
     Test_ConnectionData.cpp
     Test_xml_Serializer.cpp
     )

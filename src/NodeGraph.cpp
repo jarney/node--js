@@ -57,3 +57,16 @@ NodeGraph::hasNode(NodeId aNodeId) const
     }
     return true;
 }
+
+std::optional<ConnectionId>
+NodeGraph::newConnection(
+    NodeId aFromNode,
+    PortId aFromPort,
+    NodeId aToNode,
+    PortId aToPort
+    )
+{
+    std::optional<ConnectionId> ret;
+    
+    return ret;
+}

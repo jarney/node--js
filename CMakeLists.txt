@@ -49,6 +49,7 @@ endif()
 
 set(CPP_SOURCE_FILES
   src/main.cpp
+  src/Connection.cpp
   src/DataType.cpp
   src/NodeType.cpp
   src/NodePort.cpp
