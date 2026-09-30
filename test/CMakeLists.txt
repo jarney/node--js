@@ -32,8 +32,22 @@ add_test(
 # Code coverage report
 #########################
 if (BUILD_CODE_COVERAGE)
-    add_custom_target(gcov-report
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/gcov-report.sh ${PROJECT_BINARY_DIR}
-    )
+    find_program(GCOV_BIN gcov HINTS ${COMPILER_PATH})
+    find_program(GCOVR_BIN gcovr HINTS ${COMPILER_PATH})
+    if (NOT GCOV_BIN)
+        message("Code coverage was asked for, but we could not find gcov")
+    endif()
+    if (NOT GCOVR_BIN)
+        message("Code coverage was asked for, but we could not find gcovr")
+    endif()
+
+    if (GCOV_BIN AND GCOVR_BIN)
+        add_custom_target(gcov-report
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/gcov-report.sh ${PROJECT_BINARY_DIR}
+        )
+    else()
+        message("Code coverage was asked for, but we don't have the dependencies to make it happen")
+    endif()
 endif()
+

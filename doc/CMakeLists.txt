@@ -1,6 +1,8 @@
 
+find_program(DOT_BIN dot)
 find_package(Doxygen)
-if (DOXYGEN_FOUND)
+
+if (DOXYGEN_FOUND AND DOT_BIN)
     # set input and output files
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
     set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
@@ -16,8 +18,8 @@ if (DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM )
-else (DOXYGEN_FOUND)
-  message("Doxygen need to be installed to generate the doxygen documentation")
-endif (DOXYGEN_FOUND)
+else ()
+  message("Doxygen and 'dot' (graphviz) need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND AND DOT_BIN)
 
 
