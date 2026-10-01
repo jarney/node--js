@@ -1,7 +1,7 @@
 import pytest
 
-from node2.NodeType import NodeType
-from node2.NodePort import NodePort
+from nodejs.NodeType import NodeType
+from nodejs.NodePort import NodePort
 
 def test_NodeType_empty():
     nodeType = NodeType()

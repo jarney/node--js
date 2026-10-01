@@ -52,7 +52,7 @@ namespace NodeJS {
 	    const std::map<std::string, std::string> & getData() const;
 	    
 	private:
-	    std::map<std::string, std::string> _data;
+	    std::map<std::string, std::string> mData;
 	};
 
     } // End core

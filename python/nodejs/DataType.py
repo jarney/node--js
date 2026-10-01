@@ -28,3 +28,6 @@ class DataType:
         the same ID.
         """
         return a.mId == b.mId
+
+    def __ne__(a,b):
+        return not (a == b)

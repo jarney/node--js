@@ -6,20 +6,20 @@ ConnectionData::ConnectionData()
 {}
 
 ConnectionData::ConnectionData(const ConnectionData & other)
-    : _data(other._data)
+    : mData(other.mData)
 {}
 
 void
 ConnectionData::setValue(std::string key, std::string value)
 {
-    _data[key] = value;
+    mData[key] = value;
 }
 
 std::string
 ConnectionData::getValue(std::string key, std::string default_value) const
 {
-    const auto it = _data.find(key);
-    if (it == _data.end()) {
+    const auto it = mData.find(key);
+    if (it == mData.end()) {
 	return default_value;
     }
     return it->second;
@@ -33,8 +33,8 @@ ConnectionData::getValue(std::string key) const
 bool
 ConnectionData::hasValue(std::string key) const
 {
-    const auto it = _data.find(key);
-    if (it == _data.end()) {
+    const auto it = mData.find(key);
+    if (it == mData.end()) {
 	return false;
     }
     return true;
@@ -43,6 +43,6 @@ ConnectionData::hasValue(std::string key) const
 const std::map<std::string, std::string> &
 ConnectionData::getData() const
 {
-    return _data;
+    return mData;
 }
 

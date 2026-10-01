@@ -14,10 +14,10 @@ fi
 . ${CMAKE_BINARY_DIR}/python/venv/bin/activate
 
 # Build the main package
-pip install -r requirements.txt
+#pip install -r requirements.txt
 
 # Build the developer stuff
-pip install -r requirements-dev.txt
+#pip install -r requirements-dev.txt
 
 # Run the unit-tests
 coverage run -m pytest
