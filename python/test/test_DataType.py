@@ -1,6 +1,6 @@
 import pytest
 
-from ..DataType import DataType
+from node2.DataType import DataType
 
 def test_DataType_equality():
     dataType1 = DataType("int", "Integer");

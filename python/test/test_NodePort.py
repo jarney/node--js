@@ -1,6 +1,6 @@
 import pytest
 
-from ..NodePort import NodePort
+from node2.NodePort import NodePort
 
 DATA_TYPE = "variable"
 DESCRIPTION = "Input A"

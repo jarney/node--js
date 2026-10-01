@@ -1,7 +1,7 @@
 import pytest
 
-from ..xml import *
-from ..NodeModule import NodeModule
+from node2.xml import *
+from node2.NodeModule import NodeModule
 import sys
 
 def test_serializer():
