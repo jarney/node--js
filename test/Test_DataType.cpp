@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("DataType equality", "[NodeJS][DataType]")
+TEST_CASE("DataType equality", "[NodeJS][core][DataType]")
 {
     DataType dataType1("int", "Integer");
     DataType dataType2("int", "Another integer");
@@ -17,7 +17,7 @@ TEST_CASE("DataType equality", "[NodeJS][DataType]")
     
 }
 
-TEST_CASE("DataType copy", "[NodeJS][DataType]")
+TEST_CASE("DataType copy", "[NodeJS][core][DataType]")
 {
     DataType dataType1("int", "Integer");
     DataType dataType2(dataType1);
@@ -30,7 +30,7 @@ TEST_CASE("DataType copy", "[NodeJS][DataType]")
     
 }
 
-TEST_CASE("DataType assign", "[NodeJS][DataType]")
+TEST_CASE("DataType assign", "[NodeJS][core][DataType]")
 {
     DataType dataType1("int", "Integer");
     DataType dataType2("float", "Float");

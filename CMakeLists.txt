@@ -62,6 +62,7 @@ set(CPP_SOURCE_FILES
   src/NodeGraph.cpp
   src/ConnectionData.cpp
   src/SerializerError.cpp
+  src/Validator.cpp
   src/xml/Serializer.cpp
   src/xml/XmlNodeWrapper.cpp
 )

@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("Connection equality", "[NodeJS][Connection]")
+TEST_CASE("Connection equality", "[NodeJS][core][Connection]")
 {
     Connection conn0{"n0", "p0", "n1", "p1"};
     // Only one way that they can be the same.

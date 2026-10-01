@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("NodeType empty", "[NodeJS][NodeType]")
+TEST_CASE("NodeType empty", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
 
@@ -23,7 +23,7 @@ TEST_CASE("NodeType empty", "[NodeJS][NodeType]")
 }
 
 
-TEST_CASE("NodeType some ports", "[NodeJS][NodeType]")
+TEST_CASE("NodeType some ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
     nodeType.setId("add");
@@ -59,7 +59,7 @@ TEST_CASE("NodeType some ports", "[NodeJS][NodeType]")
     CHECK(nodeType.getOutputPortByIndex(1) == nullptr);
 }
 
-TEST_CASE("NodeType unique input ports", "[NodeJS][NodeType]")
+TEST_CASE("NodeType unique input ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
     bool rc1 = nodeType.addInputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
@@ -73,7 +73,7 @@ TEST_CASE("NodeType unique input ports", "[NodeJS][NodeType]")
     CHECK(nodeType.getInputPortByName("first")->getDescription() == "First Argument");
 }
 
-TEST_CASE("NodeType unique output ports", "[NodeJS][NodeType]")
+TEST_CASE("NodeType unique output ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
     bool rc1 = nodeType.addOutputPort("first", std::make_unique<NodePort>("variable", "First Argument"));

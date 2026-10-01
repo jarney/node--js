@@ -5,7 +5,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("NodeModule main", "[NodeJS][NodeModule]")
+TEST_CASE("NodeModule main", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
     nodeModule.addDataType(std::make_unique<DataType>("abc", "def"));
@@ -20,7 +20,7 @@ TEST_CASE("NodeModule main", "[NodeJS][NodeModule]")
     
 }
 
-TEST_CASE("Node Type preserves ID", "[NodeJS][NodeType]")
+TEST_CASE("Node Type preserves ID", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
 
@@ -30,7 +30,7 @@ TEST_CASE("Node Type preserves ID", "[NodeJS][NodeType]")
     fprintf(stderr, "Doing some testing\n");
 }
 
-TEST_CASE("Node Type Input Ports", "[NodeJS][NodeType]")
+TEST_CASE("Node Type Input Ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
     nodeType.addInputPort("input0", std::make_unique<NodePort>("abc", "Something Wild", NodePort::ConnectionPolicy::One));

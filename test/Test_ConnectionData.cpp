@@ -4,12 +4,12 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("ConnectionData basics", "[NodeJS][ConnectionData]")
+TEST_CASE("ConnectionData basics", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 }
 
-TEST_CASE("ConnectionData default values", "[NodeJS][ConnectionData]")
+TEST_CASE("ConnectionData default values", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 
@@ -22,7 +22,7 @@ TEST_CASE("ConnectionData default values", "[NodeJS][ConnectionData]")
     CHECK(cd.getValue("unknown-value") == "");
 }
 
-TEST_CASE("ConnectionData actual values", "[NodeJS][ConnectionData]")
+TEST_CASE("ConnectionData actual values", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 
@@ -34,7 +34,7 @@ TEST_CASE("ConnectionData actual values", "[NodeJS][ConnectionData]")
 
 }
 
-TEST_CASE("ConnectionData copy", "[NodeJS][ConnectionData]")
+TEST_CASE("ConnectionData copy", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
     // If we actually have a value, make sure it works.

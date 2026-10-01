@@ -5,7 +5,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("Node Module package id", "[NodeJS][NodeModule]")
+TEST_CASE("Node Module package id", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
 
@@ -14,7 +14,7 @@ TEST_CASE("Node Module package id", "[NodeJS][NodeModule]")
     CHECK(nodeModule.getPackage() == "simple.package.name");
 }
 
-TEST_CASE("NodeModule single type", "[NodeJS][NodeModule]")
+TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
     
@@ -38,7 +38,7 @@ TEST_CASE("NodeModule single type", "[NodeJS][NodeModule]")
     CHECK(!nodeModule.hasNodeType("add"));
 }
 
-TEST_CASE("NodeModule Iterator", "[NodeJS][NodeModule]")
+TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
     
@@ -56,7 +56,7 @@ TEST_CASE("NodeModule Iterator", "[NodeJS][NodeModule]")
     CHECK(i == 1);
 }
 
-TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][NodeModule]")
+TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
 
@@ -73,7 +73,7 @@ TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][NodeModule]")
     
 }
 
-TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][NodeModule]")
+TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][core][NodeModule]")
 {
     NodeModule nodeModule;
     

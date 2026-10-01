@@ -11,6 +11,7 @@ set(TEST_SOURCES
     Test_NodeGraph.cpp
     Test_Connection.cpp
     Test_ConnectionData.cpp
+    Test_Validator.cpp
     Test_xml_Serializer.cpp
     Test_xml_XmlNodeWrapper.cpp
     )

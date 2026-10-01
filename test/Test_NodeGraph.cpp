@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("NodeGraph create node", "[NodeJS][NodeGraph]")
+TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph]")
 {
 
     NodeGraph graph;
@@ -26,7 +26,7 @@ TEST_CASE("NodeGraph create node", "[NodeJS][NodeGraph]")
 
 }
 
-TEST_CASE("NodeGraph registered node type", "[NodeJS][NodeGraph]")
+TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph]")
 {
 
     NodeGraph graph;
@@ -45,7 +45,7 @@ TEST_CASE("NodeGraph registered node type", "[NodeJS][NodeGraph]")
     CHECK(&createdNode.getGraph() == &graph);
 }
 
-TEST_CASE("NodeGraph copied data", "[NodeJS][NodeGraph]")
+TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph]")
 {
 
     NodeGraph graph;
@@ -70,7 +70,7 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][NodeGraph]")
     CHECK(nodeData.hasValue("runtime-for-initializer"));
 }
 
-TEST_CASE("NodeGraph node existence", "[NodeJS][NodeGraph]")
+TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph]")
 {
     NodeGraph graph;
     ConnectionData nodeData;
