@@ -15,12 +15,21 @@ namespace NodeJS {
 	
 	class Connection {
 	public:
+	    Connection(
+		NodeId aFromNode,
+		PortId aFromPort,
+		NodeId aToNode,
+		PortId aToPort
+		);
+	    ~Connection() = default;
+	    
 	    NodeId fromNode;
 	    PortId fromPort;
 	    NodeId toNode;
 	    PortId toPort;
 	    bool operator==(const Connection & other) const;
 	    bool operator!=(const Connection & other) const;
+	    ConnectionId getId() const;
 	};
 	
     }

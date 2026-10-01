@@ -10,6 +10,7 @@
 using namespace NodeJS::xml;
 
 using NodeJS::core::Node;
+using NodeJS::core::ConnectionId;
 using NodeJS::core::NodePort;
 using NodeJS::core::NodeType;
 using NodeJS::core::NodeModule;
@@ -371,19 +372,62 @@ static void
 readGraphNodes(
     NodeModule & node_module,
     NodeGraph & node_graph,
-    XmlNodeWrapper graphNode,
+    XmlNodeWrapper nodesNode,
     NodeJS::core::SerializerErrorReporter & err
     )
 {
-    for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
+    for (XmlNodeWrapper::Iterator it = nodesNode.begin(); it != nodesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("node")) {
 	    readGraphNode(node_module, node_graph, child, err);
 	}
     }
-
 }
+
+static void
+readGraphEdge(
+    NodeModule & node_module,
+    NodeGraph & node_graph,
+    XmlNodeWrapper edgeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    std::string fromNode = edgeNode.getAttribute("from-node");
+    std::string toNode = edgeNode.getAttribute("to-node");
+    std::string fromPort = edgeNode.getAttribute("from-port");
+    std::string toPort = edgeNode.getAttribute("to-port");
+
+    std::optional<ConnectionId> connection = 
+	node_graph.newEdge(
+	    fromNode, fromPort,
+	    toNode, toPort
+	    );
+
+    if (!connection.has_value()) {
+	err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Duplicate graph edge");
+	return;
+    }
+}
+
+static void
+readGraphEdges(
+    NodeModule & node_module,
+    NodeGraph & node_graph,
+    XmlNodeWrapper nodesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = nodesNode.begin(); it != nodesNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("edge")) {
+	    fprintf(stderr, "Reading edge\n");
+	    readGraphEdge(node_module, node_graph, child, err);
+	}
+    }
+}
+
 
 static void
 readGraph(
@@ -395,17 +439,32 @@ readGraph(
     std::unique_ptr<NodeGraph> graph = std::make_unique<NodeGraph>();
     std::string id = graphNode.getAttribute("id");
 
+    // Scopes must be read first because
+    // we may need to resolve node types
+    // using the scope if they are externally
+    // defined.  How will we deal with this
+    // if we need to recursively load?
     for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("scope")) {
 	    //readGraphScope();
 	}
-	else if (childName == std::string("nodes")) {
+    }
+    
+    // All nodes must be read before any edges
+    for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("nodes")) {
 	    readGraphNodes(node_module, *graph.get(), child, err);
 	}
-	else if (childName == std::string("edges")) {
-	    //readGraphEdges();
+    }
+    for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("edges")) {
+	    readGraphEdges(node_module, *graph.get(), child, err);
 	}
     }    
     node_module.addGraph(id, std::move(graph));
@@ -468,7 +527,24 @@ writeGraphNodes(
     
 }
     
-		
+static void
+writeGraphEdges(
+    const NodeGraph & graph,
+    XmlNodeWrapper edgesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (const auto & it : graph.getEdges()) {
+	XmlNodeWrapper edgeNode("edge");
+
+	edgeNode.setAttribute("from-node", it.second->fromNode);
+	edgeNode.setAttribute("from-port", it.second->fromPort);
+	edgeNode.setAttribute("to-node", it.second->toNode);
+	edgeNode.setAttribute("to-port", it.second->toPort);
+	
+	edgesNode.addChild(edgeNode);
+    }
+}
 
 static void
 writeGraph(
@@ -489,6 +565,7 @@ writeGraph(
     graphNode.addChild(nodesNode);
 
     XmlNodeWrapper edgesNode("edges");
+    writeGraphEdges(graph, edgesNode, err);
     graphNode.addChild(edgesNode);
 
     graphsNode.addChild(graphNode);

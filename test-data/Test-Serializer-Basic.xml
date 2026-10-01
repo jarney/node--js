@@ -93,6 +93,7 @@
       </nodes>
       <edges>
 	<edge from-node="x" from-port="value" to-node="sphere" to-port="r"/>
+	<edge from-node="x" from-port="value" to-node="sphere" to-port="r"/>
       </edges>
     </graph>
   </graphs>
