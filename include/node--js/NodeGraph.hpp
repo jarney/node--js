@@ -76,6 +76,8 @@ namespace NodeJS {
 	     */
 	    std::vector<const Connection*> getConnectionsTo(NodeId aNodeId) const;
 
+	    const std::vector<Connection*> & getConnetions() const;
+	    
 	private:
 
 	    std::string findNewNodeId(std::string aNodeIdCandidate);
@@ -84,8 +86,9 @@ namespace NodeJS {
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
 	    
 	    std::map<ConnectionId, Connection> mEdges;
-	    std::map<NodeId, std::vector<Connection*>> mConnectionsByFromNode;
-	    std::map<NodeId, std::vector<Connection*>> mConnectionsByToNode;
+//	    std::vector<const Connection*> mEdges;
+	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByFromNode;
+	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByToNode;
 	};
     }
 }

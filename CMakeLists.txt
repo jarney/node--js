@@ -25,13 +25,17 @@ endif()
 
 set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default settings for development of NodeJS")
 
-option(BUILD_TESTING "Build tests" ON)
-option(BUILD_PYTHON "Python Module" OFF)
 option(BUILD_EXAMPLES "Build Examples" ON)
 option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DEBUG_POSTFIX_D "Append d suffix to debug libraries" OFF)
+
+option(BUILD_TESTING "Build tests" ON)
 option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
+option(BUILD_MEMCHECK "Valgrind Memory Check" ON)
+
+option(BUILD_PYTHON "Python Module" OFF)
+
 
 if(QT_NODES_DEVELOPER_DEFAULTS)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -159,6 +163,13 @@ if(BUILD_TESTING)
   message("Enabling unit-testing")
   enable_testing()
   add_subdirectory(test)
+else()
+  if (BUILD_CODE_COVERAGE)
+      message("Code coverage was enabled, but unit tests were not built")
+  endif()
+  if (BUILD_MEMCHECK)
+      message("Valgrind memcheck was enabled, but unit tests were not built")
+  endif()
 endif()
 
 

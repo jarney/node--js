@@ -44,12 +44,28 @@ if (BUILD_CODE_COVERAGE)
     endif()
 
     if (GCOV_BIN AND GCOVR_BIN)
-        add_custom_target(gcov-report
+        add_custom_target(code-coverage
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-            COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/gcov-report.sh ${PROJECT_BINARY_DIR}
+            COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/code-coverage.sh ${PROJECT_BINARY_DIR}
         )
     else()
         message("Code coverage was asked for, but we don't have the dependencies to make it happen")
     endif()
 endif()
 
+if (BUILD_MEMCHECK)
+    message("Enabling memory checking with valgrind")
+    find_program(VALGRIND_BIN valgrind HINTS ${COMPILER_PATH})
+    if (VALGRIND_BIN)
+        add_custom_target(memcheck
+	    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+	    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/memcheck.sh
+	        ${VALGRIND_BIN}
+		${PROJECT_BINARY_DIR}/test/nodejs_core_tests
+		${PROJECT_SOURCE_DIR}/test-data/
+		${PROJECT_BINARY_DIR}/memcheck.log
+        )
+    else()
+        message("Valgrind not found, so we cannot do memory checks")
+    endif()
+endif()
