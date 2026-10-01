@@ -9,10 +9,13 @@
 
 using namespace NodeJS::xml;
 
+using NodeJS::core::Node;
 using NodeJS::core::NodePort;
 using NodeJS::core::NodeType;
 using NodeJS::core::NodeModule;
 using NodeJS::core::DataType;
+using NodeJS::core::NodeGraph;
+using NodeJS::core::ConnectionData;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
@@ -24,7 +27,11 @@ Serializer::instance()
 }
 
 static void
-readDataType(NodeModule & node_module, XmlNodeWrapper node)
+readDataType(
+    NodeModule & node_module,
+    XmlNodeWrapper node,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     std::string id = node.getAttribute("id");
     std::string name = node.getAttribute("name");
@@ -33,7 +40,11 @@ readDataType(NodeModule & node_module, XmlNodeWrapper node)
 }
 
 static void
-writeDataType(const std::string & id, const DataType & data_type, XmlNodeWrapper dataTypesNode)
+writeDataType(
+    const std::string & id,
+    const DataType & data_type, XmlNodeWrapper dataTypesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     XmlNodeWrapper node("data-type");
     node.setAttribute("id", id);
@@ -42,30 +53,42 @@ writeDataType(const std::string & id, const DataType & data_type, XmlNodeWrapper
 }
 
 static void
-readDataTypes(NodeModule & node_module, XmlNodeWrapper dataTypesNode)
+readDataTypes(
+    NodeModule & node_module,
+    XmlNodeWrapper dataTypesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     for (XmlNodeWrapper::Iterator it = dataTypesNode.begin(); it != dataTypesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	if (child.getName() != std::string("data-type")) {
 	    continue;
 	}
-	readDataType(node_module, child);
+	readDataType(node_module, child, err);
     }
 }
 
 static void
-writeDataTypes(const NodeModule & node_module, XmlNodeWrapper root)
+writeDataTypes(
+    const NodeModule & node_module,
+    XmlNodeWrapper root,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     XmlNodeWrapper dataTypesNode("data-types");
     for (const auto & it : node_module.getDataTypes()) {
-	writeDataType(it.first, *it.second.get(), dataTypesNode);
+	writeDataType(it.first, *it.second.get(), dataTypesNode, err);
     }
     
     root.addChild(dataTypesNode);
 }
 
 static void
-readPackage(NodeModule & node_module, XmlNodeWrapper packageNode)
+readPackage(
+    NodeModule & node_module,
+    XmlNodeWrapper packageNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     if (packageNode.hasAttribute("id")) {
 	std::string id = packageNode.getAttribute("id");
@@ -74,7 +97,11 @@ readPackage(NodeModule & node_module, XmlNodeWrapper packageNode)
 }
 
 static void
-writePackage(const NodeModule & node_module, XmlNodeWrapper root)
+writePackage(
+    const NodeModule & node_module,
+    XmlNodeWrapper root,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     XmlNodeWrapper package("package");
     package.setAttribute("id", node_module.getPackage());
@@ -82,7 +109,11 @@ writePackage(const NodeModule & node_module, XmlNodeWrapper root)
 }
 
 static void
-readInputs(NodeType & node_type, XmlNodeWrapper inputsNode)
+readInputs(
+    NodeType & node_type,
+    XmlNodeWrapper inputsNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     for (XmlNodeWrapper::Iterator it = inputsNode.begin(); it != inputsNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
@@ -106,7 +137,11 @@ readInputs(NodeType & node_type, XmlNodeWrapper inputsNode)
 }
 
 static void
-readOutputs(NodeType & node_type, XmlNodeWrapper outputsNode)
+readOutputs(
+    NodeType & node_type,
+    XmlNodeWrapper outputsNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     for (XmlNodeWrapper::Iterator it = outputsNode.begin(); it != outputsNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
@@ -130,7 +165,11 @@ readOutputs(NodeType & node_type, XmlNodeWrapper outputsNode)
 }
 
 static void
-readNodeType(NodeModule & node_module, XmlNodeWrapper nodeTypeNode)
+readNodeType(
+    NodeModule & node_module,
+    XmlNodeWrapper nodeTypeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     NodeType::Visibility visibility = NodeType::Visibility::PRIVATE;
     if (nodeTypeNode.hasAttribute("visibility")) {
@@ -157,10 +196,10 @@ readNodeType(NodeModule & node_module, XmlNodeWrapper nodeTypeNode)
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
 	if (tagName == "inputs") {
-	    readInputs(*nodeType.get(), child);
+	    readInputs(*nodeType.get(), child, err);
 	}
 	else if (tagName == "outputs") {
-	    readOutputs(*nodeType.get(), child);
+	    readOutputs(*nodeType.get(), child, err);
 	}
 	else {
 	    // Nothing to do, this is extraneous.
@@ -172,7 +211,11 @@ readNodeType(NodeModule & node_module, XmlNodeWrapper nodeTypeNode)
 }
 
 static void
-writeInputs(const NodeType & node_type, XmlNodeWrapper inputsNode)
+writeInputs(
+    const NodeType & node_type,
+    XmlNodeWrapper inputsNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     for (int i = 0; i < node_type.getInputPortCount(); i++) {
 	std::string id = node_type.getInputPortName(i);
@@ -188,7 +231,11 @@ writeInputs(const NodeType & node_type, XmlNodeWrapper inputsNode)
 }
 
 static void
-writeOutputs(const NodeType & node_type, XmlNodeWrapper outputsNode)
+writeOutputs(
+    const NodeType & node_type,
+    XmlNodeWrapper outputsNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     for (int i = 0; i < node_type.getOutputPortCount(); i++) {
 	std::string id = node_type.getOutputPortName(i);
@@ -203,7 +250,12 @@ writeOutputs(const NodeType & node_type, XmlNodeWrapper outputsNode)
 }
 
 static void
-writeNodeType(const std::string & id, const NodeType & node_type, XmlNodeWrapper nodeTypesNode)
+writeNodeType(
+    const std::string & id,
+    const NodeType & node_type,
+    XmlNodeWrapper nodeTypesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
 {
     XmlNodeWrapper nodeType("node-type");
     nodeType.setAttribute("id", id);
@@ -221,18 +273,22 @@ writeNodeType(const std::string & id, const NodeType & node_type, XmlNodeWrapper
     }
 
     XmlNodeWrapper inputsNode("inputs");
-    writeInputs(node_type, inputsNode);
+    writeInputs(node_type, inputsNode, err);
     nodeType.addChild(inputsNode);
     
     XmlNodeWrapper outputsNode("outputs");
-    writeOutputs(node_type, outputsNode);
+    writeOutputs(node_type, outputsNode, err);
     nodeType.addChild(outputsNode);
     
     nodeTypesNode.addChild(nodeType);
 }
 
 static void
-readNodeTypes(NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
+readNodeTypes(
+    NodeModule & node_module,
+    XmlNodeWrapper nodeTypesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
@@ -244,19 +300,214 @@ readNodeTypes(NodeModule & node_module, XmlNodeWrapper nodeTypesNode)
 	    fprintf(stderr, "Invalid file: no node type id\n");
 	    continue;
 	}
-	readNodeType(node_module, child);
+	readNodeType(node_module, child, err);
     }
 }
 
 static void
-writeNodeTypes(const NodeModule & node_module, XmlNodeWrapper root)
+writeNodeTypes(
+    const NodeModule & node_module,
+    XmlNodeWrapper root,
+    NodeJS::core::SerializerErrorReporter & err
+    )    
 {
     XmlNodeWrapper nodeTypesNode("node-types");
     for (const auto & it : node_module.getNodeTypes()) {
-	writeNodeType(it.first, *it.second, nodeTypesNode);
+	writeNodeType(it.first, *it.second, nodeTypesNode, err);
     }
     root.addChild(nodeTypesNode);
 }
+
+static void
+readGraphNodeData(
+    ConnectionData & node_data,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName != std::string("value")) {
+	    continue;
+	}
+	std::string key = child.getAttribute("key");
+	std::string value = child.getContent();
+	node_data.setValue(key, value);
+    }
+}
+
+static void
+readGraphNode(
+    NodeModule & node_module,
+    NodeGraph & node_graph,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    std::string nodeTypeName = nodeNode.getAttribute("type");
+    if (!node_module.hasNodeType(nodeTypeName)) {
+	err.reportError(-99, 22, "context", std::string("Node type ") + nodeTypeName + std::string("does not exist"));
+	return;
+    }
+    const auto *nodeType = node_module.getNodeType(nodeTypeName);
+
+    std::string nodeId = nodeNode.getAttribute("id");
+
+    // Read node data.
+    //const ConnectionData & aConnectionData
+    ConnectionData node_data;
+    readGraphNodeData(node_data, nodeNode, err);
+
+    fprintf(stderr, "Creating node %s with %p\n", nodeId.c_str(), nodeType);
+    node_graph.newNode(
+	*nodeType,
+	nodeId,
+	node_data
+	);
+}
+
+static void
+readGraphNodes(
+    NodeModule & node_module,
+    NodeGraph & node_graph,
+    XmlNodeWrapper graphNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("node")) {
+	    readGraphNode(node_module, node_graph, child, err);
+	}
+    }
+
+}
+
+static void
+readGraph(
+    NodeModule & node_module,
+    XmlNodeWrapper graphNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    std::unique_ptr<NodeGraph> graph = std::make_unique<NodeGraph>();
+    std::string id = graphNode.getAttribute("id");
+
+    for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("scope")) {
+	    //readGraphScope();
+	}
+	else if (childName == std::string("nodes")) {
+	    readGraphNodes(node_module, *graph.get(), child, err);
+	}
+	else if (childName == std::string("edges")) {
+	    //readGraphEdges();
+	}
+    }    
+    node_module.addGraph(id, std::move(graph));
+}
+
+static void
+readGraphs(
+    NodeModule & node_module,
+    XmlNodeWrapper nodeTypesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string graphName = child.getName();
+	if (graphName != std::string("graph")) {
+	    continue;
+	}
+	if (!child.hasAttribute("id")) {
+	    err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Invalid file, graph without id");
+	    continue;
+	}
+	readGraph(node_module, child, err);
+    }
+}
+
+static void
+writeGraphNodeData(
+    const Node & node,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err    
+    )
+{
+    for (const auto & it : node.getData().getData()) {
+	XmlNodeWrapper valueNode("value");
+
+	valueNode.setAttribute("key", it.first);
+	valueNode.setContent(it.second);
+	
+	nodeNode.addChild(valueNode);
+    }
+}
+
+static void
+writeGraphNodes(
+    const NodeGraph & graph,
+    XmlNodeWrapper nodesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (const auto & it : graph.getNodes()) {
+	XmlNodeWrapper nodeNode("node");
+
+	nodeNode.setAttribute("id", it.first);
+	nodeNode.setAttribute("type", it.second->getType().getId());
+	writeGraphNodeData(*it.second.get(), nodeNode, err);
+	
+	nodesNode.addChild(nodeNode);
+    }
+    
+}
+    
+		
+
+static void
+writeGraph(
+    std::string id,
+    const NodeGraph & graph,
+    XmlNodeWrapper graphsNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    XmlNodeWrapper graphNode("graph");
+    graphNode.setAttribute("id", id);
+
+    XmlNodeWrapper scopeNode("scope");
+    graphNode.addChild(scopeNode);
+
+    XmlNodeWrapper nodesNode("nodes");
+    writeGraphNodes(graph, nodesNode, err);
+    graphNode.addChild(nodesNode);
+
+    XmlNodeWrapper edgesNode("edges");
+    graphNode.addChild(edgesNode);
+
+    graphsNode.addChild(graphNode);
+}
+
+static void
+writeGraphs(
+    const NodeModule & node_module,
+    XmlNodeWrapper root,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    XmlNodeWrapper graphsNode("graphs");
+    for (const auto & it : node_module.getGraphs()) {
+	writeGraph(it.first, *it.second, graphsNode, err);
+    }
+    root.addChild(graphsNode);
+}
+
 
 bool
 Serializer::write(
@@ -270,9 +521,10 @@ Serializer::write(
     XmlNodeWrapper rootNode("node-module");
     rootNode.setAttribute("xmlns", NODEJS_XML_NAMESPACE);
 
-    writePackage(node_module, rootNode);
-    writeDataTypes(node_module, rootNode);
-    writeNodeTypes(node_module, rootNode);
+    writePackage(node_module, rootNode, err);
+    writeDataTypes(node_module, rootNode, err);
+    writeNodeTypes(node_module, rootNode, err);
+    writeGraphs(node_module, rootNode, err);
     
     xmlDocSetRootElement(doc, rootNode.releasePointer());
 
@@ -319,7 +571,7 @@ Serializer::read(
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
 	if (tagName == std::string("package")) {
-	    readPackage(node_module, child);
+	    readPackage(node_module, child, err);
 	}
     }
 
@@ -329,7 +581,16 @@ Serializer::read(
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
 	if (tagName == std::string("data-types")) {
-	    readDataTypes(node_module, child);
+	    readDataTypes(node_module, child, err);
+	}
+    }
+
+    // Node types must be loaded before we load any nodes
+    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string tagName = child.getName();
+	if (tagName == std::string("node-types")) {
+	    readNodeTypes(node_module, child, err);
 	}
     }
 
@@ -338,8 +599,8 @@ Serializer::read(
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
-	if (tagName == std::string("node-types")) {
-	    readNodeTypes(node_module, child);
+	if (tagName == std::string("graphs")) {
+	    readGraphs(node_module, child, err);
 	}
     }
     

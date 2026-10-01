@@ -48,6 +48,9 @@ namespace NodeJS {
 	     * Returns true if there is a value stored at this key.
 	     */
 	    bool hasValue(std::string key) const;
+
+	    const std::map<std::string, std::string> & getData() const;
+	    
 	private:
 	    std::map<std::string, std::string> _data;
 	};

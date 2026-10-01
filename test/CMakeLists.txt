@@ -12,6 +12,7 @@ set(TEST_SOURCES
     Test_Connection.cpp
     Test_ConnectionData.cpp
     Test_xml_Serializer.cpp
+    Test_xml_XmlNodeWrapper.cpp
     )
 
 add_executable(nodejs_core_tests ${TEST_SOURCES})

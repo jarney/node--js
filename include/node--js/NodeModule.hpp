@@ -6,6 +6,7 @@
 
 #include "node--js/DataType.hpp"
 #include "node--js/NodeType.hpp"
+#include "node--js/NodeGraph.hpp"
 
 namespace NodeJS {
     namespace core {
@@ -76,11 +77,16 @@ namespace NodeJS {
 	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
 
 	    bool hasNodeType(const std::string & name) const;
+
+	    bool addGraph(std::string id, std::unique_ptr<NodeGraph> graph);
+
+	    const std::map<std::string, std::unique_ptr<NodeGraph>> & getGraphs() const;
 	    
 	private:
 	    std::string mPackage;
 	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
+	    std::map<std::string, std::unique_ptr<NodeGraph>> mGraphs;
 	};
     }
 }

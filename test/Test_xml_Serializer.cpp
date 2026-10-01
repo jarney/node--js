@@ -69,3 +69,4 @@ TEST_CASE("xml::Serializer xml parse error with stream reporting", "[NodeJS][xml
     std::string ostr = ostring.str();
     CHECK(ostr.find("Failed to parse xml document") != std::string::npos);
 }
+

@@ -43,6 +43,8 @@ namespace NodeJS {
 	    NodeGraph & getGraph() const;
 
 	    ConnectionData & getData();
+	    
+	    const ConnectionData & getData() const;
 	        
 	protected:
 	    // Data purely about the abstract node

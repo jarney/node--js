@@ -28,6 +28,12 @@
 	<port id="Geometry" description="Geometry" data-type="geometry"/>
       </outputs>
     </node-type>
+    <node-type id="variable" visibility="public" type="native">
+      <inputs></inputs>
+      <outputs>
+	<port id="value" description="Nothing" data-type="variable"/>
+      </outputs>
+    </node-type>
     <node-type id="const_true" visibility="public" type="native">
       <inputs>
       </inputs>
@@ -72,4 +78,22 @@
     </node-type>
     <!-- more nodes will follow -->
   </node-types>
+  <graphs>
+    <graph id="main">
+      <scope>
+	<import id="openscad-builtins"/> <!-- import an exported registry -->
+        <define-type id="foo"/> <!-- define a specific type in this registry (but probably not export it) -->
+      </scope>
+      <nodes>
+	<node id="x" type="variable">
+	  <value key="variable-name">x</value>
+	</node>
+	<node id="sphere" type="sphere">
+	</node>
+      </nodes>
+      <edges>
+	<edge from-node="x" from-port="value" to-node="sphere" to-port="r"/>
+      </edges>
+    </graph>
+  </graphs>
 </node-module>

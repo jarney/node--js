@@ -39,3 +39,10 @@ ConnectionData::hasValue(std::string key) const
     }
     return true;
 }
+
+const std::map<std::string, std::string> &
+ConnectionData::getData() const
+{
+    return _data;
+}
+

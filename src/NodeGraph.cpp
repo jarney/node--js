@@ -58,6 +58,15 @@ NodeGraph::hasNode(NodeId aNodeId) const
     return true;
 }
 
+/**
+ * Returns a map of nodes
+ */
+const std::map<NodeId, std::unique_ptr<Node>> &
+NodeGraph::getNodes() const
+{
+    return mNodes;
+}
+
 std::optional<ConnectionId>
 NodeGraph::newConnection(
     NodeId aFromNode,

@@ -2,6 +2,7 @@
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+using namespace NodeJS::xml;
 
 XmlNodeWrapper
 XmlNodeWrapper::Iterator::get() {
@@ -50,7 +51,7 @@ XmlNodeWrapper::~XmlNodeWrapper()
 	// we are responsible for it.
 	// We own it until it has been passed off
 	// to another node.
-	xmlFree((void*)_node);
+	xmlFreeNode(_node);
 	_node = nullptr;
     }
 }
@@ -90,4 +91,25 @@ XmlNodeWrapper::addChild(XmlNodeWrapper & other)
     other._node = nullptr;
 }
 
+std::string
+XmlNodeWrapper::getContent() const
+{
+    // If there are no children, there can be no content
+    if (_node == nullptr || _node->children == nullptr) {
+	return std::string("");
+    }
+    const char *value_ptr = (const char*)XML_GET_CONTENT(_node->children);
+    if (value_ptr == nullptr) {
+	return std::string("");
+    }
+    else {
+	return std::string(value_ptr);
+    }
+}
+void
+XmlNodeWrapper::setContent(std::string textContent)
+{
+    xmlNodePtr textContentNode = xmlNewText((const xmlChar *)textContent.c_str());
+    xmlAddChild(_node, textContentNode);
+}
 

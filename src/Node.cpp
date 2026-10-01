@@ -29,3 +29,7 @@ Node::getGraph() const
 ConnectionData &
 Node::getData()
 { return mData; }
+
+const ConnectionData &
+Node::getData() const
+{ return mData; }

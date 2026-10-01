@@ -8,6 +8,33 @@
 namespace NodeJS {
     namespace core {
 
+	class Scope {
+	    // List of other
+	    // foreign namespaces that
+	    // can be resolved from here.
+	    // The scope is searched in order
+	    // when resolving node types.
+	};
+	
+	/**
+	 * A graph in NodeJS is the unit of computation much like a
+	 * function is the unit of computation in a procedural
+	 * programming language.  Like methods, graphs consist
+	 * of a set of computations linked together in an order.
+	 * In a NodeJS program, the order is expressed by the
+	 * graph structure of edges connecting computations together
+	 * and the computations themselves are represented by nodes.
+	 *
+	 * Also, like functions or methods, there is a notion of scope.
+	 * A scope is simply a local namespace where other objects
+	 * can be referenced.  In the case of NodeJS, the objects
+	 * in the scope are node types.  We express by a scope
+	 * the set of node types that are visible from within this
+	 * graph.  This allows construction of large programs
+	 * where name collisions are possible globally, each local
+	 * scope is declared in a way that limits the risk of
+	 * name collisions.
+	 */
 	class NodeGraph {
 	public:
 	    NodeGraph();
@@ -45,6 +72,11 @@ namespace NodeJS {
 	     * would be successful if called.
 	     */
 	    bool hasNode(NodeId aNodeId) const;
+
+	    /**
+	     * Returns a map of nodes
+	     */
+	    const std::map<NodeId, std::unique_ptr<Node>> & getNodes() const;
 	    
 	    /**
 	     * Attempts to create a new connection between
@@ -77,6 +109,8 @@ namespace NodeJS {
 	    std::vector<const Connection*> getConnectionsTo(NodeId aNodeId) const;
 
 	    const std::vector<Connection*> & getConnetions() const;
+
+	    const std::vector<Scope> & getScope();
 	    
 	private:
 
@@ -86,7 +120,6 @@ namespace NodeJS {
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
 	    
 	    std::map<ConnectionId, Connection> mEdges;
-//	    std::vector<const Connection*> mEdges;
 	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByFromNode;
 	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByToNode;
 	};

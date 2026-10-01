@@ -86,3 +86,19 @@ NodeModule::getNodeTypes() const
     return mNodeTypes;
 }
 
+bool
+NodeModule::addGraph(std::string id, std::unique_ptr<NodeGraph> graph)
+{
+    if (mGraphs.find(id) != mGraphs.end()) {
+	return false;
+    }
+    mGraphs.insert(std::pair(id, std::move(graph)));
+    return true;
+}
+
+const std::map<std::string, std::unique_ptr<NodeGraph>> &
+NodeModule::getGraphs() const
+{
+    return mGraphs;
+}
+
