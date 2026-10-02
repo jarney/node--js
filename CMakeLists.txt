@@ -180,7 +180,7 @@ if (BUILD_PYTHON)
     add_custom_target(python-module
         ALL
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/python
-        COMMAND bash ${PROJECT_SOURCE_DIR}/python/build.sh ${PROJECT_BINARY_DIR}
+        COMMAND bash ${PROJECT_SOURCE_DIR}/python/build.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
     )
 endif()
 

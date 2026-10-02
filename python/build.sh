@@ -1,10 +1,11 @@
 #!/bin/bash
 
-if [ $# -ne 1 ] ; then
-    echo "Supply output directory in argv[1]"
-    exit 0
+if [ $# -ne 2 ] ; then
+    echo "Usage: buil.sh cmake-binary-dir cmake-source-dir"
+    exit 1
 fi
 CMAKE_BINARY_DIR=$1
+CMAKE_SOURCE_DIR=$2
 
 mkdir -p ${CMAKE_BINARY_DIR}/python
 if [ ! -d ${CMAKE_BINARY_DIR}/python/venv ] ; then
@@ -20,7 +21,7 @@ fi
 #pip install -r requirements-dev.txt
 
 # Run the unit-tests
-coverage run -m pytest
+coverage run -m pytest --data-directory=${CMAKE_SOURCE_DIR}/test-data -s
 coverage html \
 	 --omit='test/*' \
 	 -d ${CMAKE_BINARY_DIR}/python/htmlcov
