@@ -1,5 +1,5 @@
 from .Node import Node
-from .Connection import Connection
+from .Edge import Edge
 
 class NodeGraph:
     def __init__(self):
@@ -38,23 +38,23 @@ class NodeGraph:
 
     def newEdge(self, aFromNode, aFromPort, aToNode, aToPort):
         
-        connection = Connection(
+        edge = Edge(
             aFromNode, aFromPort,
             aToNode, aToPort
         )
         
-        id = connection.getId();
+        id = edge.getId();
         if id in self.mEdges:
             return None
 
         if aFromNode not in self.mEdgesByFromNode:
             self.mEdgesByFromNode[aFromNode] = []
-        self.mEdgesByFromNode[aFromNode].append(connection)
+        self.mEdgesByFromNode[aFromNode].append(edge)
 
         if aToNode not in self.mEdgesByToNode:
             self.mEdgesByToNode[aToNode] = []
-        self.mEdgesByToNode[aToNode].append(connection);
-        self.mEdges[id] = connection
+        self.mEdgesByToNode[aToNode].append(edge);
+        self.mEdges[id] = edge
         return id
 
     

@@ -1,6 +1,6 @@
 
 
-class Connection:
+class Edge:
     def __init__(self, aFromNode, aFromPort, aToNode, aToPort):
         self.fromNode = aFromNode
         self.fromPort = aFromPort
