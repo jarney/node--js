@@ -24,6 +24,13 @@
     - are added by a native implementation library.
     -->
   <node-types>
+    <!-- Output to be rendered -->
+    <node-type id="output" visibility="public" type="native">
+      <inputs>
+	<port id="output" description="Output to render" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs/>
+    </node-type>
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">
       <inputs>
