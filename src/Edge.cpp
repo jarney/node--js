@@ -1,8 +1,8 @@
-#include "node--js/Connection.hpp"
+#include "node--js/Edge.hpp"
 
 using namespace NodeJS::core;
 
-Connection::Connection(
+Edge::Edge(
     NodeId aFromNode,
     PortId aFromPort,
     NodeId aToNode,
@@ -15,7 +15,7 @@ Connection::Connection(
 {}
 
 bool
-Connection::operator==(const Connection & other) const
+Edge::operator==(const Edge & other) const
 {
     return (this->fromNode == other.fromNode) &&
 	(this->fromPort == other.fromPort) &&
@@ -24,12 +24,12 @@ Connection::operator==(const Connection & other) const
 }
 
 bool
-Connection::operator!=(const Connection & other) const
+Edge::operator!=(const Edge & other) const
 {
     return !(*this == other);
 }
-ConnectionId
-Connection::getId() const
+EdgeId
+Edge::getId() const
 {
     return fromNode + std::string("-") + fromPort +
 	std::string("|") + 

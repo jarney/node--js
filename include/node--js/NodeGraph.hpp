@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node--js/Connection.hpp"
+#include "node--js/Edge.hpp"
 #include "node--js/Node.hpp"
 
 #include <optional>
@@ -87,7 +87,7 @@ namespace NodeJS {
 	     * then the optional is returned without a
 	     * connection id indicating that it could not be created.
 	     */
-	    std::optional<ConnectionId> newEdge(
+	    std::optional<EdgeId> newEdge(
 		NodeId aFromNode,
 		PortId aFromPort,
 		NodeId aToNode,
@@ -99,16 +99,16 @@ namespace NodeJS {
 	     * from the given node id.  That is, all connections
 	     * with a 'from node' equal to the given node.
 	     */
-	    std::vector<const Connection*> getEdgesFrom(NodeId aNodeId) const;
+	    std::vector<const Edge*> getEdgesFrom(NodeId aNodeId) const;
 
 	    /**
 	     * Return a list of the connections terminating
 	     * at the given node id.  That is, all connections
 	     * with a 'to node' equal to the given node.
 	     */
-	    std::vector<const Connection*> getEdgesTo(NodeId aNodeId) const;
+	    std::vector<const Edge*> getEdgesTo(NodeId aNodeId) const;
 
-	    const std::map<ConnectionId, std::unique_ptr<Connection>> & getEdges() const;
+	    const std::map<EdgeId, std::unique_ptr<Edge>> & getEdges() const;
 
 	    const std::vector<Scope> & getScope();
 	    
@@ -119,9 +119,9 @@ namespace NodeJS {
 	    // The core of a graph is the nodes and edges.
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
 	    
-	    std::map<ConnectionId, std::unique_ptr<Connection>> mEdges;
-	    std::map<NodeId, std::vector<const Connection*>> mEdgesByFromNode;
-	    std::map<NodeId, std::vector<const Connection*>> mEdgesByToNode;
+	    std::map<EdgeId, std::unique_ptr<Edge>> mEdges;
+	    std::map<NodeId, std::vector<const Edge*>> mEdgesByFromNode;
+	    std::map<NodeId, std::vector<const Edge*>> mEdgesByToNode;
 	};
     }
 }

@@ -94,15 +94,15 @@ TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
 {
     NodeGraph graph;
-    std::optional<ConnectionId> edgeId = graph.newEdge("a", "first", "b", "second");
+    std::optional<EdgeId> edgeId = graph.newEdge("a", "first", "b", "second");
     CHECK(edgeId.has_value());
 }
 
 TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
 {
     NodeGraph graph;
-    std::optional<ConnectionId> edgeId = graph.newEdge("a", "first", "b", "second");
-    std::optional<ConnectionId> edgeId2 = graph.newEdge("a", "first", "b", "second");
+    std::optional<EdgeId> edgeId = graph.newEdge("a", "first", "b", "second");
+    std::optional<EdgeId> edgeId2 = graph.newEdge("a", "first", "b", "second");
     CHECK(edgeId.has_value());
     CHECK(!edgeId2.has_value());
 }

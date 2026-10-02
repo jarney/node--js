@@ -53,7 +53,7 @@ endif()
 
 set(CPP_SOURCE_FILES
   src/main.cpp
-  src/Connection.cpp
+  src/Edge.cpp
   src/DataType.cpp
   src/NodeType.cpp
   src/NodePort.cpp
@@ -74,6 +74,7 @@ set(HPP_HEADER_FILES
     include/node--js/NodePort.hpp
     include/node--js/NodeModule.hpp
     include/node--js/ConnectionData.hpp
+    include/node--js/Edge.hpp
     include/node--js/Serializer.hpp
     include/node--js/xml/Serializer.hpp
     include/node--js/xml/XmlNodeWrapper.hpp

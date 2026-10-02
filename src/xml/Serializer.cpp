@@ -10,7 +10,7 @@
 using namespace NodeJS::xml;
 
 using NodeJS::core::Node;
-using NodeJS::core::ConnectionId;
+using NodeJS::core::EdgeId;
 using NodeJS::core::NodePort;
 using NodeJS::core::NodeType;
 using NodeJS::core::NodeModule;
@@ -398,7 +398,7 @@ readGraphEdge(
     std::string fromPort = edgeNode.getAttribute("from-port");
     std::string toPort = edgeNode.getAttribute("to-port");
 
-    std::optional<ConnectionId> connection = 
+    std::optional<EdgeId> connection = 
 	node_graph.newEdge(
 	    fromNode, fromPort,
 	    toNode, toPort

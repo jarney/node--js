@@ -67,7 +67,7 @@ NodeGraph::getNodes() const
     return mNodes;
 }
 
-std::optional<ConnectionId>
+std::optional<EdgeId>
 NodeGraph::newEdge(
     NodeId aFromNode,
     PortId aFromPort,
@@ -75,13 +75,13 @@ NodeGraph::newEdge(
     PortId aToPort
     )
 {
-    std::unique_ptr<Connection> connection = std::make_unique<Connection>(
+    std::unique_ptr<Edge> connection = std::make_unique<Edge>(
 	aFromNode, aFromPort,
 	aToNode, aToPort
 	);
     std::string id = connection->getId();
     if (mEdges.find(id) != mEdges.end()) {
-	return std::optional<ConnectionId>();
+	return std::optional<EdgeId>();
     }
 
     mEdgesByFromNode[aFromNode].push_back(connection.get());
@@ -90,7 +90,7 @@ NodeGraph::newEdge(
     return id;
 }
 
-const std::map<ConnectionId, std::unique_ptr<Connection>> &
+const std::map<EdgeId, std::unique_ptr<Edge>> &
 NodeGraph::getEdges() const
 {
     return mEdges;
