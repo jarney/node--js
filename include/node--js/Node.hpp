@@ -45,8 +45,11 @@ namespace NodeJS {
 	    ConnectionData & getData();
 	    
 	    const ConnectionData & getData() const;
-	        
-	protected:
+
+	    void setPosition(std::pair<float,float> pos);
+	    std::pair<float, float> getPosition();
+	    
+	private:
 	    // Data purely about the abstract node
 	    // that is the same for each instance.  Factor this out
 	    // to a node-type class.
@@ -54,6 +57,8 @@ namespace NodeJS {
 	    const NodeType & mType;
 	    NodeGraph & mGraph;
 	    ConnectionData mData;
+
+	    std::pair<float, float> mPos;
 	};
 	
     } // End core

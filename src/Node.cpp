@@ -12,6 +12,7 @@ Node::Node(
     , mType(aType)
     , mGraph(aGraph)
     , mData(aData)
+    , mPos(std::make_pair(0,0))
 {}
 
 const NodeId &
@@ -33,3 +34,12 @@ Node::getData()
 const ConnectionData &
 Node::getData() const
 { return mData; }
+
+void
+Node::setPosition(std::pair<float,float> pos)
+{ mPos = pos; }
+
+std::pair<float, float>
+Node::getPosition()
+{ return mPos; }
+

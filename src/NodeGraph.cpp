@@ -1,4 +1,5 @@
 #include "node--js/NodeGraph.hpp"
+#include "node--js/NodeModule.hpp"
 
 using namespace NodeJS::core;
 
@@ -104,3 +105,38 @@ NodeGraph::getEdges() const
 }
 
 
+void
+NodeGraph::addScope(std::unique_ptr<NodeModule> node_module)
+{
+    mScopes.push_back(std::move(node_module));
+}
+
+const NodeType *
+NodeGraph::getNodeType(std::string aTypeName)
+{
+    for (const auto & it : mScopes) {
+	if (it->hasNodeType(aTypeName)) {
+	    return it->getNodeType(aTypeName);
+	}
+    }
+    return nullptr;
+}
+
+#if 0
+NodeId
+NodeGraph::addNode(std::string aNodeTypeId)
+{
+    const NodeType *nodeType = getNodeType(aNodeTypeId);
+    if (nodeType == nullptr) {
+	fprintf(stderr, "Error loading node of type %s\n", aNodeTypeId.c_str());
+	return "";
+    }
+    ConnectionData defaultData;
+    Node & n = newNode(
+	*nodeType,
+	aNodeTypeId,
+	defaultData
+	);
+    return n.getId();
+}
+#endif
