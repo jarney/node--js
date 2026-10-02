@@ -1,16 +1,14 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
+//#include "nodes/openscad/Builtins_helpers.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_3D.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // Sphere
 ////////////////////////////////////////
 void
-Builtins::f_3d_sphere_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_sphere_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -24,7 +22,7 @@ Builtins::f_3d_sphere_process(const Node & node, const NodePortData & input, Nod
 // Cube
 ////////////////////////////////////////
 void
-Builtins::f_3d_cube_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_cube_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "size");
@@ -37,7 +35,7 @@ Builtins::f_3d_cube_process(const Node & node, const NodePortData & input, NodeP
 // Cylinder
 ////////////////////////////////////////
 void
-Builtins::f_3d_cylinder_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_cylinder_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "h");
@@ -56,7 +54,7 @@ Builtins::f_3d_cylinder_process(const Node & node, const NodePortData & input, N
 // Polyhedron
 ////////////////////////////////////////
 void
-Builtins::f_3d_polyhedron_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_polyhedron_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "points");
@@ -70,7 +68,7 @@ Builtins::f_3d_polyhedron_process(const Node & node, const NodePortData & input,
 // Import
 ////////////////////////////////////////
 void
-Builtins::f_3d_import_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_import_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "file");
@@ -89,7 +87,7 @@ Builtins::f_3d_import_process(const Node & node, const NodePortData & input, Nod
 // Linear Extrude
 ////////////////////////////////////////
 void
-Builtins::f_3d_linear_extrude_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_linear_extrude_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "height");
@@ -110,7 +108,7 @@ Builtins::f_3d_linear_extrude_process(const Node & node, const NodePortData & in
 // Rotate Extrude
 ////////////////////////////////////////
 void
-Builtins::f_3d_rotate_extrude_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_rotate_extrude_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "angle");
@@ -124,7 +122,7 @@ Builtins::f_3d_rotate_extrude_process(const Node & node, const NodePortData & in
 // Surface
 ////////////////////////////////////////
 void
-Builtins::f_3d_surface_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_surface_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "file");
@@ -139,7 +137,7 @@ Builtins::f_3d_surface_process(const Node & node, const NodePortData & input, No
 // Import DXF Dimensions
 ////////////////////////////////////////
 void
-Builtins::f_3d_dxf_dim_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_dxf_dim_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "file");
@@ -155,7 +153,7 @@ Builtins::f_3d_dxf_dim_process(const Node & node, const NodePortData & input, No
 // Import DXF Cross (Origin)
 ////////////////////////////////////////
 void
-Builtins::f_3d_dxf_cross_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_3d_dxf_cross_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "file");

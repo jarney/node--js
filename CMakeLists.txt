@@ -65,6 +65,8 @@ set(CPP_SOURCE_FILES
   src/Validator.cpp
   src/xml/Serializer.cpp
   src/xml/XmlNodeWrapper.cpp
+  src/engines/openscad/Builtins.cpp
+  src/engines/openscad/Builtins3D.cpp
 )
 
 set(HPP_HEADER_FILES

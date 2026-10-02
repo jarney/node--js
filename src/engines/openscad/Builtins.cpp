@@ -1,43 +1,15 @@
-#include "nodes/gui/NodeEditorWidget.hpp"
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
+//#include "nodes/openscad/Builtins_helpers.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-const NodeCategory Builtins::CATEGORY_SYNTAX("syntax", "Syntax", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_CONST("const", "Constants", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_OPERATOR("operator", "Operators", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_2D("2d", "2D Primitives", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_3D("3d", "3d Primitives", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_BOOLEAN_OPS("op", "Boolean Operations", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_XFORM("xform", "Transformations", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_LIST("list", "List", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_FUNCTION("function", "Functions", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_FLOW("flow", "Flow Control", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_MATH("math", "Mathematical", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_TYPETEST("typetest", "Type Test", "../resources/icons/stopbutton.png");
-const NodeCategory Builtins::CATEGORY_OTHER("other", "Other", "../resources/icons/stopbutton.png");
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 #define _OPENSCAD_NODE_REGISTER(name) ret->registerModel(std::move(f_##name()))
 
 void
-Builtins::registerDataModels(std::shared_ptr<NodeFactoryRegistry> ret)
+Builtins::registerDataModels()
 {
-    ret->registerCategory(CATEGORY_SYNTAX);
-    ret->registerCategory(CATEGORY_CONST);
-    ret->registerCategory(CATEGORY_OPERATOR);
-    ret->registerCategory(CATEGORY_2D);
-    ret->registerCategory(CATEGORY_3D);
-    ret->registerCategory(CATEGORY_XFORM);
-    ret->registerCategory(CATEGORY_LIST);
-    ret->registerCategory(CATEGORY_BOOLEAN_OPS);
-    ret->registerCategory(CATEGORY_FLOW);
-    ret->registerCategory(CATEGORY_TYPETEST);
-    ret->registerCategory(CATEGORY_OTHER);
-    ret->registerCategory(CATEGORY_FUNCTION);
-    ret->registerCategory(CATEGORY_MATH);
-    
+#if 0    
     // Syntax
     _OPENSCAD_NODE_REGISTER(syntax_assign);        // parsed
 //    _OPENSCAD_NODE_REGISTER(syntax_assign_list);
@@ -188,7 +160,7 @@ Builtins::registerDataModels(std::shared_ptr<NodeFactoryRegistry> ret)
     _OPENSCAD_NODE_REGISTER(math_max);             // parsed
     _OPENSCAD_NODE_REGISTER(math_norm);            // parsed
     _OPENSCAD_NODE_REGISTER(math_cross);           // parsed
-
+#endif
 }
 
 std::string
@@ -210,7 +182,7 @@ Builtins::joinArguments(std::vector<std::string> list)
 void
 Builtins::conditionalArg(
     std::vector<std::string> & args,
-    const NodePortData & input,
+    const ConnectionData & input,
     const Node & node,
     std::string key,
     std::string default_value)
@@ -218,8 +190,8 @@ Builtins::conditionalArg(
     if (input.hasValue(key)) {
 	args.push_back(key + std::string("=") + input.getValue(key, ""));
     }
-    else if (node.hasValue(key)) {
-	args.push_back(key + std::string("=") + node.getValue(key, ""));
+    else if (node.getData().hasValue(key)) {
+	args.push_back(key + std::string("=") + node.getData().getValue(key, ""));
     }
     else {
 	args.push_back(key + std::string("=") + default_value);
@@ -229,7 +201,7 @@ Builtins::conditionalArg(
 void
 Builtins::conditionalArg(
     std::vector<std::string> & args,
-    const NodePortData & input,
+    const ConnectionData & input,
     const Node & node,
     std::string key
     )
@@ -237,7 +209,7 @@ Builtins::conditionalArg(
     if (input.hasValue(key)) {
 	args.push_back(key + std::string("=") + input.getValue(key, ""));
     }
-    else if (node.hasValue(key)) {
-	args.push_back(key + std::string("=") + node.getValue(key, ""));
+    else if (node.getData().hasValue(key)) {
+	args.push_back(key + std::string("=") + node.getData().getValue(key, ""));
     }
 }

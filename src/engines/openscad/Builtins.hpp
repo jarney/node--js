@@ -1,17 +1,9 @@
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtWidgets/QLabel>
+#include "node--js/NodeType.hpp"
+#include "node--js/Node.hpp"
 
-#include <QtNodes/NodeDelegateModel>
-#include <QtNodes/NodeData>
-#include "nodes/NodeType.hpp"
-#include "nodes/NodeFactoryRegistry.hpp"
-#include "nodes/Node.hpp"
-
-#include "nodes/openscad/DataTypes.hpp"
-
-namespace JNodes {
+namespace NodeJS {
     namespace openscad {
 
 /**
@@ -32,62 +24,28 @@ namespace JNodes {
  */
 class Builtins {
 public:
-    using RegistryItemPtr = std::unique_ptr<JNodes::core::NodeType>;
+    static void registerDataModels();
 
-    static const JNodes::core::NodeCategory CATEGORY_SYNTAX;
-    static const JNodes::core::NodeCategory CATEGORY_CONST;
-    static const JNodes::core::NodeCategory CATEGORY_OPERATOR;
-    static const JNodes::core::NodeCategory CATEGORY_2D;
-    static const JNodes::core::NodeCategory CATEGORY_3D;
-    static const JNodes::core::NodeCategory CATEGORY_XFORM;
-    static const JNodes::core::NodeCategory CATEGORY_LIST;
-    static const JNodes::core::NodeCategory CATEGORY_BOOLEAN_OPS;
-    static const JNodes::core::NodeCategory CATEGORY_FLOW;
-    static const JNodes::core::NodeCategory CATEGORY_TYPETEST;
-    static const JNodes::core::NodeCategory CATEGORY_OTHER;
-    static const JNodes::core::NodeCategory CATEGORY_FUNCTION;
-    static const JNodes::core::NodeCategory CATEGORY_MATH;
-    
-    static void registerDataModels(std::shared_ptr<JNodes::core::NodeFactoryRegistry> scope);
-
-    // Most nodes only need a type and a processor
-    // because the instances hold no state.  Addition
-    // is addition, and no modifiers are needed.
 #define _OPENSCAD_NODE_DECL(name)                                    \
-    static std::unique_ptr<JNodes::core::NodeType> f_##name();				\
-    static void f_##name##_process(const JNodes::core::Node & node, const JNodes::core::NodePortData & input, JNodes::core::NodePortData & output);
-
-    // Some nodes carry state for each instance
-    // of the node.  For example, nodes
-    // representing variables carry the name
-    // of the variable inside the node's instance,
-    // so typically they need an initializer to
-    // set the state to some known initial state
-    // and a widget to allow the user to modify
-    // things like the name of the variable.
-#define _OPENSCAD_NODE_DECL_FULL(name)                                    \
-    static std::unique_ptr<JNodes::core::NodeType> f_##name();                     \
-    static void f_##name##_process(const JNodes::core::Node & node, const JNodes::core::NodePortData & input, JNodes::core::NodePortData & output); \
-    static void f_##name##_initializer(JNodes::core::Node & node);      \
-    static QWidget* f_##name##_widget(JNodes::core::Node & node)
+    static void f_##name##_process(const NodeJS::core::Node & node, const NodeJS::core::ConnectionData & input, NodeJS::core::ConnectionData & output);
 
     // Syntax
-    _OPENSCAD_NODE_DECL_FULL(syntax_assign);
+    _OPENSCAD_NODE_DECL(syntax_assign);
     _OPENSCAD_NODE_DECL(syntax_assign_list);
-    _OPENSCAD_NODE_DECL_FULL(syntax_variable);
+    _OPENSCAD_NODE_DECL(syntax_variable);
     _OPENSCAD_NODE_DECL(syntax_module);
-    _OPENSCAD_NODE_DECL_FULL(syntax_function);
+    _OPENSCAD_NODE_DECL(syntax_function);
     _OPENSCAD_NODE_DECL(syntax_include);
     _OPENSCAD_NODE_DECL(syntax_use);
     
-    static void syntax_custom_node_processor(const JNodes::core::Node & node, const JNodes::core::NodePortData & input, JNodes::core::NodePortData & output);
+    static void syntax_custom_node_processor(const NodeJS::core::Node & node, const NodeJS::core::ConnectionData & input, NodeJS::core::ConnectionData & output);
     
     // Constants
     _OPENSCAD_NODE_DECL(const_true);
     _OPENSCAD_NODE_DECL(const_false);
-    _OPENSCAD_NODE_DECL_FULL(const_int);
-    _OPENSCAD_NODE_DECL_FULL(const_float);
-    _OPENSCAD_NODE_DECL_FULL(const_string);
+    _OPENSCAD_NODE_DECL(const_int);
+    _OPENSCAD_NODE_DECL(const_float);
+    _OPENSCAD_NODE_DECL(const_string);
     _OPENSCAD_NODE_DECL(const_undef);
 
     // Operators
@@ -169,11 +127,11 @@ public:
     // Maybe this can just be syntactic sugar?
 
     // Flow control
-    _OPENSCAD_NODE_DECL_FULL(flow_for);
+    _OPENSCAD_NODE_DECL(flow_for);
     _OPENSCAD_NODE_DECL(flow_intersection_for);
     _OPENSCAD_NODE_DECL(flow_if);
     _OPENSCAD_NODE_DECL(flow_let);
-    _OPENSCAD_NODE_DECL_FULL(flow_comment);
+    _OPENSCAD_NODE_DECL(flow_comment);
     _OPENSCAD_NODE_DECL(flow_group);
     _OPENSCAD_NODE_DECL(flow_module_output);
     _OPENSCAD_NODE_DECL(flow_function_output);
@@ -239,8 +197,8 @@ private:
      */
     static void conditionalArg(
 	std::vector<std::string> & args,
-	const JNodes::core::NodePortData & input,
-	const JNodes::core::Node & node,
+	const NodeJS::core::ConnectionData & input,
+	const NodeJS::core::Node & node,
 	std::string key,
 	std::string default_value
     );
@@ -250,8 +208,8 @@ private:
      */
     static void conditionalArg(
 	std::vector<std::string> & args,
-	const JNodes::core::NodePortData & input,
-	const JNodes::core::Node & node,
+	const NodeJS::core::ConnectionData & input,
+	const NodeJS::core::Node & node,
 	std::string key
     );
 };
