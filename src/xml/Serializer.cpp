@@ -436,8 +436,8 @@ readGraph(
     NodeJS::core::SerializerErrorReporter & err
     )
 {
-    std::unique_ptr<NodeGraph> graph = std::make_unique<NodeGraph>();
     std::string id = graphNode.getAttribute("id");
+    NodeGraph *graph = node_module.addGraph(id);
 
     // Scopes must be read first because
     // we may need to resolve node types
@@ -457,17 +457,16 @@ readGraph(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("nodes")) {
-	    readGraphNodes(node_module, *graph.get(), child, err);
+	    readGraphNodes(node_module, *graph, child, err);
 	}
     }
     for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("edges")) {
-	    readGraphEdges(node_module, *graph.get(), child, err);
+	    readGraphEdges(node_module, *graph, child, err);
 	}
     }    
-    node_module.addGraph(id, std::move(graph));
 }
 
 static void

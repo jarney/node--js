@@ -1,16 +1,13 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_BOOLEAN_OPS.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // Union
 ////////////////////////////////////////
 void
-Builtins::f_op_union_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_op_union_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("union() {\n");
@@ -23,7 +20,7 @@ Builtins::f_op_union_process(const Node & node, const NodePortData & input, Node
 // Difference
 ////////////////////////////////////////
 void
-Builtins::f_op_difference_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_op_difference_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("difference() {\n");
@@ -41,7 +38,7 @@ Builtins::f_op_difference_process(const Node & node, const NodePortData & input,
 // Intersection
 ////////////////////////////////////////
 void
-Builtins::f_op_intersection_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_op_intersection_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("intersection() {\n");

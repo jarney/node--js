@@ -1,16 +1,13 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_XFORM.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // Translate
 ////////////////////////////////////////
 void
-Builtins::f_xform_translate_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_translate_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "v");
@@ -26,7 +23,7 @@ Builtins::f_xform_translate_process(const Node & node, const NodePortData & inpu
 // Rotate
 ////////////////////////////////////////
 void
-Builtins::f_xform_rotate_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_rotate_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "a");
@@ -42,7 +39,7 @@ Builtins::f_xform_rotate_process(const Node & node, const NodePortData & input, 
 // Scale
 ////////////////////////////////////////
 void
-Builtins::f_xform_scale_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_scale_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "v");
@@ -58,7 +55,7 @@ Builtins::f_xform_scale_process(const Node & node, const NodePortData & input, N
 // Resize
 ////////////////////////////////////////
 void
-Builtins::f_xform_resize_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_resize_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out = std::string();
     std::vector<std::string> args;
@@ -76,7 +73,7 @@ Builtins::f_xform_resize_process(const Node & node, const NodePortData & input, 
 // Mirror
 ////////////////////////////////////////
 void
-Builtins::f_xform_mirror_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_mirror_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "v");
@@ -92,7 +89,7 @@ Builtins::f_xform_mirror_process(const Node & node, const NodePortData & input, 
 // Multmatrix
 ////////////////////////////////////////
 void
-Builtins::f_xform_multmatrix_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_multmatrix_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "m");
@@ -108,7 +105,7 @@ Builtins::f_xform_multmatrix_process(const Node & node, const NodePortData & inp
 // Color
 ////////////////////////////////////////
 void
-Builtins::f_xform_color_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_color_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "convexity");
@@ -124,7 +121,7 @@ Builtins::f_xform_color_process(const Node & node, const NodePortData & input, N
 // Offset
 ////////////////////////////////////////
 void
-Builtins::f_xform_offset_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_offset_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -142,7 +139,7 @@ Builtins::f_xform_offset_process(const Node & node, const NodePortData & input, 
 // Convex Hull
 ////////////////////////////////////////
 void
-Builtins::f_xform_hull_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_hull_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("hull() {\n");
@@ -157,7 +154,7 @@ Builtins::f_xform_hull_process(const Node & node, const NodePortData & input, No
 // Fill
 ////////////////////////////////////////
 void
-Builtins::f_xform_fill_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_fill_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("Geometry", std::string("fill() {\n") +
 	std::string("    {\n") + 
@@ -170,7 +167,7 @@ Builtins::f_xform_fill_process(const Node & node, const NodePortData & input, No
 // Minkowski
 ////////////////////////////////////////
 void
-Builtins::f_xform_minkowski_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_xform_minkowski_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "convexity");

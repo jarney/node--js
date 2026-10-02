@@ -1,16 +1,13 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_LIST.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // List Index
 ////////////////////////////////////////
 void
-Builtins::f_list_index_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_index_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     std::string out;
@@ -23,7 +20,7 @@ Builtins::f_list_index_process(const Node & node, const NodePortData & input, No
 // List get xyz
 ////////////////////////////////////////
 void
-Builtins::f_list_get_xyz_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_get_xyz_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     std::string x = input.getValue("list", "[0,0,0]") + std::string("[0]");
@@ -38,7 +35,7 @@ Builtins::f_list_get_xyz_process(const Node & node, const NodePortData & input, 
 // List set xyz
 ////////////////////////////////////////
 void
-Builtins::f_list_set_xyz_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_set_xyz_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("[");
@@ -53,7 +50,7 @@ Builtins::f_list_set_xyz_process(const Node & node, const NodePortData & input, 
 // List get xyz
 ////////////////////////////////////////
 void
-Builtins::f_list_get_xy_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_get_xy_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     std::string x = input.getValue("list", "[0,0]") + std::string("[0]");
@@ -66,7 +63,7 @@ Builtins::f_list_get_xy_process(const Node & node, const NodePortData & input, N
 // List set xy
 ////////////////////////////////////////
 void
-Builtins::f_list_set_xy_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_set_xy_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("[");
@@ -80,7 +77,7 @@ Builtins::f_list_set_xy_process(const Node & node, const NodePortData & input, N
 // List get xyz
 ////////////////////////////////////////
 void
-Builtins::f_list_get_rgba_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_get_rgba_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     std::string r = input.getValue("list", "[1,1,1,0]") + std::string("[0]");
@@ -97,7 +94,7 @@ Builtins::f_list_get_rgba_process(const Node & node, const NodePortData & input,
 // List set rgba
 ////////////////////////////////////////
 void
-Builtins::f_list_set_rgba_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_set_rgba_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("[");
@@ -114,7 +111,7 @@ Builtins::f_list_set_rgba_process(const Node & node, const NodePortData & input,
 // List set range
 ////////////////////////////////////////
 void
-Builtins::f_list_set_range_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_list_set_range_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out;
     out += std::string("[");

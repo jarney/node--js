@@ -15,6 +15,8 @@ namespace NodeJS {
 	    // The scope is searched in order
 	    // when resolving node types.
 	};
+
+	class NodeModule;
 	
 	/**
 	 * A graph in NodeJS is the unit of computation much like a
@@ -37,8 +39,10 @@ namespace NodeJS {
 	 */
 	class NodeGraph {
 	public:
-	    NodeGraph();
+	    NodeGraph(NodeModule & aModule);
 	    ~NodeGraph();
+
+	    NodeModule & getModule() const;
 	    
 	    /**
 	     * Creates a new node of the given type, attempting to use
@@ -113,6 +117,7 @@ namespace NodeJS {
 	    const std::vector<Scope> & getScope();
 	    
 	private:
+	    NodeModule & mModule;
 
 	    std::string findNewNodeId(std::string aNodeIdCandidate);
 	    

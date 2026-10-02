@@ -2,11 +2,18 @@
 
 using namespace NodeJS::core;
 
-NodeGraph::NodeGraph()
+NodeGraph::NodeGraph(NodeModule & aModule)
+    : mModule(aModule)
 {}
 
 NodeGraph::~NodeGraph()
 {}
+
+NodeModule &
+NodeGraph::getModule() const
+{
+    return mModule;
+}
 
 std::string
 NodeGraph::findNewNodeId(std::string aNodeIdCandidate)

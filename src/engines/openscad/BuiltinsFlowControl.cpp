@@ -1,28 +1,19 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-#include "nodes/openscad/NodeProgramSerializerOpenSCAD.hpp"
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QPlainTextEdit>
-#include <QtWidgets/QLineEdit>
-#include <QRegularExpressionValidator>
-#include <Qsci/qsciscintilla.h>
+//#include "nodes/openscad/NodeProgramSerializerOpenSCAD.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_FLOW.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // For
 ////////////////////////////////////////
 void
-Builtins::f_flow_for_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_for_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out = std::string();
     out += std::string("for (");
-    out += std::string(node.getValue("variable"));
+    out += std::string(node.getData().getValue("variable"));
     out += std::string(" = ");
     if (input.hasValue("range")) {
 	out += input.getValue("range");
@@ -40,33 +31,25 @@ Builtins::f_flow_for_process(const Node & node, const NodePortData & input, Node
     }
     out += std::string(") {");
 
-    std::string bodyGraphId = node.getValue("graph");
+    std::string bodyGraphId = node.getData().getValue("graph");
+
+    // This is a big TODO once we re-do the
+    // processing engine for the new structure.
+#if 0
     const NodeGraph *subgraph =
 	node.getGraph().getParent().getGraph(bodyGraphId);
     out += NodeProgramSerializerOpenSCAD::toString(*subgraph);
+#endif
     
     out += std::string("}");
     output.setValue("Geometry", out);
-}
-
-void
-Builtins::f_flow_for_initializer(Node & node)
-{
-    if (!node.hasValue("graph")) {
-	NodeProgram::GraphId graphId =
-	    node.getGraph().getParent().newGraphWithPrefix("for");
-	node.setValue("graph", graphId);
-    }
-    if (!node.hasValue("variable")) {
-	node.setValue("variable", "i");
-    }
 }
 
 ////////////////////////////////////////
 // Intersection For
 ////////////////////////////////////////
 void
-Builtins::f_flow_intersection_for_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_intersection_for_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     // TODO: Call/evaluate sub-flow
     std::string out = std::string();
@@ -80,7 +63,7 @@ Builtins::f_flow_intersection_for_process(const Node & node, const NodePortData 
 // If
 ////////////////////////////////////////
 void
-Builtins::f_flow_if_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_if_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string out = std::string();
     out += std::string("if(");
@@ -97,7 +80,7 @@ Builtins::f_flow_if_process(const Node & node, const NodePortData & input, NodeP
 // Let
 ////////////////////////////////////////
 void
-Builtins::f_flow_let_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_let_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     // TODO: Call/evaluate sub-flow
     std::string out = std::string();
@@ -115,7 +98,7 @@ Builtins::f_flow_let_process(const Node & node, const NodePortData & input, Node
 // Group
 ////////////////////////////////////////
 void
-Builtins::f_flow_group_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_group_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("Geometry", std::string("group() {\n") +
         input.getValue("a", "{}") +
@@ -126,7 +109,7 @@ Builtins::f_flow_group_process(const Node & node, const NodePortData & input, No
 // Output
 ////////////////////////////////////////
 void
-Builtins::f_flow_module_output_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_module_output_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string s = input.getValue("out", "//No Geometry Output\n");
     output.setValue("out", s);
@@ -136,7 +119,7 @@ Builtins::f_flow_module_output_process(const Node & node, const NodePortData & i
 // Output
 ////////////////////////////////////////
 void
-Builtins::f_flow_function_output_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_flow_function_output_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string s = input.getValue("out", "//No Geometry Output\n");
     output.setValue("out", s);

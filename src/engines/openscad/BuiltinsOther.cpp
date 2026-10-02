@@ -1,12 +1,13 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_OTHER.getName()
-
-UNARY_NODE(other, echo, _OPENSCAD_NODE_CATEGORY, "Echo", "value", DATA_VARIABLE, "out", DATA_VARIABLE)
+////////////////////////////////////////
+// Echo
+////////////////////////////////////////
+void
+Builtins::f_other_echo_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("echo(") + input.getValue("value", "1") + std::string(")"));
 }
@@ -14,7 +15,7 @@ UNARY_NODE(other, echo, _OPENSCAD_NODE_CATEGORY, "Echo", "value", DATA_VARIABLE,
 // Render
 ////////////////////////////////////////
 void
-Builtins::f_other_render_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_other_render_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "convexity");
@@ -29,7 +30,7 @@ Builtins::f_other_render_process(const Node & node, const NodePortData & input, 
 // Children
 ////////////////////////////////////////
 void
-Builtins::f_other_children_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_other_children_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "index");
@@ -44,7 +45,7 @@ Builtins::f_other_children_process(const Node & node, const NodePortData & input
 // Assert
 ////////////////////////////////////////
 void
-Builtins::f_other_assert_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_other_assert_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "condition");

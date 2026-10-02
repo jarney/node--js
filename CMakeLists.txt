@@ -66,7 +66,19 @@ set(CPP_SOURCE_FILES
   src/xml/Serializer.cpp
   src/xml/XmlNodeWrapper.cpp
   src/engines/openscad/Builtins.cpp
+  src/engines/openscad/Builtins2D.cpp
   src/engines/openscad/Builtins3D.cpp
+  src/engines/openscad/BuiltinsBooleanOperations.cpp
+  src/engines/openscad/BuiltinsConstants.cpp
+  src/engines/openscad/BuiltinsFlowControl.cpp
+  src/engines/openscad/BuiltinsFunctions.cpp
+  src/engines/openscad/BuiltinsList.cpp
+  src/engines/openscad/BuiltinsMath.cpp
+  src/engines/openscad/BuiltinsOperators.cpp
+  src/engines/openscad/BuiltinsOther.cpp
+  src/engines/openscad/BuiltinsSyntax.cpp
+  src/engines/openscad/BuiltinsTransforms.cpp
+  src/engines/openscad/BuiltinsTypeTest.cpp
 )
 
 set(HPP_HEADER_FILES

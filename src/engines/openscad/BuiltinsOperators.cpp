@@ -1,92 +1,110 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_OPERATOR.getName()
-
-BINARY_NODE(operator, add, _OPENSCAD_NODE_CATEGORY, "Add", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_add_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "+" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, subtract, _OPENSCAD_NODE_CATEGORY, "Subtract", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_subtract_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "-" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, multiply, _OPENSCAD_NODE_CATEGORY, "Multiply", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_multiply_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "*" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, divide, _OPENSCAD_NODE_CATEGORY, "Divide", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_divide_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "/" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, modulo, _OPENSCAD_NODE_CATEGORY, "Modulo", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_modulo_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "%" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, exponentiate, _OPENSCAD_NODE_CATEGORY, "Exponentiate", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_exponentiate_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "^" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, lt, _OPENSCAD_NODE_CATEGORY, "Less Than", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_lt_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "<" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, leq, _OPENSCAD_NODE_CATEGORY, "Less Than or Equal", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_leq_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "<=" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, eq, _OPENSCAD_NODE_CATEGORY, "Equal", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_eq_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "==" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, neq, _OPENSCAD_NODE_CATEGORY, "Not Equal", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_neq_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + "!=" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, geq, _OPENSCAD_NODE_CATEGORY, "Greater Than or Equal", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_geq_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ">=" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, gt, _OPENSCAD_NODE_CATEGORY, "Greater Than", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_gt_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ">" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, and, _OPENSCAD_NODE_CATEGORY, "And", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_and_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")&&(" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, binary_and, _OPENSCAD_NODE_CATEGORY, "Bitwise And", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_binary_and_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")&(" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, or, _OPENSCAD_NODE_CATEGORY, "Or", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_or_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")||(" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, binary_or, _OPENSCAD_NODE_CATEGORY, "Bitwise Or", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_binary_or_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")|(" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, binary_shl, _OPENSCAD_NODE_CATEGORY, "Bitwise Shift Left", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_binary_shl_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")<<(" + input.getValue("b", "0") + std::string(")"));
 }
-BINARY_NODE(operator, binary_shr, _OPENSCAD_NODE_CATEGORY, "Bitwise Shift Right", "a", DATA_VARIABLE, "b", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_binary_shr_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("(") + input.getValue("a", "0") + ")>>(" + input.getValue("b", "0") + std::string(")"));
 }
-UNARY_NODE(operator, not, _OPENSCAD_NODE_CATEGORY, "Not", "a", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_not_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("!(") + input.getValue("a", "0") + std::string(")"));
 }
-UNARY_NODE(operator, negate, _OPENSCAD_NODE_CATEGORY, "Negate", "a", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_negate_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("-(") + input.getValue("a", "0") + std::string(")"));
 }
-UNARY_NODE(operator, tilde, _OPENSCAD_NODE_CATEGORY, "Binary Not", "a", DATA_VARIABLE, "out", DATA_VARIABLE)
+void
+Builtins::f_operator_tilde_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     output.setValue("out", std::string("~(") + input.getValue("a", "0") + std::string(")"));
 }

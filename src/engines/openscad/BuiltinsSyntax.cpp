@@ -1,25 +1,16 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
-#include "NodeProgramSerializerOpenSCAD.hpp"
+#include "Builtins.hpp"
+#include "node--js/NodeGraph.hpp"
+#include "node--js/NodeModule.hpp"
+//#include "NodeProgramSerializerOpenSCAD.hpp"
 
-#include <QLabel>
-#include <QCheckBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QPlainTextEdit>
-
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_SYNTAX.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // Assignment
 ////////////////////////////////////////
 void
-Builtins::f_syntax_assign_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_assign_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::string value;
     if (input.hasValue("value")) {
@@ -36,28 +27,20 @@ Builtins::f_syntax_assign_process(const Node & node, const NodePortData & input,
     // in the comment parser, so we're not really
     // handling all cases yet.  Also, if there is
     // any newline inside the annotation, that's bad news.
-    if (node.hasValue("annotations.Description")) {
-	out += std::string("//") + node.getValue("annotations.Description");
+    if (node.getData().hasValue("annotations.Description")) {
+	out += std::string("//") + node.getData().getValue("annotations.Description");
 	out += std::string("\n");
     }
-    out += node.getValue("variable_name", "x") + std::string("= ") + value + std::string(";");
+    out += node.getData().getValue("variable_name", "x") + std::string("= ") + value + std::string(";");
     out += std::string("\n");
     output.setValue("out", out);
-}
-
-void
-Builtins::f_syntax_assign_initializer(Node & node)
-{
-    if (!node.hasValue("variable_name")) {
-	node.setValue("variable_name", "x");
-    }
 }
 
 ////////////////////////////////////////
 // Assign List
 ////////////////////////////////////////
 void
-Builtins::f_syntax_assign_list_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_assign_list_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -70,24 +53,17 @@ Builtins::f_syntax_assign_list_process(const Node & node, const NodePortData & i
 // Variable
 ////////////////////////////////////////
 void
-Builtins::f_syntax_variable_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_variable_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
-    std::string out = node.getValue("variable_name");
+    std::string out = node.getData().getValue("variable_name");
     output.setValue("variable", out);
 }
 
-void
-Builtins::f_syntax_variable_initializer(Node & node)
-{
-    if (!node.hasValue("variable_name")) {
-	node.setValue("variable_name", "x");
-    }
-}
 ////////////////////////////////////////
 // Define Module
 ////////////////////////////////////////
 void
-Builtins::f_syntax_module_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_module_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -100,16 +76,20 @@ Builtins::f_syntax_module_process(const Node & node, const NodePortData & input,
 // Define Function
 ////////////////////////////////////////
 void
-Builtins::f_syntax_function_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_function_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
-    std::string graph = node.getValue("name", "undefined");
+    std::string graph = node.getData().getValue("name", "undefined");
     
-    NodeGraph *bodyGraph = node.getGraph().getParent().getGraph(graph);
+    NodeGraph *bodyGraph = node.getGraph().getModule().getGraph(graph);
     if (!bodyGraph) {
 	fprintf(stderr, "Body graph for %s does not exist\n", graph.c_str());
 	return;
     }
+#if 0
     std::string bodyString = NodeProgramSerializerOpenSCAD::toString(*bodyGraph);
+#else
+    std::string bodyString = "TODO";
+#endif
     
     std::string out = std::string("function ") + graph + std::string("()") + bodyString;
     output.setValue("Geometry", out);
@@ -123,7 +103,7 @@ Builtins::f_syntax_function_process(const Node & node, const NodePortData & inpu
 // Include
 ////////////////////////////////////////
 void
-Builtins::f_syntax_include_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_include_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -136,7 +116,7 @@ Builtins::f_syntax_include_process(const Node & node, const NodePortData & input
 // Use
 ////////////////////////////////////////
 void
-Builtins::f_syntax_use_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_syntax_use_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -149,19 +129,20 @@ Builtins::f_syntax_use_process(const Node & node, const NodePortData & input, No
 // and functions get processed.
 ////////////////////////////////////////
 void
-Builtins::syntax_custom_node_processor(const JNodes::core::Node & node, const JNodes::core::NodePortData & input, JNodes::core::NodePortData & output)
+Builtins::syntax_custom_node_processor(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     // If the output is 'value' then
     // it is a custom function.
-    if (node.hasOutputPort("value")) {
+    const NodeType & nodeType = node.getType();
+    if (nodeType.hasOutputPort("value")) {
 	std::string out;
-	for (int i = 0; i < node.nPorts(QtNodes::PortType::In); i++) {
-	    std::string argname = node.getInputPortName(i);
+	for (int i = 0; i < nodeType.getInputPortCount(); i++) {
+	    std::string argname = nodeType.getInputPortName(i);
 	    conditionalArg(args, input, node, argname);
 	}
 
-	out += node.name().toStdString();
+	out += nodeType.getId();
 	out += std::string("(") + joinArguments(args) + std::string(")");
 	output.setValue("value", out);
     }

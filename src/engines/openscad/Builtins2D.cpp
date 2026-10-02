@@ -1,16 +1,13 @@
-#include "nodes/openscad/Builtins.hpp"
-#include "nodes/openscad/Builtins_helpers.hpp"
+#include "Builtins.hpp"
 
-using namespace JNodes::openscad;
-using namespace JNodes::core;
-
-#define _OPENSCAD_NODE_CATEGORY Builtins::CATEGORY_2D.getName()
+using namespace NodeJS::openscad;
+using namespace NodeJS::core;
 
 ////////////////////////////////////////
 // Circle
 ////////////////////////////////////////
 void
-Builtins::f_2d_circle_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_2d_circle_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -23,7 +20,7 @@ Builtins::f_2d_circle_process(const Node & node, const NodePortData & input, Nod
 // Square
 ////////////////////////////////////////
 void
-Builtins::f_2d_square_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_2d_square_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "size");
@@ -37,7 +34,7 @@ Builtins::f_2d_square_process(const Node & node, const NodePortData & input, Nod
 // Polygon
 ////////////////////////////////////////
 void
-Builtins::f_2d_polygon_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_2d_polygon_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "points", "[]");
@@ -52,7 +49,7 @@ Builtins::f_2d_polygon_process(const Node & node, const NodePortData & input, No
 // Text
 ////////////////////////////////////////
 void
-Builtins::f_2d_text_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_2d_text_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "text");
@@ -76,7 +73,7 @@ Builtins::f_2d_text_process(const Node & node, const NodePortData & input, NodeP
 // Projection
 ////////////////////////////////////////
 void
-Builtins::f_2d_projection_process(const Node & node, const NodePortData & input, NodePortData & output)
+Builtins::f_2d_projection_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "cut");
