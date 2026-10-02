@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph]")
+TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
 {
 
     NodeGraph graph;
@@ -26,7 +26,7 @@ TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph]")
 
 }
 
-TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph]")
+TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
 {
 
     NodeGraph graph;
@@ -45,7 +45,7 @@ TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph]")
     CHECK(&createdNode.getGraph() == &graph);
 }
 
-TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph]")
+TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
 {
 
     NodeGraph graph;
@@ -70,7 +70,7 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph]")
     CHECK(nodeData.hasValue("runtime-for-initializer"));
 }
 
-TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph]")
+TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 {
     NodeGraph graph;
     ConnectionData nodeData;
@@ -89,4 +89,20 @@ TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph]")
     // behavior for non-existing nodes.
     CHECK(!graph.hasNode("something-else"));
     CHECK(graph.getNode("something-else") == nullptr);
+}
+
+TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
+{
+    NodeGraph graph;
+    std::optional<ConnectionId> edgeId = graph.newEdge("a", "first", "b", "second");
+    CHECK(edgeId.has_value());
+}
+
+TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
+{
+    NodeGraph graph;
+    std::optional<ConnectionId> edgeId = graph.newEdge("a", "first", "b", "second");
+    std::optional<ConnectionId> edgeId2 = graph.newEdge("a", "first", "b", "second");
+    CHECK(edgeId.has_value());
+    CHECK(!edgeId2.has_value());
 }

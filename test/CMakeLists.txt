@@ -3,17 +3,17 @@ find_package(Catch2 3 QUIET)
 
 set(TEST_SOURCES
     main.cpp
-    Test_test.cpp
-    Test_NodePort.cpp
-    Test_DataType.cpp
-    Test_NodeType.cpp
-    Test_NodeModule.cpp
-    Test_NodeGraph.cpp
-    Test_Connection.cpp
-    Test_ConnectionData.cpp
-    Test_Validator.cpp
-    Test_xml_Serializer.cpp
-    Test_xml_XmlNodeWrapper.cpp
+    test_test.cpp
+    test_NodePort.cpp
+    test_DataType.cpp
+    test_NodeType.cpp
+    test_NodeModule.cpp
+    test_NodeGraph.cpp
+    test_Connection.cpp
+    test_ConnectionData.cpp
+    test_Validator.cpp
+    test_xml_Serializer.cpp
+    test_xml_XmlNodeWrapper.cpp
     )
 
 add_executable(nodejs_core_tests ${TEST_SOURCES})

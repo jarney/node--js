@@ -84,8 +84,8 @@ NodeGraph::newEdge(
 	return std::optional<ConnectionId>();
     }
 
-    mConnectionsByFromNode[aFromNode].push_back(connection.get());
-    mConnectionsByToNode[aToNode].push_back(connection.get());
+    mEdgesByFromNode[aFromNode].push_back(connection.get());
+    mEdgesByToNode[aToNode].push_back(connection.get());
     mEdges.insert(std::pair(id, std::move(connection)));
     return id;
 }

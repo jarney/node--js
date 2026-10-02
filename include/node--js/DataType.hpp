@@ -58,6 +58,7 @@ namespace NodeJS {
 	     * considered the same.
 	     */
 	    bool operator==(const DataType & other) const;
+	    bool operator!=(const DataType & other) const;
 	private:
 	    std::string mId;
 	    std::string mName;

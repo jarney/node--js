@@ -70,4 +70,17 @@ def test_NodeGraph_node_existence():
     assert(not graph.hasNode("something-else"))
     assert(graph.getNode("something-else") == None)
 
+def test_NodeGraph_create_edge():    
+    graph = NodeGraph()
     
+    edgeId = graph.newEdge("a", "first", "b", "second");
+    assert(edgeId != None)
+
+def test_NodeGraph_edge_duplicate():
+    graph = NodeGraph()
+    
+    edgeId = graph.newEdge("a", "first", "b", "second");
+    edgeId2 = graph.newEdge("a", "first", "b", "second");
+    assert(edgeId != None)
+    assert(edgeId2 == None)
+

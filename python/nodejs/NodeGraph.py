@@ -47,13 +47,13 @@ class NodeGraph:
         if id in self.mEdges:
             return None
 
-        if aFromNode not in self.mConnectionsByFromNode:
-            self.mConnectionsByFromNode[aFromNode] = []
-        self.mConnectionsByFromNode[aFromNode].append(connection)
+        if aFromNode not in self.mEdgesByFromNode:
+            self.mEdgesByFromNode[aFromNode] = []
+        self.mEdgesByFromNode[aFromNode].append(connection)
 
-        if aToNode not in self.mConnectionsByToNode:
-            self.mConnectionsByToNode[aToNode] = []
-        self.mConnectionsByToNode[aToNode].append(connection);
+        if aToNode not in self.mEdgesByToNode:
+            self.mEdgesByToNode[aToNode] = []
+        self.mEdgesByToNode[aToNode].append(connection);
         self.mEdges[id] = connection
         return id
 

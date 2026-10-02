@@ -10,6 +10,7 @@ TEST_CASE("DataType equality", "[NodeJS][core][DataType]")
     DataType dataType2("int", "Another integer");
     
     CHECK(dataType1 == dataType2);
+    CHECK(!(dataType1 != dataType2));
 
     // Things may compare equal as long as the ID is the same.
     // even if they have different names.

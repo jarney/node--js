@@ -24,3 +24,9 @@ DataType::operator==(const DataType & other) const
     return other.mId == mId;
 }
 
+bool
+DataType::operator!=(const DataType & other) const
+{
+    return other.mId != mId;
+}
+

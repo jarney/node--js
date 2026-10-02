@@ -22,3 +22,9 @@ TEST_CASE("Connection equality", "[NodeJS][core][Connection]")
     CHECK(conn0 != conn4);
     CHECK(conn0 != conn5);
 }
+
+TEST_CASE("Connection id", "[NodeJS][core][Connection]")
+{
+    Connection conn0{"n0", "p0", "n1", "p1"};
+    CHECK(conn0.getId() == "n0-p0|n1-p1");
+}

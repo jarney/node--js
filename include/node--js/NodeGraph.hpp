@@ -120,8 +120,8 @@ namespace NodeJS {
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
 	    
 	    std::map<ConnectionId, std::unique_ptr<Connection>> mEdges;
-	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByFromNode;
-	    std::map<NodeId, std::vector<const Connection*>> mConnectionsByToNode;
+	    std::map<NodeId, std::vector<const Connection*>> mEdgesByFromNode;
+	    std::map<NodeId, std::vector<const Connection*>> mEdgesByToNode;
 	};
     }
 }

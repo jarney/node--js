@@ -8,8 +8,7 @@ class Connection:
         self.toPort = aToPort
 
     def getId(self):
-        return \
-            self.fromNode + "-" + self.fromPort + \
+        return self.fromNode + "-" + self.fromPort + \
             "|" + \
             self.toNode + "-" + self.toPort
 

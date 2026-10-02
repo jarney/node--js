@@ -54,3 +54,14 @@ TEST_CASE("ConnectionData copy", "[NodeJS][core][ConnectionData]")
 
 }
 
+TEST_CASE("ConnectionData data", "[NodeJS][core][ConnectionData]")
+{
+    ConnectionData cd;
+    cd.setValue("well-known-value", "actual value");
+    
+    const auto & d = cd.getData();
+
+    const auto & it = d.find("well-known-value");
+    CHECK(it != d.end());
+    CHECK(it->second == "actual value");
+}

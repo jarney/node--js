@@ -40,3 +40,12 @@ def test_ConnectionData_copy():
     assert(not cd.hasValue("only-other-value"))
     assert(cdOther.hasValue("only-other-value"))
 
+def test_ConnectionData_data():
+    cd = ConnectionData()
+    # If we actually have a value, make sure it works.
+    cd.setValue("well-known-value", "actual value")
+    
+    d = cd.getData()
+
+    assert("well-known-value" in d)
+    assert(d["well-known-value"] == "actual value")
