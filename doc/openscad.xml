@@ -1,75 +1,1072 @@
 <?xml version="1.0"?>
 <node-module xmlns="http://jarney.github.io/nodejs-schema">
   <!--
-      - This is the interface to OpenSCAD.
-      - This consists of a bunch of nodes that are designed
-      - mimic the OpenSCAD declaration language.  With a suitable
-      - node processor, it is possible to convert programs
-      - in OpenSCAD to NodeJS language and vice-versa.
-  -->
+    - This is the interface to OpenSCAD.
+    - This consists of a bunch of nodes that are designed
+    - mimic the OpenSCAD declaration language.  With a suitable
+    - node processor, it is possible to convert programs
+    - in OpenSCAD to NodeJS language and vice-versa.
+    -->
   <package id="org.ensor.nodejs.openscad"/>
   <data-types>
-    <!--
-	These are (for now) purely documentary.
-	There is no 'hard' validation of data types,
-	their origin, or function at this level.  They
-	exist purely as identifiers that tie ports together.
+  <!--
+    - These are (for now) purely documentary.
+    - There is no 'hard' validation of data types,
+    - their origin, or function at this level.  They
+    - exist purely as identifiers that tie ports together.
     -->
     <data-type id="variable" name="OpenSCAD Variable"/>
     <data-type id="geometry" name="OpenSCAD Geometry"/>
   </data-types>
+  <!--
+    - This is the set of nodes provided by the OpenSCAD
+    - implementation.  Each of these node processors
+    - are added by a native implementation library.
+    -->
   <node-types>
+    <!-- 2D Primitives -->
+    <node-type id="circle" visibility="public" type="native">
+      <inputs>
+        <port id="r" description="r" data-type="variable" connection-policy="one"/>
+        <port id="d" description="d" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="square" visibility="public" type="native">
+      <inputs>
+        <port id="size" description="size" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="polygon" visibility="public" type="native">
+      <inputs>
+        <port id="points" description="points" data-type="variable" connection-policy="one"/>
+        <port id="paths" description="paths" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="text" visibility="public" type="native">
+      <inputs>
+        <port id="text" description="text" data-type="variable" connection-policy="one"/>
+        <port id="size" description="size" data-type="variable" connection-policy="one"/>
+        <port id="font" description="font" data-type="variable" connection-policy="one"/>
+        <port id="direction" description="direction" data-type="variable" connection-policy="one"/>
+        <port id="language" description="language" data-type="variable" connection-policy="one"/>
+        <port id="script" description="script" data-type="variable" connection-policy="one"/>
+        <port id="halign" description="halign" data-type="variable" connection-policy="one"/>
+        <port id="valign" description="valign" data-type="variable" connection-policy="one"/>
+        <port id="spacing" description="spacing" data-type="variable" connection-policy="one"/>
+        <port id="em" description="em" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="projection" visibility="public" type="native">
+      <inputs>
+        <port id="cut" description="cut" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- 3d Primitives -->
     <node-type id="sphere" visibility="public" type="native">
       <inputs>
-	<port id="r" description="r" data-type="variable"/>
-	<port id="d" description="d" data-type="variable"/>
+        <port id="r" description="r" data-type="variable" connection-policy="one"/>
+        <port id="d" description="d" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-	<port id="Geometry" description="Geometry" data-type="geometry"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_true" visibility="public" type="native">
+    <node-type id="cube" visibility="public" type="native">
+      <inputs>
+        <port id="size" description="size" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="cylinder" visibility="public" type="native">
+      <inputs>
+        <port id="h" description="h" data-type="variable" connection-policy="one"/>
+        <port id="r1" description="r1" data-type="variable" connection-policy="one"/>
+        <port id="r2" description="r2" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+        <port id="r" description="r" data-type="variable" connection-policy="one"/>
+        <port id="d" description="d" data-type="variable" connection-policy="one"/>
+        <port id="d1" description="d1" data-type="variable" connection-policy="one"/>
+        <port id="d2" description="d2" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="polyhedron" visibility="public" type="native">
+      <inputs>
+        <port id="points" description="points" data-type="variable" connection-policy="one"/>
+        <port id="faces" description="faces" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="import" visibility="public" type="native">
+      <inputs>
+        <port id="file" description="file" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="id" description="id" data-type="variable" connection-policy="one"/>
+        <port id="layer" description="layer" data-type="variable" connection-policy="one"/>
+        <port id="$fn" description="$fn" data-type="variable" connection-policy="one"/>
+        <port id="$fa" description="$fa" data-type="variable" connection-policy="one"/>
+        <port id="$fs" description="$fs" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="linear_extrude" visibility="public" type="native">
+      <inputs>
+        <port id="height" description="height" data-type="variable" connection-policy="one"/>
+        <port id="v" description="v" data-type="variable" connection-policy="one"/>
+        <port id="scale" description="scale" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+        <port id="twist" description="twist" data-type="variable" connection-policy="one"/>
+        <port id="slices" description="slices" data-type="variable" connection-policy="one"/>
+        <port id="segments" description="segments" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="h" description="h" data-type="variable" connection-policy="one"/>
+        <port id="$fn" description="$fn" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="rotate_extrude" visibility="public" type="native">
+      <inputs>
+        <port id="angle" description="angle" data-type="variable" connection-policy="one"/>
+        <port id="start" description="start" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="a" description="a" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="surface" visibility="public" type="native">
+      <inputs>
+        <port id="file" description="file" data-type="variable" connection-policy="one"/>
+        <port id="center" description="center" data-type="variable" connection-policy="one"/>
+        <port id="invert" description="invert" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="dxf_dim" visibility="public" type="native">
+      <inputs>
+        <port id="file" description="file" data-type="variable" connection-policy="one"/>
+        <port id="name" description="name" data-type="variable" connection-policy="one"/>
+        <port id="layer" description="layer" data-type="variable" connection-policy="one"/>
+        <port id="origin" description="origin" data-type="variable" connection-policy="one"/>
+        <port id="scale" description="scale" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="out" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="dxf_cross" visibility="public" type="native">
+      <inputs>
+        <port id="file" description="file" data-type="variable" connection-policy="one"/>
+        <port id="layer" description="layer" data-type="variable" connection-policy="one"/>
+        <port id="origin" description="origin" data-type="variable" connection-policy="one"/>
+        <port id="scale" description="scale" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="out" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Constants -->
+    <node-type id="true" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_false" visibility="public" type="native">
+    <node-type id="false" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="const_int" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="const_float" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="const_string" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_undef" visibility="public" type="native">
+    <node-type id="undef" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Value" data-type="variable"/>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <!-- more nodes will follow -->
+    <!-- Flow Control -->
+    <node-type id="for" visibility="public" type="native">
+      <inputs>
+        <port id="range" description="range" data-type="variable" connection-policy="one"/>
+        <port id="start" description="start" data-type="variable" connection-policy="one"/>
+        <port id="end" description="end" data-type="variable" connection-policy="one"/>
+        <port id="increment" description="increment" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="intersection_for" visibility="public" type="native">
+      <inputs>
+        <port id="var" description="var" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="if" visibility="public" type="native">
+      <inputs>
+        <port id="condition" description="condition" data-type="variable" connection-policy="one"/>
+        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+        <port id="b" description="b" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="let" visibility="public" type="native">
+      <inputs>
+        <port id="var" description="var" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="comment" visibility="public" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+    <node-type id="group" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="module_output" visibility="public" type="native">
+      <inputs>
+        <port id="out" description="" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+    <node-type id="function_output" visibility="public" type="native">
+      <inputs>
+        <port id="out" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+    <!-- Functions -->
+    <node-type id="concat" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="lookup" visibility="public" type="native">
+      <inputs>
+        <port id="value" description="" data-type="variable" connection-policy="one"/>
+        <port id="table" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="str" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="chr" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="ord" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="search" visibility="public" type="native">
+      <inputs>
+        <port id="needle" description="" data-type="variable" connection-policy="one"/>
+        <port id="haystack" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="version" visibility="public" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="version_num" visibility="public" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+        <port id="value" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="parent_module" visibility="public" type="native">
+      <inputs>
+        <port id="index" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- List -->
+    <node-type id="__builtin_list_index" visibility="public" type="native">
+      <inputs>
+        <port id="list" description="list" data-type="variable" connection-policy="one"/>
+        <port id="index" description="index" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="out" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_get_xyz" visibility="public" type="native">
+      <inputs>
+        <port id="list" description="list" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="x" description="x" data-type="variable" connection-policy="multi"/>
+        <port id="y" description="y" data-type="variable" connection-policy="multi"/>
+        <port id="z" description="z" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_set_xyz" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="x" data-type="variable" connection-policy="one"/>
+        <port id="y" description="y" data-type="variable" connection-policy="one"/>
+        <port id="z" description="z" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="list" description="list" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_get_xy" visibility="public" type="native">
+      <inputs>
+        <port id="list" description="list" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="x" description="x" data-type="variable" connection-policy="multi"/>
+        <port id="y" description="y" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_set_xy" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="x" data-type="variable" connection-policy="one"/>
+        <port id="y" description="y" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="list" description="list" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_get_rgba" visibility="public" type="native">
+      <inputs>
+        <port id="list" description="list" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="r" description="r" data-type="variable" connection-policy="multi"/>
+        <port id="g" description="g" data-type="variable" connection-policy="multi"/>
+        <port id="b" description="b" data-type="variable" connection-policy="multi"/>
+        <port id="a" description="a" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="__builtin_list_set_range" visibility="public" type="native">
+      <inputs>
+        <port id="start" description="start" data-type="variable" connection-policy="one"/>
+        <port id="end" description="end" data-type="variable" connection-policy="one"/>
+        <port id="increment" description="increment" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="range" description="range" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Mathematical -->
+    <node-type id="abs" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="sign" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="sin" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="cos" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="tan" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="acos" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="asin" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="atan" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="atan2" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+        <port id="y" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="floor" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="round" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="ceil" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="ln" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="len" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="log" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="pow" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="sqrt" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="exp" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="rands" visibility="public" type="native">
+      <inputs>
+        <port id="min" description="min" data-type="variable" connection-policy="one"/>
+        <port id="max" description="max" data-type="variable" connection-policy="one"/>
+        <port id="n" description="n" data-type="variable" connection-policy="one"/>
+        <port id="seed" description="seed" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="value" description="value" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="min" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="max" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="norm" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="cross" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Boolean Operations -->
+    <node-type id="union" visibility="public" type="native">
+      <inputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="difference" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="a" data-type="geometry" connection-policy="one"/>
+        <port id="b" description="b" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="intersection" visibility="public" type="native">
+      <inputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Operators -->
+    <node-type id="add" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="subtract" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="multiply" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="divide" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="modulo" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="exponentiate" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="lt" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="leq" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="eq" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="neq" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="geq" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="gt" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="and" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="binary_and" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="or" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="binary_or" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="binary_shl" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="binary_shr" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+        <port id="b" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="not" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="negate" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="tilde" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Other -->
+    <node-type id="echo" visibility="public" type="native">
+      <inputs>
+        <port id="value" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="render" visibility="public" type="native">
+      <inputs>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="children" visibility="public" type="native">
+      <inputs>
+        <port id="index" description="index" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="assert" visibility="public" type="native">
+      <inputs>
+        <port id="condition" description="condition" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Syntax -->
+    <node-type id="assign" visibility="public" type="native">
+      <inputs>
+        <port id="value" description="value" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+    <node-type id="variable" visibility="public" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+        <port id="variable" description="variable" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="function" visibility="public" type="native">
+      <inputs>
+        <port id="r" description="r" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+    <!-- Type Test -->
+    <node-type id="is_bool" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="is_string" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="is_num" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="is_function" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="is_list" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="is_undef" visibility="public" type="native">
+      <inputs>
+        <port id="x" description="" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <!-- Transformations -->
+    <node-type id="translate" visibility="public" type="native">
+      <inputs>
+        <port id="v" description="v" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="rotate" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="a" data-type="variable" connection-policy="one"/>
+        <port id="v" description="v" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="scale" visibility="public" type="native">
+      <inputs>
+        <port id="v" description="v" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="resize" visibility="public" type="native">
+      <inputs>
+        <port id="newsize" description="newsize" data-type="variable" connection-policy="one"/>
+        <port id="auto" description="auto" data-type="variable" connection-policy="one"/>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="mirror" visibility="public" type="native">
+      <inputs>
+        <port id="v" description="v" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="multmatrix" visibility="public" type="native">
+      <inputs>
+        <port id="m" description="m" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="color" visibility="public" type="native">
+      <inputs>
+        <port id="color" description="c" data-type="variable" connection-policy="one"/>
+        <port id="alpha" description="alpha" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="offset" visibility="public" type="native">
+      <inputs>
+        <port id="r" description="r" data-type="variable" connection-policy="one"/>
+        <port id="delta" description="delta" data-type="variable" connection-policy="one"/>
+        <port id="chamfer" description="chamfer" data-type="variable" connection-policy="one"/>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="hull" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="fill" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="minkowski" visibility="public" type="native">
+      <inputs>
+        <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
+        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
   </node-types>
 </node-module>
