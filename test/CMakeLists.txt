@@ -9,6 +9,7 @@ set(TEST_SOURCES
     test_NodeType.cpp
     test_NodeModule.cpp
     test_NodeGraph.cpp
+    test_Processor.cpp
     test_Edge.cpp
     test_ConnectionData.cpp
     test_Validator.cpp

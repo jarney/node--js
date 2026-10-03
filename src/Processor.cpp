@@ -1,5 +1,6 @@
 #include "node--js/Processor.hpp"
 #include "node--js/NodeGraph.hpp"
+#include "node--js/NodeModule.hpp"
 #include <optional>
 
 using namespace NodeJS::core;
@@ -23,10 +24,11 @@ Processor::processGraph(const NodeGraph & graph)
     const std::vector<NodeId> & nodeIds = maybeNodeIds.value();
 
     ConnectionData lastData;
-    
+
     if (nodeIds.size() == 0) {
 	return lastData;
     }
+    
     nodeData[nodeIds.at(0)] = ConnectionData();
 
     for (const NodeId & nodeId : nodeIds) {
@@ -41,29 +43,52 @@ Processor::processGraph(const NodeGraph & graph)
         // to the right place.
         ConnectionData fromData;
         for (const Edge *edge : graph.getEdgesFrom(nodeId)) {
-            fromData.setValue(edge->fromPort, nodeData[edge->toNode].getValue(edge->toPort));
+	    std::string data = nodeData[edge->toNode].getValue(edge->toPort);
+            fromData.setValue(edge->fromPort, data);
 	}
         ConnectionData toData;
-        processNodeType(nodeType, node, fromData, toData);
+        processNodeType(graph, nodeType, node, fromData, toData);
         nodeData[nodeId] = toData;
         lastData = toData;
     }
     return lastData;
 }
-/*
-  def processNodeType(self, nodeType, node, fromData, toData):
-        if nodeType.getType() == NodeType.Type.NATIVE:
-            nodeTypeId = nodeType.getId()
-            if nodeTypeId not in self.native_impl:
-                self.defaultProcess(node, fromData, toData)
-            else:
-                processor = self.native_impl[nodeTypeId]
-                processor(node, fromData, toData)
-        elif nodeType.getType() == NodeType.Type.GRAPH:
-            module = graph.getModule()
-            subgraph = module.getGraph(nodeType.getId())
-            self.processGraph(subgraph)
-        
-    def defaultProcess(self, node, fromData, toData):
-        print("Processing node " + node.getType().getId())
-*/
+
+void
+Processor::processNodeType(
+    const NodeGraph & graph,
+    const NodeType & nodeType,
+    const Node & node,
+    const ConnectionData & fromData,
+    ConnectionData & toData)
+{
+    if (nodeType.getType() == NodeType::Type::NATIVE) {
+	NodeTypeId nodeTypeId = nodeType.getId();
+	const auto nodeProcessorIt = mNodeProcessors.find(nodeTypeId);
+	if (nodeProcessorIt == mNodeProcessors.end()) {
+	    default_processor(node, fromData, toData);
+	    return;
+	}
+	NodeProcessor processor = nodeProcessorIt->second;
+	processor(node, fromData, toData);
+    }
+    else if (nodeType.getType() == NodeType::Type::GRAPH) {
+	NodeModule & module = graph.getModule();
+	NodeGraph *subgraph = module.getGraph(nodeType.getId());
+	if (subgraph == nullptr) {
+	    default_processor(node, fromData, toData);
+	    return;
+	}
+	processGraph(*subgraph);
+    }
+}
+
+void
+Processor::default_processor(
+    const Node & node,
+    const ConnectionData & fromData,
+    ConnectionData & toData
+    )
+{
+    fprintf(stderr, "Default processing unregistered node %s\n", node.getType().getId().c_str());
+}

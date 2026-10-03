@@ -33,13 +33,13 @@ class Processor:
             for edge in graph.getEdgesFrom(nodeId):
                 fromData.setValue(edge.fromPort, nodeData[edge.toNode].getValue(edge.toPort))
             toData = ConnectionData()
-            self.processNodeType(nodeType, node, fromData, toData)
+            self.processNodeType(graph, nodeType, node, fromData, toData)
             nodeData[nodeId] = toData.copy()
             lastData = toData
             
         return lastData
 
-    def processNodeType(self, nodeType, node, fromData, toData):
+    def processNodeType(self, graph, nodeType, node, fromData, toData):
         if nodeType.getType() == NodeType.Type.NATIVE:
             nodeTypeId = nodeType.getId()
             if nodeTypeId not in self.native_impl:

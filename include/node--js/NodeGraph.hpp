@@ -104,14 +104,14 @@ namespace NodeJS {
 	     * from the given node id.  That is, all connections
 	     * with a 'from node' equal to the given node.
 	     */
-	    std::vector<const Edge*> getEdgesFrom(NodeId aNodeId) const;
+	    const std::vector<const Edge *> & getEdgesFrom(NodeId aNodeId) const;
 
 	    /**
 	     * Return a list of the connections terminating
 	     * at the given node id.  That is, all connections
 	     * with a 'to node' equal to the given node.
 	     */
-	    std::vector<const Edge*> getEdgesTo(NodeId aNodeId) const;
+	    const std::vector<const Edge*> & getEdgesTo(NodeId aNodeId) const;
 
 	    const std::map<EdgeId, std::unique_ptr<Edge>> & getEdges() const;
 

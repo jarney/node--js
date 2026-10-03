@@ -33,6 +33,7 @@ namespace NodeJS {
 	     * Performs the process step on an individual node.
 	     */
 	    void processNodeType(
+		const NodeGraph & graph,
 		const NodeType & nodeType,
 		const Node & node,
 		const ConnectionData & fromData,

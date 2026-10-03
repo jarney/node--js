@@ -13,7 +13,7 @@ def unary_processor(node, fromData, toData):
     toData.setValue("out", "callDataFrom(" + node.getId() + ")")
     return
 
-def test_NodeGraph_create_node():
+def test_Process_minimal():
     graph = NodeGraph()
     nodeData = ConnectionData()
 

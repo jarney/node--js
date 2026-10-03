@@ -98,12 +98,29 @@ NodeGraph::newEdge(
     return id;
 }
 
+static const std::vector<const Edge *> empty_edges;
+
+const std::vector<const Edge *> &
+NodeGraph::getEdgesFrom(NodeId aNodeId) const
+{
+    const auto edgesIt = mEdgesByFromNode.find(aNodeId);
+    if (edgesIt == mEdgesByFromNode.end()) return empty_edges;
+    return edgesIt->second;
+}
+
+const std::vector<const Edge *> &
+NodeGraph::getEdgesTo(NodeId aNodeId) const
+{
+    const auto edgesIt = mEdgesByToNode.find(aNodeId);
+    if (edgesIt == mEdgesByToNode.end()) return empty_edges;
+    return edgesIt->second;
+}
+
 const std::map<EdgeId, std::unique_ptr<Edge>> &
 NodeGraph::getEdges() const
 {
     return mEdges;
 }
-
 
 void
 NodeGraph::addScope(std::unique_ptr<NodeModule> node_module)
