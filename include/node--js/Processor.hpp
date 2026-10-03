@@ -27,7 +27,11 @@ namespace NodeJS {
 
 	    void setNativeImpl(NodeTypeId aNodeTypeId, NodeProcessor proc);
 
-	    ConnectionData processGraph(const NodeGraph & graph);
+            void processGraph(
+				const NodeGraph & graph,
+				const ConnectionData & input,
+				ConnectionData & output
+			       );
 
 	    /**
 	     * Performs the process step on an individual node.
@@ -36,13 +40,13 @@ namespace NodeJS {
 		const NodeGraph & graph,
 		const NodeType & nodeType,
 		const Node & node,
-		const ConnectionData & fromData,
-		ConnectionData & toData);
+		const ConnectionData & input,
+		ConnectionData & output);
 
 	    static void default_processor(
 		const Node & node,
-		const ConnectionData & fromData,
-		ConnectionData & toData);
+		const ConnectionData & input,
+		ConnectionData & output);
 	    
 	private:
 	    std::map<NodeTypeId, NodeProcessor> mNodeProcessors;

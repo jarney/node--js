@@ -46,8 +46,9 @@ TEST_CASE("Processor minimal", "[NodeJS][core][Processor]")
     processor.setNativeImpl("unary", unary_processor);
     processor.setNativeImpl("binary", binary_processor);
     
-    //out =
-    processor.processGraph(graph);
-    fprintf(stderr, "We really processed a graph?\n");
+    ConnectionData input;
+    ConnectionData output;
+    processor.processGraph(graph, input, output);
+    fprintf(stderr, "We really processed a graph: %s\n", output.getValue("out").c_str());
 
 }

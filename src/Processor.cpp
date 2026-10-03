@@ -11,8 +11,8 @@ Processor::setNativeImpl(NodeTypeId aNodeTypeId, NodeProcessor processor)
     mNodeProcessors[aNodeTypeId] = processor;
 }
         
-ConnectionData
-Processor::processGraph(const NodeGraph & graph)
+void
+Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, ConnectionData & output)
 {
     // Being in topological order ensures that each node
     // will have its prececessors calculated first
@@ -23,13 +23,12 @@ Processor::processGraph(const NodeGraph & graph)
     std::optional<std::vector<NodeId>> maybeNodeIds = graph.getNodeIdsInTopologicalOrder();
     const std::vector<NodeId> & nodeIds = maybeNodeIds.value();
 
-    ConnectionData lastData;
-
     if (nodeIds.size() == 0) {
-	return lastData;
+        return;
     }
-    
-    nodeData[nodeIds.at(0)] = ConnectionData();
+
+    ConnectionData lastData;
+    nodeData[nodeIds.at(0)] = input;
 
     for (const NodeId & nodeId : nodeIds) {
         const Node & node = *graph.getNode(nodeId);
@@ -51,7 +50,7 @@ Processor::processGraph(const NodeGraph & graph)
         nodeData[nodeId] = toData;
         lastData = toData;
     }
-    return lastData;
+    output = lastData;
 }
 
 void
@@ -79,15 +78,15 @@ Processor::processNodeType(
 	    default_processor(node, fromData, toData);
 	    return;
 	}
-	processGraph(*subgraph);
+	processGraph(*subgraph, fromData, toData);
     }
 }
 
 void
 Processor::default_processor(
     const Node & node,
-    const ConnectionData & fromData,
-    ConnectionData & toData
+    const ConnectionData & input,
+    ConnectionData & output
     )
 {
     fprintf(stderr, "Default processing unregistered node %s\n", node.getType().getId().c_str());

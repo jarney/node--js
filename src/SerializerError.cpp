@@ -44,7 +44,18 @@ SerializerErrorReporterByCode::reportError(
 	std::string error
     )
 {
-    SerializerError error_record{error_code, lineno, file_context, error};
+    SerializerError error_record(error_code, lineno, file_context, error);
     mErrorsByCode[error_code].push_back(error_record);
 }
 
+SerializerError::SerializerError(
+				 SerializerErrorCode aError_code,
+				 unsigned long aLineno,
+				 std::string aFile_context,
+				 std::string aError
+				)
+  : error_code(aError_code)
+  , lineno(aLineno)
+  , file_context(aFile_context)
+  , error(aError)
+{}

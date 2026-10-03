@@ -38,7 +38,14 @@ namespace NodeJS {
 	 */
 	class SerializerError {
 	public:
-	    SerializerError() = default;
+  	    SerializerError();
+  	    SerializerError(
+			    SerializerErrorCode aError_code,
+			    unsigned long aLineno,
+			    std::string aFile_context,
+			    std::string aError
+			   );
+  	    SerializerError(const SerializerError & other) = default;
 	    ~SerializerError() = default;
 	    SerializerErrorCode error_code;
 	    unsigned long lineno;
