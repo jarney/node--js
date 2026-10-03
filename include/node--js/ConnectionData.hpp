@@ -21,7 +21,7 @@ namespace NodeJS {
 	public:
 	    ConnectionData();
 	    ConnectionData(const ConnectionData & other);
-	    ConnectionData & operator=(const ConnectionData & ) = delete;
+	    ConnectionData & operator=(const ConnectionData & ) = default;
 	    ~ConnectionData() = default;
 
 	    /**

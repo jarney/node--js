@@ -24,6 +24,7 @@ namespace NodeJS {
 	 * associated with a data type.
 	 */
 	typedef std::string PortId;
+	typedef std::string NodeTypeId;
 	
 	class NodeType {
 	public:
