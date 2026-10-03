@@ -140,3 +140,89 @@ NodeGraph::addNode(std::string aNodeTypeId)
     return n.getId();
 }
 #endif
+
+std::set<NodeId>
+NodeGraph::getNodeIds(void) const
+{
+    std::set<NodeId> nodes;
+    for (const auto & it : mNodes) {
+	nodes.insert(it.first);
+    }
+    return nodes;
+}
+
+
+std::set<NodeId>
+NodeGraph::getNeighborNodeIds(NodeId aNode) const
+{
+    std::set<NodeId> neighbors;
+
+    // No edges means empty neighbor graph
+    const auto & edges = mEdgesByFromNode.find(aNode);
+    if (edges == mEdgesByFromNode.end()) {
+	return neighbors;
+    }
+    for (const auto & edge : edges->second) {
+	neighbors.insert(edge->toNode);
+    }
+
+    return neighbors;
+}
+
+// Useful for states in the
+// topological sort algorithm used
+// to unwind the dependency order.
+static constexpr int TOPOSORT_STATE_TODO = 0;
+static constexpr int TOPOSORT_STATE_IN_PROGRESS = 1;
+static constexpr int TOPOSORT_STATE_PROCESSED = 2;
+
+std::optional<std::vector<NodeId>>
+NodeGraph::getNodeIdsInTopologicalOrder(void) const
+{
+    std::map<NodeId, int> state;
+    for (const auto & nodeId : getNodeIds()) {
+	state[nodeId] = TOPOSORT_STATE_TODO;
+    }
+    std::vector<NodeId> order;
+
+    for (const auto & start : getNodeIds()) {
+	if (state[start] != TOPOSORT_STATE_TODO) {
+	    continue;
+	}
+	std::vector<std::pair<NodeId, bool>> stack;
+	stack.push_back(std::make_pair(start, false));
+
+	while (stack.size() > 0) {
+	    std::pair<NodeId, bool> pair = stack.back();
+	    stack.pop_back();
+
+	    NodeId node = pair.first;
+	    bool processed = pair.second;
+	    
+	    if (processed) {
+		state[node] = TOPOSORT_STATE_PROCESSED;
+		order.push_back(node);
+		continue;
+	    }
+	    if (state[node] == TOPOSORT_STATE_PROCESSED) {
+		continue;
+	    }
+	    if (state[node] == TOPOSORT_STATE_IN_PROGRESS) {
+		return std::optional<std::vector<NodeId>>();
+	    }
+	    state[node] = TOPOSORT_STATE_IN_PROGRESS;
+	    stack.push_back(std::make_pair(node, true));
+
+	    for ( const auto & neighbor : getNeighborNodeIds(node)) {
+		if (state[neighbor] == TOPOSORT_STATE_IN_PROGRESS) {
+		    return std::optional<std::vector<NodeId>>();
+		}
+		if (state[neighbor] == TOPOSORT_STATE_TODO) {
+		    stack.push_back(std::make_pair(neighbor, false));
+		}
+	    }
+	}
+    }
+    return std::optional(order);
+}
+

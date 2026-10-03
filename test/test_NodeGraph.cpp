@@ -112,3 +112,49 @@ TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
     CHECK(edgeId.has_value());
     CHECK(!edgeId2.has_value());
 }
+TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
+{
+    NodeModule module;
+    NodeGraph &graph = *module.addGraph("main");
+    NodeType plain;
+    ConnectionData empty;
+
+    graph.newNode(plain, "C", empty);
+    graph.newNode(plain, "B", empty);
+    graph.newNode(plain, "A", empty);
+    graph.newNode(plain, "E", empty);
+
+    graph.newEdge("A", "x", "B", "x");
+    graph.newEdge("B", "x", "C", "x");
+    graph.newEdge("A", "x", "E", "x");
+    graph.newEdge("E", "x", "B", "x");
+    
+    std::optional<std::vector<NodeId>> maybeNodesSorted = graph.getNodeIdsInTopologicalOrder();
+    CHECK(maybeNodesSorted.has_value());
+
+    std::vector<NodeId> nodesSorted = maybeNodesSorted.value();
+    std::vector<NodeId> correctOrder = {"C", "B", "E", "A"};
+    std::vector<NodeId> incorrectOrder = {"C", "B", "A", "E"};
+    CHECK(nodesSorted == correctOrder);
+    CHECK(nodesSorted != incorrectOrder);
+}
+
+TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGraph][Algorithms]")
+{
+    NodeModule module;
+    NodeGraph &graph = *module.addGraph("main");
+    NodeType plain;
+    ConnectionData empty;
+    
+    graph.newNode(plain, "C", empty);
+    graph.newNode(plain, "B", empty);
+    graph.newNode(plain, "A", empty);
+    
+    graph.newEdge("A", "x", "B", "x");
+    graph.newEdge("B", "x", "C", "x");
+    graph.newEdge("C", "x", "A", "x");
+    
+    std::optional<std::vector<NodeId>> maybeNodesSorted = graph.getNodeIdsInTopologicalOrder();
+    CHECK(!maybeNodesSorted.has_value());    
+}
+

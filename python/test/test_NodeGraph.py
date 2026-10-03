@@ -86,13 +86,13 @@ def test_NodeGraph_edge_duplicate():
 
 def test_NodeGraph_topological_sort():
     graph = NodeGraph()
-
     plain = NodeType()
+    empty = ConnectionData()
 
-    graph.newNode(plain, "C", {})
-    graph.newNode(plain, "B", {})
-    graph.newNode(plain, "A", {})
-    graph.newNode(plain, "E", {})
+    graph.newNode(plain, "C", empty)
+    graph.newNode(plain, "B", empty)
+    graph.newNode(plain, "A", empty)
+    graph.newNode(plain, "E", empty)
 
     graph.newEdge("A", "x", "B", "x");
     graph.newEdge("B", "x", "C", "x");
@@ -105,12 +105,12 @@ def test_NodeGraph_topological_sort():
 
 def test_NodeGraph_topological_sort_cycle():
     graph = NodeGraph()
-
     plain = NodeType()
+    empty = ConnectionData()
 
-    graph.newNode(plain, "C", {})
-    graph.newNode(plain, "B", {})
-    graph.newNode(plain, "A", {})
+    graph.newNode(plain, "C", empty)
+    graph.newNode(plain, "B", empty)
+    graph.newNode(plain, "A", empty)
 
     graph.newEdge("A", "x", "B", "x");
     graph.newEdge("B", "x", "C", "x");

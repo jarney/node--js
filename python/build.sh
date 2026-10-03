@@ -7,6 +7,8 @@ fi
 CMAKE_BINARY_DIR=$1
 CMAKE_SOURCE_DIR=$2
 
+exit 0
+
 mkdir -p ${CMAKE_BINARY_DIR}/python
 if [ ! -d ${CMAKE_BINARY_DIR}/python/venv ] ; then
     python3 -m venv ${CMAKE_BINARY_DIR}/python/venv

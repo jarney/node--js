@@ -4,6 +4,7 @@
 #include "node--js/Node.hpp"
 
 #include <optional>
+#include <set>
 
 namespace NodeJS {
     namespace core {
@@ -119,6 +120,18 @@ namespace NodeJS {
 	    void addScope(std::unique_ptr<NodeModule> node_module);
 	    
 	    const NodeType * getNodeType(std::string aTypeName);
+
+	    std::set<NodeId> getNodeIds(void) const;
+
+	    std::set<NodeId> getNeighborNodeIds(NodeId aNode) const;
+            /**
+	     * This method sorts the nodes in topological
+	     * order and returns the associated NodeIds
+	     * This method will return no value (in the optional)
+	     * if the graph has a cycle.
+	     */
+	    std::optional<std::vector<NodeId>> getNodeIdsInTopologicalOrder(void) const;
+
 	    
 	private:
 	    NodeModule & mModule;
