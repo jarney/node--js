@@ -1,6 +1,13 @@
 from .Node import Node
 from .Edge import Edge
 
+# Useful for states in the
+# topological sort algorithm used
+# to unwind the dependency order.
+TOPOSORT_STATE_TODO = 0
+TOPOSORT_STATE_IN_PROGRESS = 1
+TOPOSORT_STATE_PROCESSED = 2
+
 class NodeGraph:
     def __init__(self):
         self.mNodes = {}
@@ -27,6 +34,9 @@ class NodeGraph:
         
         return retNode
 
+    def getNodeIds(self):
+        return self.mNodes.keys()
+    
     def getNode(self, aNodeId):
         if aNodeId in self.mNodes:
             return self.mNodes[aNodeId]
@@ -57,4 +67,62 @@ class NodeGraph:
         self.mEdges[id] = edge
         return id
 
+    def getEdgesFrom(self, nodeId):
+        if not nodeId in self.mEdgesByFromNode:
+            return []
+        return self.mEdgesByFromNode[nodeId]
+
+    def getEdgesTo(self, nodeId):
+        if not nodeId in self.mEdgesByToNode:
+            return []
+        return self.mEdgesByToNode[nodeId]
     
+    def getNeighborNodeIds(self, aNode):
+        neighbors = []
+
+        # No edges means empty neighbor graph
+        if not aNode in self.mEdgesByFromNode:
+            return neighbors
+        
+        for edge in self.mEdgesByFromNode[aNode]:
+            neighbors.append(edge.toNode)
+        neighbors = set(neighbors)
+        return neighbors
+    
+    # This method sorts the nodes in topological
+    # order and returns the associated NodeIds
+    # This method will return None if the graph
+    # has a cycle.
+    def getNodeIdsInTopologicalOrder(self):
+        state = {node: TOPOSORT_STATE_TODO for node in self.getNodeIds()}
+        order = []
+    
+        for start in self.getNodeIds():
+            if state[start] != TOPOSORT_STATE_TODO:
+                continue
+    
+            stack = [(start, False)]
+    
+            while stack:
+                node, processed = stack.pop()
+    
+                if processed:
+                    state[node] = TOPOSORT_STATE_PROCESSED
+                    order.append(node)
+                    continue
+    
+                if state[node] == TOPOSORT_STATE_PROCESSED:
+                    continue
+    
+                if state[node] == TOPOSORT_STATE_IN_PROGRESS:
+                    return None
+    
+                state[node] = TOPOSORT_STATE_IN_PROGRESS
+                stack.append((node, True))
+    
+                for neighbor in self.getNeighborNodeIds(node):
+                    if state[neighbor] == TOPOSORT_STATE_IN_PROGRESS:
+                        return None
+                    if state[neighbor] == TOPOSORT_STATE_TODO:
+                        stack.append((neighbor, False))
+        return order

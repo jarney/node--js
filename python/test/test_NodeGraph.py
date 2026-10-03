@@ -84,3 +84,38 @@ def test_NodeGraph_edge_duplicate():
     assert(edgeId != None)
     assert(edgeId2 == None)
 
+def test_NodeGraph_topological_sort():
+    graph = NodeGraph()
+
+    plain = NodeType()
+
+    graph.newNode(plain, "C", {})
+    graph.newNode(plain, "B", {})
+    graph.newNode(plain, "A", {})
+    graph.newNode(plain, "E", {})
+
+    graph.newEdge("A", "x", "B", "x");
+    graph.newEdge("B", "x", "C", "x");
+    graph.newEdge("A", "x", "E", "x");
+    
+    nodesSorted = graph.getNodeIdsInTopologicalOrder()
+
+    assert(nodesSorted == ['C', 'B', 'E', 'A'])
+    assert(nodesSorted != ['C', 'B', 'A', 'E'])
+
+def test_NodeGraph_topological_sort_cycle():
+    graph = NodeGraph()
+
+    plain = NodeType()
+
+    graph.newNode(plain, "C", {})
+    graph.newNode(plain, "B", {})
+    graph.newNode(plain, "A", {})
+
+    graph.newEdge("A", "x", "B", "x");
+    graph.newEdge("B", "x", "C", "x");
+    graph.newEdge("C", "x", "A", "x");
+    
+    nodesSorted = graph.getNodeIdsInTopologicalOrder()
+
+    assert(nodesSorted == None)

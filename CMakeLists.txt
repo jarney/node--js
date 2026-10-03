@@ -34,7 +34,7 @@ option(BUILD_TESTING "Build tests" ON)
 option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
 option(BUILD_MEMCHECK "Valgrind Memory Check" ON)
 
-option(BUILD_PYTHON "Python Module" OFF)
+option(BUILD_PYTHON "Python Module" ON)
 
 
 if(QT_NODES_DEVELOPER_DEFAULTS)
