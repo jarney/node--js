@@ -3,11 +3,17 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
 ////////////////////////////////////////
 // Circle
 ////////////////////////////////////////
-void
-Builtins::f_2d_circle_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(2d_circle)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -19,8 +25,7 @@ Builtins::f_2d_circle_process(const Node & node, const ConnectionData & input, C
 ////////////////////////////////////////
 // Square
 ////////////////////////////////////////
-void
-Builtins::f_2d_square_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(2d_square)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "size");
@@ -33,8 +38,7 @@ Builtins::f_2d_square_process(const Node & node, const ConnectionData & input, C
 ////////////////////////////////////////
 // Polygon
 ////////////////////////////////////////
-void
-Builtins::f_2d_polygon_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(2d_polygon)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "points", "[]");
@@ -48,8 +52,7 @@ Builtins::f_2d_polygon_process(const Node & node, const ConnectionData & input, 
 ////////////////////////////////////////
 // Text
 ////////////////////////////////////////
-void
-Builtins::f_2d_text_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(2d_text)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "text");
@@ -72,8 +75,7 @@ Builtins::f_2d_text_process(const Node & node, const ConnectionData & input, Con
 ////////////////////////////////////////
 // Projection
 ////////////////////////////////////////
-void
-Builtins::f_2d_projection_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(2d_projection)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "cut");

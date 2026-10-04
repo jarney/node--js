@@ -5,11 +5,17 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
 ////////////////////////////////////////
 // Assignment
 ////////////////////////////////////////
-void
-Builtins::f_syntax_assign_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_assign)
 {
     std::string value;
     if (input.hasValue("value")) {
@@ -38,8 +44,7 @@ Builtins::f_syntax_assign_process(const Node & node, const ConnectionData & inpu
 ////////////////////////////////////////
 // Assign List
 ////////////////////////////////////////
-void
-Builtins::f_syntax_assign_list_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_assign_list)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -51,8 +56,7 @@ Builtins::f_syntax_assign_list_process(const Node & node, const ConnectionData &
 ////////////////////////////////////////
 // Variable
 ////////////////////////////////////////
-void
-Builtins::f_syntax_variable_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_variable)
 {
     std::string out = node.getData().getValue("variable_name");
     output.setValue("variable", out);
@@ -61,8 +65,7 @@ Builtins::f_syntax_variable_process(const Node & node, const ConnectionData & in
 ////////////////////////////////////////
 // Define Module
 ////////////////////////////////////////
-void
-Builtins::f_syntax_module_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_module)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -74,8 +77,7 @@ Builtins::f_syntax_module_process(const Node & node, const ConnectionData & inpu
 ////////////////////////////////////////
 // Define Function
 ////////////////////////////////////////
-void
-Builtins::f_syntax_function_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_function)
 {
     std::string graph = node.getData().getValue("name", "undefined");
     
@@ -101,8 +103,7 @@ Builtins::f_syntax_function_process(const Node & node, const ConnectionData & in
 ////////////////////////////////////////
 // Include
 ////////////////////////////////////////
-void
-Builtins::f_syntax_include_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_include)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -114,8 +115,7 @@ Builtins::f_syntax_include_process(const Node & node, const ConnectionData & inp
 ////////////////////////////////////////
 // Use
 ////////////////////////////////////////
-void
-Builtins::f_syntax_use_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_use)
 {
     std::vector<std::string> args;
     conditionalArg(args, input, node, "r");
@@ -127,8 +127,7 @@ Builtins::f_syntax_use_process(const Node & node, const ConnectionData & input, 
 // This is how custom nodes like modules
 // and functions get processed.
 ////////////////////////////////////////
-void
-Builtins::syntax_custom_node_processor(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(syntax_custom_node)
 {
     std::vector<std::string> args;
     // If the output is 'value' then

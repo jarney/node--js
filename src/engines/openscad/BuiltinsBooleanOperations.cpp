@@ -3,11 +3,17 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
 ////////////////////////////////////////
 // Union
 ////////////////////////////////////////
-void
-Builtins::f_op_union_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(op_union)
 {
     std::string out;
     out += std::string("union() {\n");
@@ -19,8 +25,7 @@ Builtins::f_op_union_process(const Node & node, const ConnectionData & input, Co
 ////////////////////////////////////////
 // Difference
 ////////////////////////////////////////
-void
-Builtins::f_op_difference_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(op_difference)
 {
     std::string out;
     out += std::string("difference() {\n");
@@ -37,8 +42,7 @@ Builtins::f_op_difference_process(const Node & node, const ConnectionData & inpu
 ////////////////////////////////////////
 // Intersection
 ////////////////////////////////////////
-void
-Builtins::f_op_intersection_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(op_intersection)
 {
     std::string out;
     out += std::string("intersection() {\n");

@@ -3,11 +3,17 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
 ////////////////////////////////////////
 // For
 ////////////////////////////////////////
-void
-Builtins::f_flow_for_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_for)
 {
     std::string out = std::string();
     out += std::string("for (");
@@ -46,8 +52,7 @@ Builtins::f_flow_for_process(const Node & node, const ConnectionData & input, Co
 ////////////////////////////////////////
 // Intersection For
 ////////////////////////////////////////
-void
-Builtins::f_flow_intersection_for_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_intersection_for)
 {
     // TODO: Call/evaluate sub-flow
     std::string out = std::string();
@@ -60,8 +65,7 @@ Builtins::f_flow_intersection_for_process(const Node & node, const ConnectionDat
 ////////////////////////////////////////
 // If
 ////////////////////////////////////////
-void
-Builtins::f_flow_if_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_if)
 {
     std::string out = std::string();
     out += std::string("if(");
@@ -77,8 +81,7 @@ Builtins::f_flow_if_process(const Node & node, const ConnectionData & input, Con
 ////////////////////////////////////////
 // Let
 ////////////////////////////////////////
-void
-Builtins::f_flow_let_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_let)
 {
     // TODO: Call/evaluate sub-flow
     std::string out = std::string();
@@ -95,8 +98,7 @@ Builtins::f_flow_let_process(const Node & node, const ConnectionData & input, Co
 ////////////////////////////////////////
 // Group
 ////////////////////////////////////////
-void
-Builtins::f_flow_group_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_group)
 {
     output.setValue("Geometry", std::string("group() {\n") +
         input.getValue("a", "{}") +
@@ -106,8 +108,7 @@ Builtins::f_flow_group_process(const Node & node, const ConnectionData & input, 
 ////////////////////////////////////////
 // Output
 ////////////////////////////////////////
-void
-Builtins::f_flow_module_output_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_module_output)
 {
     std::string s = input.getValue("out", "//No Geometry Output\n");
     output.setValue("out", s);
@@ -116,8 +117,7 @@ Builtins::f_flow_module_output_process(const Node & node, const ConnectionData &
 ////////////////////////////////////////
 // Output
 ////////////////////////////////////////
-void
-Builtins::f_flow_function_output_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(flow_function_output)
 {
     std::string s = input.getValue("out", "//No Geometry Output\n");
     output.setValue("out", s);

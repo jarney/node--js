@@ -14,18 +14,23 @@ namespace NodeJS {
 	 * from a node and the input data and calculates
 	 * a result into the 'toData'.
 	 */
-	typedef std::function<void(
-	    const Node & node,
-	    const ConnectionData & fromData,
-	    ConnectionData & toData
-	    )> NodeProcessor;
+	class NodeProcessor {
+	public:
+	    NodeProcessor() = default;
+	    virtual ~NodeProcessor() = default;
+	    virtual void process(
+		const Node & node,
+		const ConnectionData & fromData,
+		ConnectionData & toData
+		) = 0;
+	};
 
 	class Processor {
 	public:
 	    Processor() = default;
 	    virtual ~Processor() = default;
 
-	    void setNativeImpl(NodeTypeId aNodeTypeId, NodeProcessor proc);
+	    void setNativeImpl(NodeTypeId aNodeTypeId, std::unique_ptr<NodeProcessor> proc);
 
             void processGraph(
 				const NodeGraph & graph,
@@ -49,7 +54,7 @@ namespace NodeJS {
 		ConnectionData & output);
 	    
 	private:
-	    std::map<NodeTypeId, NodeProcessor> mNodeProcessors;
+	    std::map<NodeTypeId, std::unique_ptr<NodeProcessor>> mNodeProcessors;
 	};
     }
 }

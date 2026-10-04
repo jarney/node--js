@@ -3,18 +3,22 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
-void
-Builtins::f_const_true_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
+_OPENSCAD_PROCESSOR_DEF(const_true)
 {
     output.setValue("value", std::string("true"));
 }
-void
-Builtins::f_const_false_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(const_false)
 {
     output.setValue("value", std::string("false"));
 }
-void
-Builtins::f_const_undef_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(const_undef)
 {
     output.setValue("value", std::string("undef"));
 }
@@ -22,8 +26,7 @@ Builtins::f_const_undef_process(const Node & node, const ConnectionData & input,
 ////////////////////////////////////////
 // Integer Constant
 ////////////////////////////////////////
-void
-Builtins::f_const_int_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(const_int)
 {
     output.setValue("value", node.getData().getValue("value", "0"));
 }
@@ -31,8 +34,7 @@ Builtins::f_const_int_process(const Node & node, const ConnectionData & input, C
 ////////////////////////////////////////
 // Float Constant
 ////////////////////////////////////////
-void
-Builtins::f_const_float_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(const_float)
 {
     output.setValue("value", node.getData().getValue("value", "0.0"));
 }
@@ -40,8 +42,7 @@ Builtins::f_const_float_process(const Node & node, const ConnectionData & input,
 ////////////////////////////////////////
 // String Constant
 ////////////////////////////////////////
-void
-Builtins::f_const_string_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(const_string)
 {
     fprintf(stderr, "Processing string to %s\n", node.getData().getValue("value").c_str());
     output.setValue(

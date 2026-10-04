@@ -6,9 +6,10 @@
 using namespace NodeJS::core;
 
 void
-Processor::setNativeImpl(NodeTypeId aNodeTypeId, NodeProcessor processor)
+Processor::setNativeImpl(NodeTypeId aNodeTypeId, std::unique_ptr<NodeProcessor> processor)
 {
-    mNodeProcessors[aNodeTypeId] = processor;
+    fprintf(stderr, "Registering processor %s\n", aNodeTypeId.c_str());
+    mNodeProcessors[aNodeTypeId] = std::move(processor);
 }
         
 static void
@@ -85,8 +86,8 @@ Processor::processNodeType(
 	}
 	fprintf(stderr, "Processing node type %s\n", nodeTypeId.c_str());
 	dumpDict("input:", fromData);
-	NodeProcessor processor = nodeProcessorIt->second;
-	processor(node, fromData, toData);
+	NodeProcessor & processor = *nodeProcessorIt->second.get();
+	processor.process(node, fromData, toData);
 	dumpDict("output: ", toData);
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {

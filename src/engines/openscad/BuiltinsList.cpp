@@ -3,11 +3,17 @@
 using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
+#define _OPENSCAD_PROCESSOR_DEF(name)                  \
+    void Builtins::NodeProcessor_##name##_fn::process(      \
+	const Node & node,                             \
+	const ConnectionData & input,                  \
+	ConnectionData & output                        \
+	)
+
 ////////////////////////////////////////
 // List Index
 ////////////////////////////////////////
-void
-Builtins::f_list_index_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_index)
 {
     std::vector<std::string> args;
     std::string out;
@@ -19,8 +25,7 @@ Builtins::f_list_index_process(const Node & node, const ConnectionData & input, 
 ////////////////////////////////////////
 // List get xyz
 ////////////////////////////////////////
-void
-Builtins::f_list_get_xyz_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_get_xyz)
 {
     std::vector<std::string> args;
     std::string x = input.getValue("list", "[0,0,0]") + std::string("[0]");
@@ -34,8 +39,7 @@ Builtins::f_list_get_xyz_process(const Node & node, const ConnectionData & input
 ////////////////////////////////////////
 // List set xyz
 ////////////////////////////////////////
-void
-Builtins::f_list_set_xyz_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_set_xyz)
 {
     std::string out;
     out += std::string("[");
@@ -49,8 +53,7 @@ Builtins::f_list_set_xyz_process(const Node & node, const ConnectionData & input
 ////////////////////////////////////////
 // List get xyz
 ////////////////////////////////////////
-void
-Builtins::f_list_get_xy_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_get_xy)
 {
     std::vector<std::string> args;
     std::string x = input.getValue("list", "[0,0]") + std::string("[0]");
@@ -62,8 +65,7 @@ Builtins::f_list_get_xy_process(const Node & node, const ConnectionData & input,
 ////////////////////////////////////////
 // List set xy
 ////////////////////////////////////////
-void
-Builtins::f_list_set_xy_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_set_xy)
 {
     std::string out;
     out += std::string("[");
@@ -76,8 +78,7 @@ Builtins::f_list_set_xy_process(const Node & node, const ConnectionData & input,
 ////////////////////////////////////////
 // List get xyz
 ////////////////////////////////////////
-void
-Builtins::f_list_get_rgba_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_get_rgba)
 {
     std::vector<std::string> args;
     std::string r = input.getValue("list", "[1,1,1,0]") + std::string("[0]");
@@ -93,8 +94,7 @@ Builtins::f_list_get_rgba_process(const Node & node, const ConnectionData & inpu
 ////////////////////////////////////////
 // List set rgba
 ////////////////////////////////////////
-void
-Builtins::f_list_set_rgba_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_set_rgba)
 {
     std::string out;
     out += std::string("[");
@@ -110,8 +110,7 @@ Builtins::f_list_set_rgba_process(const Node & node, const ConnectionData & inpu
 ////////////////////////////////////////
 // List set range
 ////////////////////////////////////////
-void
-Builtins::f_list_set_range_process(const Node & node, const ConnectionData & input, ConnectionData & output)
+_OPENSCAD_PROCESSOR_DEF(list_set_range)
 {
     std::string out;
     out += std::string("[");
