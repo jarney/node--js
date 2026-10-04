@@ -11,6 +11,15 @@ Processor::setNativeImpl(NodeTypeId aNodeTypeId, NodeProcessor processor)
     mNodeProcessors[aNodeTypeId] = processor;
 }
         
+static void
+dumpDict(std::string msg, const ConnectionData & data)
+{
+    fprintf(stderr, "%s\n", msg.c_str());
+    for (const auto & it : data.getData()) {
+	fprintf(stderr, "        %s : %s\n", it.first.c_str(), it.second.c_str());
+    }
+}
+
 void
 Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, ConnectionData & output)
 {
@@ -51,15 +60,7 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         lastData = toData;
     }
     output = lastData;
-}
-
-static void
-dumpDict(std::string msg, const ConnectionData & data)
-{
-    fprintf(stderr, "%s\n", msg.c_str());
-    for (const auto & it : data.getData()) {
-	fprintf(stderr, "        %s : %s\n", it.first.c_str(), it.second.c_str());
-    }
+    dumpDict("Graph output:", output);
 }
 
 void
@@ -79,9 +80,9 @@ Processor::processNodeType(
 	}
 	fprintf(stderr, "Processing node type %s\n", nodeTypeId.c_str());
 	dumpDict("input:", fromData);
-	dumpDict("output: ", toData);
 	NodeProcessor processor = nodeProcessorIt->second;
 	processor(node, fromData, toData);
+	dumpDict("output: ", toData);
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
 	NodeModule & module = graph.getModule();

@@ -10,6 +10,8 @@ void
 Builtins::registerProcessors(Processor & processor)
 {
     processor.setNativeImpl("assign", f_syntax_assign_process);
+    processor.setNativeImpl("variable", f_syntax_variable_process);
+    processor.setNativeImpl("function", f_syntax_function_process);
     
 #if 0    
     // Syntax
