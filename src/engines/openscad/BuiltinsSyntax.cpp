@@ -32,7 +32,7 @@ Builtins::f_syntax_assign_process(const Node & node, const ConnectionData & inpu
     }
     out += node.getData().getValue("variable_name", "x") + std::string("= ") + value + std::string(";");
     out += std::string("\n");
-    output.setValue("out", out);
+    output.setValue("assignment", out);
 }
 
 ////////////////////////////////////////

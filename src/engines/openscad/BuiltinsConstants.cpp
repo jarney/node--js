@@ -43,6 +43,7 @@ Builtins::f_const_float_process(const Node & node, const ConnectionData & input,
 void
 Builtins::f_const_string_process(const Node & node, const ConnectionData & input, ConnectionData & output)
 {
+    fprintf(stderr, "Processing string to %s\n", node.getData().getValue("value").c_str());
     output.setValue(
 	"value",
 	std::string("\"") +

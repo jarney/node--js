@@ -9,14 +9,18 @@
     -->
   <package id="org.ensor.nodejs.openscad"/>
   <data-types>
-  <!--
-    - These are (for now) purely documentary.
-    - There is no 'hard' validation of data types,
-    - their origin, or function at this level.  They
-    - exist purely as identifiers that tie ports together.
-    -->
+    <!--
+      - These are (for now) purely documentary.
+      - There is no 'hard' validation of data types,
+      - their origin, or function at this level.  They
+      - exist purely as identifiers that tie ports together.
+      -->
     <data-type id="variable" name="OpenSCAD Variable"/>
     <data-type id="geometry" name="OpenSCAD Geometry"/>
+    
+    <data-type id="assignment" name="OpenSCAD Variable Assignment"/>
+    <data-type id="function-definition" name="OpenSCAD Function Definition"/>
+    <data-type id="module-definition" name="OpenSCAD Module Definition"/>
   </data-types>
   <!--
     - This is the set of nodes provided by the OpenSCAD
@@ -27,7 +31,10 @@
     <!-- Output to be rendered -->
     <node-type id="output" visibility="public" type="native">
       <inputs>
-	<port id="output" description="Output to render" data-type="geometry" connection-policy="multi"/>
+	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"/>
+	<port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
+	<port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
+	<port id="module-instantiations" description="Output to render" data-type="geometry" connection-policy="multi"/>
       </inputs>
       <outputs/>
     </node-type>
@@ -906,7 +913,7 @@
         <port id="value" description="value" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="out" description="Assignment" data-type="variable" connection-policy="one"/>
+	<port id="assignment" description="value" data-type="assignment" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="variable" visibility="public" type="native">
@@ -1073,6 +1080,14 @@
         <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
       </inputs>
       <outputs>
+        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    <node-type id="graph" visibility="public" type="graph">
+      <inputs>
+      </inputs>
+      <outputs>
+        <port id="assignments" description="Assignments" data-type="geometry" connection-policy="multi"/>
         <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
       </outputs>
     </node-type>

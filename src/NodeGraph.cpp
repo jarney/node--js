@@ -1,6 +1,8 @@
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
 
+#include <algorithm>
+
 using namespace NodeJS::core;
 
 NodeGraph::NodeGraph(NodeModule & aModule)
@@ -240,6 +242,7 @@ NodeGraph::getNodeIdsInTopologicalOrder(void) const
 	    }
 	}
     }
+    std::reverse(order.begin(), order.end());
     return std::optional(order);
 }
 

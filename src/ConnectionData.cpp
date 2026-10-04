@@ -12,7 +12,12 @@ ConnectionData::ConnectionData(const ConnectionData & other)
 void
 ConnectionData::setValue(std::string key, std::string value)
 {
-    mData[key] = value;
+    if (!hasValue(key)) {
+	mData[key] = value;
+    }
+    else {
+	mData[key] = getValue(key) + value;
+    }
 }
 
 std::string

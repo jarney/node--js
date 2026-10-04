@@ -40,6 +40,7 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
     nodeData[nodeIds.at(0)] = input;
 
     for (const NodeId & nodeId : nodeIds) {
+	fprintf(stderr, "Processing node %s\n", nodeId.c_str());
         const Node & node = *graph.getNode(nodeId);
 
         // Get the type of the node.
@@ -50,9 +51,13 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         // prececessor nodes, so we need to shuttle it
         // to the right place.
         ConnectionData fromData;
-        for (const Edge *edge : graph.getEdgesFrom(nodeId)) {
-	    std::string data = nodeData[edge->toNode].getValue(edge->toPort);
-            fromData.setValue(edge->fromPort, data);
+        for (const Edge *edge : graph.getEdgesTo(nodeId)) {
+	    std::string data = nodeData[edge->fromNode].getValue(edge->fromPort);
+            fromData.setValue(edge->toPort, data);
+	    fprintf(stderr, "Taking data from %s:%s -> %s:%s = %s\n",
+		    edge->fromNode.c_str(), edge->fromPort.c_str(),
+		    edge->toNode.c_str(), edge->toPort.c_str(),
+		    data.c_str());
 	}
         ConnectionData toData;
         processNodeType(graph, nodeType, node, fromData, toData);
@@ -91,6 +96,15 @@ Processor::processNodeType(
 	    default_processor(node, fromData, toData);
 	    return;
 	}
+	// Rules:
+	// - Only one terminal node called "output".
+	// - Each output corresponds to the node type's output ports.
+	// - Each input corresponds to the node type's input ports.
+	// All of this implies:
+	// - Assignment must produce a value (an assignment).
+	// - Module Instantiation must be a value by itself (this is 'geometry')
+	// - Function definition is also its own thing producing a value.
+	// - Module definition also produces its own thing.
 	processGraph(*subgraph, fromData, toData);
     }
 }

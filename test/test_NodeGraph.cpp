@@ -133,7 +133,7 @@ TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
     CHECK(maybeNodesSorted.has_value());
 
     std::vector<NodeId> nodesSorted = maybeNodesSorted.value();
-    std::vector<NodeId> correctOrder = {"C", "B", "E", "A"};
+    std::vector<NodeId> correctOrder = {"A", "E", "B", "C"};
     std::vector<NodeId> incorrectOrder = {"C", "B", "A", "E"};
     CHECK(nodesSorted == correctOrder);
     CHECK(nodesSorted != incorrectOrder);
