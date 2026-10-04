@@ -2,6 +2,7 @@
 
 #include "node--js/NodeType.hpp"
 #include "node--js/Node.hpp"
+#include "node--js/Processor.hpp"
 
 namespace NodeJS {
     namespace openscad {
@@ -24,7 +25,7 @@ namespace NodeJS {
  */
 class Builtins {
 public:
-    static void registerDataModels();
+    static void registerProcessors(NodeJS::core::Processor & processor);
 
 #define _OPENSCAD_NODE_DECL(name)                                    \
     static void f_##name##_process(const NodeJS::core::Node & node, const NodeJS::core::ConnectionData & input, NodeJS::core::ConnectionData & output);

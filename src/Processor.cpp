@@ -53,6 +53,15 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
     output = lastData;
 }
 
+static void
+dumpDict(std::string msg, const ConnectionData & data)
+{
+    fprintf(stderr, "%s\n", msg.c_str());
+    for (const auto & it : data.getData()) {
+	fprintf(stderr, "        %s : %s\n", it.first.c_str(), it.second.c_str());
+    }
+}
+
 void
 Processor::processNodeType(
     const NodeGraph & graph,
@@ -68,6 +77,9 @@ Processor::processNodeType(
 	    default_processor(node, fromData, toData);
 	    return;
 	}
+	fprintf(stderr, "Processing node type %s\n", nodeTypeId.c_str());
+	dumpDict("input:", fromData);
+	dumpDict("output: ", toData);
 	NodeProcessor processor = nodeProcessorIt->second;
 	processor(node, fromData, toData);
     }

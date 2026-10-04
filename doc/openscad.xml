@@ -906,6 +906,7 @@
         <port id="value" description="value" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
+        <port id="out" description="Assignment" data-type="variable" connection-policy="one"/>
       </outputs>
     </node-type>
     <node-type id="variable" visibility="public" type="native">

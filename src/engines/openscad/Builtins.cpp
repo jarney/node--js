@@ -1,4 +1,4 @@
-#include "Builtins.hpp"
+#include "node--js/engines/openscad/Builtins.hpp"
 //#include "nodes/openscad/Builtins_helpers.hpp"
 
 using namespace NodeJS::openscad;
@@ -7,8 +7,10 @@ using namespace NodeJS::core;
 #define _OPENSCAD_NODE_REGISTER(name) ret->registerModel(std::move(f_##name()))
 
 void
-Builtins::registerDataModels()
+Builtins::registerProcessors(Processor & processor)
 {
+    processor.setNativeImpl("assign", f_syntax_assign_process);
+    
 #if 0    
     // Syntax
     _OPENSCAD_NODE_REGISTER(syntax_assign);        // parsed
@@ -22,15 +24,17 @@ Builtins::registerDataModels()
     // We put this in the syntax section because
     // we use this for custom modules and functions.
     ret->setCustomProcessor(Builtins::syntax_custom_node_processor);
+#endif
     
     // Constants
-    _OPENSCAD_NODE_REGISTER(const_true);           // parsed
-    _OPENSCAD_NODE_REGISTER(const_false);          // parsed
-    _OPENSCAD_NODE_REGISTER(const_int);            // parsed
-    _OPENSCAD_NODE_REGISTER(const_float);          // parsed
-    _OPENSCAD_NODE_REGISTER(const_string);         // parsed
-    _OPENSCAD_NODE_REGISTER(const_undef);          // parsed
+    processor.setNativeImpl("true", f_const_true_process);
+    processor.setNativeImpl("false", f_const_false_process);
+    processor.setNativeImpl("const_int", f_const_int_process);
+    processor.setNativeImpl("const_float", f_const_float_process);
+    processor.setNativeImpl("const_string", f_const_string_process);
+    processor.setNativeImpl("undef", f_const_string_process);
 
+#if 0
     // Operators
     _OPENSCAD_NODE_REGISTER(operator_add);         // parsed
     _OPENSCAD_NODE_REGISTER(operator_subtract);    // parsed
