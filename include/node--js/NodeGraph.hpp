@@ -115,9 +115,9 @@ namespace NodeJS {
 
 	    const std::map<EdgeId, std::unique_ptr<Edge>> & getEdges() const;
 
-	    const std::vector<Scope> & getScope();
+	    const std::vector<const NodeModule *> & getScopes() const;
 
-	    void addScope(std::unique_ptr<NodeModule> node_module);
+	    void addScope(const NodeModule * node_module);
 	    
 	    const NodeType * getNodeType(std::string aTypeName);
 
@@ -145,7 +145,7 @@ namespace NodeJS {
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByFromNode;
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByToNode;
 
-	    std::vector<std::unique_ptr<NodeModule>> mScopes;
+	    std::vector<const NodeModule*> mScopes;
 	};
     }
 }

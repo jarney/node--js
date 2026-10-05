@@ -2,12 +2,15 @@
 
 #include "node--js/NodeType.hpp"
 #include "node--js/NodeModule.hpp"
+#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 
 using namespace NodeJS::core;
+using namespace NodeJS::xml;
 
 TEST_CASE("Node Module package id", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
 
     nodeModule.setPackage("simple.package.name");
 
@@ -16,7 +19,8 @@ TEST_CASE("Node Module package id", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
     nodeType->setId("add");
@@ -40,7 +44,8 @@ TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
     nodeType->setId("add");
@@ -58,7 +63,8 @@ TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
 
     auto dataType = std::make_unique<DataType>("variable", "Variable Type");
     nodeModule.addDataType(std::move(dataType));
@@ -75,7 +81,8 @@ TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][core][NodeModule]"
 
 TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     
     auto dataType = std::make_unique<DataType>("variable", "Variable Type");
     nodeModule.addDataType(std::move(dataType));

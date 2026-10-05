@@ -96,7 +96,7 @@ ModuleLoaderNodeJSPath::loadModule(
     for (const auto & pathElement : mPath) {
 	std::string filename = aFullyQualifiedModuleName + std::string(".xml");
 	std::filesystem::path full_filename = std::filesystem::path(pathElement) / filename;
-	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>();
+	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this);
 	std::ifstream input_stream(full_filename);
 	bool success = ser.read(
 	    *module,
@@ -113,5 +113,20 @@ ModuleLoaderNodeJSPath::loadModule(
 	return ret_module;
     }
     return nullptr;
+}
+
+NodeModule *
+ModuleLoaderNodeJSPath::newModule(
+    std::string aFullyQualifiedModuleName
+    )
+{
+    const auto it = mLoadedModules.find(aFullyQualifiedModuleName);
+    if (it == mLoadedModules.end()) {
+	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this);
+	NodeModule *ret_module = module.get();
+	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+	return ret_module;
+    }
+    return it->second.get();
 }
 

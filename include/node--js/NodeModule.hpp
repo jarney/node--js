@@ -10,6 +10,8 @@
 
 namespace NodeJS {
     namespace core {
+	class ModuleLoader;
+	
 	/**
 	 * A NodeJS module consists of a collection of data types
 	 * and node types.  These represent the possible types available
@@ -26,7 +28,7 @@ namespace NodeJS {
 	 */
 	class NodeModule {
 	public:
-	    NodeModule() = default;
+	    NodeModule(ModuleLoader & moduleLoader);
 	    ~NodeModule() = default;
 
 	    /**
@@ -38,6 +40,8 @@ namespace NodeJS {
 	     * Returns the fully-qualified package name.
 	     */
 	    std::string getPackage(void) const;
+	    
+	    ModuleLoader & getModuleLoader(void) const;
 	    
 	    /**
 	     * This method adds a data type to the module.
@@ -83,8 +87,9 @@ namespace NodeJS {
 	    NodeGraph *getGraph(std::string id);
 
 	    const std::map<std::string, std::unique_ptr<NodeGraph>> & getGraphs() const;
-	    
+
 	private:
+	    ModuleLoader & mModuleLoader;
 	    std::string mPackage;
 	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;

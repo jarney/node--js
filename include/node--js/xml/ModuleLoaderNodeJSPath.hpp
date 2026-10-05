@@ -37,6 +37,10 @@ namespace NodeJS {
 		std::string aFullyQualifiedModuleName,
 		NodeJS::core::SerializerErrorReporter & reporter
 		) override;
+	    
+	    virtual NodeJS::core::NodeModule *newModule(
+		std::string packageName
+		) override;
 	private:
 	    std::map<std::string, std::unique_ptr<NodeJS::core::NodeModule>> mLoadedModules;
 	    std::vector<std::string> mPath;

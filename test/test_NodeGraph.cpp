@@ -2,12 +2,15 @@
 
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
+#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 
 using namespace NodeJS::core;
+using namespace NodeJS::xml;
 
 TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
@@ -30,7 +33,8 @@ TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
 {
 
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
@@ -50,7 +54,8 @@ TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
 {
 
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
@@ -75,7 +80,8 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
@@ -97,7 +103,8 @@ TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
     CHECK(edgeId.has_value());
@@ -105,7 +112,8 @@ TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
 
 TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph *graph = module.addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
     std::optional<EdgeId> edgeId2 = graph->newEdge("a", "first", "b", "second");
@@ -114,7 +122,8 @@ TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
 }
 TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph &graph = *module.addGraph("main");
     NodeType plain;
     ConnectionData empty;
@@ -141,7 +150,8 @@ TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
 
 TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGraph][Algorithms]")
 {
-    NodeModule module;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
     NodeGraph &graph = *module.addGraph("main");
     NodeType plain;
     ConnectionData empty;

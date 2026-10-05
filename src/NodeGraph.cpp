@@ -125,18 +125,20 @@ NodeGraph::getEdges() const
 }
 
 void
-NodeGraph::addScope(std::unique_ptr<NodeModule> node_module)
+NodeGraph::addScope(const NodeModule *node_module)
 {
-    mScopes.push_back(std::move(node_module));
+    mScopes.push_back(node_module);
 }
+
+const std::vector<const NodeModule *> &
+NodeGraph::getScopes() const
+{ return mScopes; }
 
 const NodeType *
 NodeGraph::getNodeType(std::string aTypeName)
 {
     for (const auto & it : mScopes) {
-	fprintf(stderr, "Checking scope %s\n", it->getPackage().c_str());
 	if (it->hasNodeType(aTypeName)) {
-	    fprintf(stderr, "It has type %s\n", aTypeName.c_str());
 	    return it->getNodeType(aTypeName);
 	}
     }

@@ -8,7 +8,6 @@ using namespace NodeJS::core;
 void
 Processor::setNativeImpl(NodeTypeId aNodeTypeId, std::unique_ptr<NodeProcessor> processor)
 {
-    fprintf(stderr, "Registering processor %s\n", aNodeTypeId.c_str());
     mNodeProcessors[aNodeTypeId] = std::move(processor);
 }
         

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include "node--js/NodeModule.hpp"
+#include "node--js/ModuleLoader.hpp"
 #include "node--js/xml/SerializerXML.hpp"
+#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 #include "node--js/SerializerError.hpp"
 
 using namespace NodeJS::core;
@@ -11,7 +13,8 @@ int main(int argc, char **argv)
 {
     const SerializerXML & ser = SerializerXML::instance();
 
-    NodeModule mod;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & mod = *loader.newModule("anonymous");
 
     std::string fname(argv[1]);
     std::ifstream input_stream(fname);

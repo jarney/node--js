@@ -2,12 +2,15 @@
 
 #include "node--js/NodeType.hpp"
 #include "node--js/NodeModule.hpp"
+#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 
 using namespace NodeJS::core;
+using namespace NodeJS::xml;
 
 TEST_CASE("NodeModule main", "[NodeJS][core][NodeModule]")
 {
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     nodeModule.addDataType(std::make_unique<DataType>("abc", "def"));
 
     auto newNodeType = std::make_unique<NodeType>();

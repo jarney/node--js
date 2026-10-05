@@ -36,6 +36,16 @@ namespace NodeJS {
 		std::string aFullyQualifiedModuleName,
 		SerializerErrorReporter & reporter
 		) = 0;
+
+	    /**
+	     * This creates a new (mutable)
+	     * module so that new modules can be loaded and
+	     * manipulated.  Generally speaking, tools
+	     * only ever modify a single module at one time (in theory?)
+	     */
+	    virtual NodeModule *newModule(
+		std::string packageName
+		) = 0;
 	};
 
     } // End core

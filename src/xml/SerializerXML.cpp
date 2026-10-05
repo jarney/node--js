@@ -1,5 +1,7 @@
 #include "node--js/xml/SerializerXML.hpp"
 #include "node--js/xml/XmlNodeWrapper.hpp"
+#include "node--js/ModuleLoader.hpp"
+
 #include <istream>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -17,6 +19,7 @@ using NodeJS::core::NodeModule;
 using NodeJS::core::DataType;
 using NodeJS::core::NodeGraph;
 using NodeJS::core::ConnectionData;
+using NodeJS::core::ModuleLoader;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
@@ -360,7 +363,6 @@ readGraphNode(
     ConnectionData node_data;
     readGraphNodeData(node_data, nodeNode, err);
 
-    fprintf(stderr, "Creating node %s with %p\n", nodeId.c_str(), nodeType);
     node_graph.newNode(
 	*nodeType,
 	nodeId,
@@ -422,8 +424,32 @@ readGraphEdges(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("edge")) {
-	    fprintf(stderr, "Reading edge\n");
 	    readGraphEdge(node_module, node_graph, child, err);
+	}
+    }
+}
+
+static void
+readGraphScope(
+    NodeModule & node_module,
+    NodeGraph & node_graph,
+    XmlNodeWrapper scopeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = scopeNode.begin(); it != scopeNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == std::string("package")) {
+	    ModuleLoader & loader = node_module.getModuleLoader();
+	    const NodeModule *scope_package = loader.loadModule(child.getAttribute("id"), err);
+	    if (scope_package) {
+		node_graph.addScope(scope_package);
+	    }
+	    else {
+		fprintf(stderr, "Failed to load scope %s\n", child.getAttribute("id").c_str());
+		return;
+	    }
 	}
     }
 }
@@ -448,9 +474,7 @@ readGraph(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("scope")) {
-	    // This is the point where we need a 'class loader' to
-	    // load dependent modules....
-	    //readGraphScope();
+	    readGraphScope(node_module, *graph, child, err);
 	}
     }
     
@@ -548,6 +572,21 @@ writeGraphEdges(
 }
 
 static void
+writeGraphScopeNodes(
+    const NodeGraph & graph,
+    XmlNodeWrapper scopesNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (const auto & module : graph.getScopes()) {
+	XmlNodeWrapper packageNode("package");
+	packageNode.setAttribute("id", module->getPackage());
+	scopesNode.addChild(packageNode);
+    }
+}
+    
+
+static void
 writeGraph(
     std::string id,
     const NodeGraph & graph,
@@ -559,6 +598,7 @@ writeGraph(
     graphNode.setAttribute("id", id);
 
     XmlNodeWrapper scopeNode("scope");
+    writeGraphScopeNodes(graph, scopeNode, err);
     graphNode.addChild(scopeNode);
 
     XmlNodeWrapper nodesNode("nodes");
@@ -617,7 +657,6 @@ SerializerXML::write(
     free(output_mem);
     
     xmlFreeDoc(doc);
-    fprintf(stderr, "Done write\n");
     
     return true;
 }
@@ -629,11 +668,10 @@ SerializerXML::read(
     NodeJS::core::SerializerErrorReporter & err
     ) const
 {
-    fprintf(stderr, "Starting read\n");
     xmlDocPtr doc; /* the resulting document tree */
 
     std::string json_string(std::istreambuf_iterator<char>(input_stream), {});
-
+    
     doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
     if (doc == nullptr) {
         err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
@@ -683,6 +721,5 @@ SerializerXML::read(
     }
     
     xmlFreeDoc(doc);
-    fprintf(stderr, "Done read\n");
     return true;
 }

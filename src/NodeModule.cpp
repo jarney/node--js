@@ -2,6 +2,10 @@
 
 using namespace NodeJS::core;
 
+NodeModule::NodeModule(ModuleLoader & aModuleLoader)
+    : mModuleLoader(aModuleLoader)
+{}
+
 void
 NodeModule::setPackage(std::string package)
 {
@@ -12,6 +16,12 @@ std::string
 NodeModule::getPackage(void) const
 {
     return mPackage;
+}
+
+ModuleLoader &
+NodeModule::getModuleLoader(void) const
+{
+    return mModuleLoader;
 }
 	    
 

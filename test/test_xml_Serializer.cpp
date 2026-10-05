@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "node--js/xml/SerializerXML.hpp"
+#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 #include "node--js/SerializerError.hpp"
 #include "TestData.h"
 
@@ -18,7 +19,8 @@ TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
 
     SerializerErrorReporterStream err(std::cerr);
     
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     bool rc = ser.read(
 	nodeModule,
 	in,
@@ -40,7 +42,8 @@ TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
     std::ifstream in(testFilename("Test-xml-Serializer-parse-error.xml"));
 
     SerializerErrorReporterByCode err;
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     bool rc = ser.read(
 	nodeModule,
 	in,
@@ -59,7 +62,8 @@ TEST_CASE("xml::Serializer xml parse error with stream reporting", "[NodeJS][xml
 
     std::ostringstream ostring;
     SerializerErrorReporterStream err(ostring);
-    NodeModule nodeModule;
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
     bool rc = ser.read(
 	nodeModule,
 	in,
