@@ -134,9 +134,14 @@ const NodeType *
 NodeGraph::getNodeType(std::string aTypeName)
 {
     for (const auto & it : mScopes) {
+	fprintf(stderr, "Checking scope %s\n", it->getPackage().c_str());
 	if (it->hasNodeType(aTypeName)) {
+	    fprintf(stderr, "It has type %s\n", aTypeName.c_str());
 	    return it->getNodeType(aTypeName);
 	}
+    }
+    if (mScopes.size() == 0) {
+	fprintf(stderr, "This graph doesn't have any scopes?!\n");
     }
     return nullptr;
 }

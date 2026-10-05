@@ -8,14 +8,24 @@
 
 using namespace NodeJS::core;
 
-static void
-binary_processor(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
+class NodeProcessor_binary : public NodeProcessor {
+public:
+    void process(const Node & node, const ConnectionData & fromData, ConnectionData & toData);
+};
+
+void
+NodeProcessor_binary::process(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
 {
     toData.setValue("out", "binary call node(" + fromData.getValue("in1") + ", " + fromData.getValue("in2") + ")");
 }
 
-static void
-unary_processor(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
+class NodeProcessor_unary : public NodeProcessor {
+public:
+    void process(const Node & node, const ConnectionData & fromData, ConnectionData & toData);
+};
+
+void
+NodeProcessor_unary::process(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
 {
     toData.setValue("out", "callDataFrom(" + node.getId() + ")");
 }
@@ -39,16 +49,16 @@ TEST_CASE("Processor minimal", "[NodeJS][core][Processor]")
     const Node & call1 = graph.newNode(unaryType, "call1", nodeData);
     const Node & call2 = graph.newNode(unaryType, "call2", nodeData);
 
-    graph.newEdge(main.getId(), "in1", call1.getId(), "out");
-    graph.newEdge(main.getId(), "in2", call2.getId(), "out");
+    graph.newEdge(call1.getId(), "out", main.getId(), "in1");
+    graph.newEdge(call2.getId(), "out", main.getId(), "in2");
 
     Processor processor;
-    processor.setNativeImpl("unary", unary_processor);
-    processor.setNativeImpl("binary", binary_processor);
+    processor.setNativeImpl("unary", std::make_unique<NodeProcessor_unary>());
+    processor.setNativeImpl("binary", std::make_unique<NodeProcessor_binary>());
     
     ConnectionData input;
     ConnectionData output;
     processor.processGraph(graph, input, output);
-    fprintf(stderr, "We really processed a graph: %s\n", output.getValue("out").c_str());
 
+    CHECK(output.getValue("out") == "binary call node(callDataFrom(call1), callDataFrom(call2))");
 }

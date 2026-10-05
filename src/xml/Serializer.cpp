@@ -347,11 +347,11 @@ readGraphNode(
     )
 {
     std::string nodeTypeName = nodeNode.getAttribute("type");
-    if (!node_module.hasNodeType(nodeTypeName)) {
-	err.reportError(-99, 22, "context", std::string("Node type ") + nodeTypeName + std::string("does not exist"));
+    const NodeType *nodeType = node_graph.getNodeType(nodeTypeName);
+    if (nodeType == nullptr) {
+	err.reportError(-99, 22, "context", std::string("Node type ") + nodeTypeName + std::string(" does not exist"));
 	return;
     }
-    const auto *nodeType = node_module.getNodeType(nodeTypeName);
 
     std::string nodeId = nodeNode.getAttribute("id");
 
@@ -448,6 +448,8 @@ readGraph(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("scope")) {
+	    // This is the point where we need a 'class loader' to
+	    // load dependent modules....
 	    //readGraphScope();
 	}
     }
