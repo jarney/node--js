@@ -65,6 +65,7 @@ set(CPP_SOURCE_FILES
   src/SerializerError.cpp
   src/Validator.cpp
   src/xml/Serializer.cpp
+  src/xml/ModuleLoaderNodeJSPath.cpp
   src/xml/XmlNodeWrapper.cpp
   src/engines/openscad/Builtins.cpp
   src/engines/openscad/Builtins2D.cpp
@@ -91,7 +92,9 @@ set(HPP_HEADER_FILES
     include/node--js/ConnectionData.hpp
     include/node--js/Edge.hpp
     include/node--js/Serializer.hpp
+    include/node--js/ModuleLoader.hpp
     include/node--js/xml/Serializer.hpp
+    include/node--js/xml/ModuleLoaderNodeJSPath.hpp
     include/node--js/xml/XmlNodeWrapper.hpp
 )
 

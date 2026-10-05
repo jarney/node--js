@@ -14,6 +14,7 @@ set(TEST_SOURCES
     test_ConnectionData.cpp
     test_Validator.cpp
     test_xml_Serializer.cpp
+    test_xml_ModuleLoaderNodeJSPath.cpp
     test_xml_XmlNodeWrapper.cpp
     )
 
