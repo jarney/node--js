@@ -22,7 +22,9 @@ namespace NodeJS {
 	     */
 	    void setNODEJS_PATH(std::string path);
 	    
-	    /**
+	    const std::vector<std::string> & getNODEJS_PATH();
+
+            /**
 	     * This loads a module from the NODEJS_PATH
 	     * if it exists, or returns nullptr if it does not.
 	     *
