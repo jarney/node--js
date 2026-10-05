@@ -1,14 +1,20 @@
 #include <iostream>
 #include <catch2/catch_session.hpp>
 #include <fstream>
+#include <filesystem>
 
 namespace NodeJS {
     namespace test {
 	std::string test_data_directory;
 
+	std::string testDirectory(void)
+	{
+	    return test_data_directory;
+	}
+	
 	std::string testFilename(std::string basename)
 	{
-	    return test_data_directory + std::string("/") + basename;
+	    return (std::filesystem::path(test_data_directory) / basename).string();
 	}
 	
     }

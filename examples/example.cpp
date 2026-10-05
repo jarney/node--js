@@ -1,14 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include "node--js/NodeModule.hpp"
-#include "node--js/xml/Serializer.hpp"
+#include "node--js/xml/SerializerXML.hpp"
 #include "node--js/SerializerError.hpp"
 
 using namespace NodeJS::core;
+using namespace NodeJS::xml;
 
 int main(int argc, char **argv)
 {
-    const Serializer & ser = NodeJS::xml::Serializer::instance();
+    const SerializerXML & ser = SerializerXML::instance();
 
     NodeModule mod;
 

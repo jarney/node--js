@@ -1,4 +1,4 @@
-#include "node--js/xml/Serializer.hpp"
+#include "node--js/xml/SerializerXML.hpp"
 #include "node--js/xml/XmlNodeWrapper.hpp"
 #include <istream>
 #include <libxml/parser.h>
@@ -20,10 +20,10 @@ using NodeJS::core::ConnectionData;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
 
-const Serializer &
-Serializer::instance()
+const SerializerXML &
+SerializerXML::instance()
 {
-    static Serializer instance;
+    static SerializerXML instance;
     return instance;
 }
 
@@ -405,7 +405,7 @@ readGraphEdge(
 	    );
 
     if (!connection.has_value()) {
-	err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Duplicate graph edge");
+	err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Duplicate graph edge");
 	return;
     }
 }
@@ -485,7 +485,7 @@ readGraphs(
 	    continue;
 	}
 	if (!child.hasAttribute("id")) {
-	    err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Invalid file, graph without id");
+	    err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Invalid file, graph without id");
 	    continue;
 	}
 	readGraph(node_module, child, err);
@@ -588,7 +588,7 @@ writeGraphs(
 
 
 bool
-Serializer::write(
+SerializerXML::write(
     const NodeModule & node_module,
     std::ostream & output_stream,
     NodeJS::core::SerializerErrorReporter & err
@@ -623,7 +623,7 @@ Serializer::write(
 }
 
 bool
-Serializer::read(
+SerializerXML::read(
     NodeModule & node_module,
     std::istream & input_stream,
     NodeJS::core::SerializerErrorReporter & err
@@ -636,7 +636,7 @@ Serializer::read(
 
     doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
     if (doc == nullptr) {
-        err.reportError(Serializer::ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
+        err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
 	return false;
     }
 

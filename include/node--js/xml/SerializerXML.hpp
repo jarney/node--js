@@ -10,27 +10,27 @@ namespace NodeJS {
  * that serializes the node program to and
  * from JSON.
  */
-	class Serializer : public NodeJS::core::Serializer {
+	class SerializerXML : public NodeJS::core::Serializer {
 	private:
 	    /**
 	     * Constructor is private because we are a singleton.
 	     */
-	    Serializer() = default;
-	    ~Serializer() = default;
+	    SerializerXML() = default;
+	    ~SerializerXML() = default;
 	public:
 	    /**
 	     * No copy because we are a singleton.
 	     */
-	    Serializer(Serializer const &other) = delete;
+	    SerializerXML(SerializerXML const &other) = delete;
 	    /**
 	     * No copy because we are a singleton.
 	     */
-	    void operator=(Serializer const &other)  = delete;
+	    void operator=(SerializerXML const &other)  = delete;
 	    
 	    /**
 	     * Public method to return the serializer.
 	     */
-	    static const Serializer & instance();
+	    static const SerializerXML & instance();
 	    /**
 	     * Writes the given node program to
 	     * the given stream using the serialization

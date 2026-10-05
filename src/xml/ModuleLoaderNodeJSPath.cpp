@@ -1,8 +1,11 @@
 #include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 #include "node--js/NodeModule.hpp"
+#include "node--js/xml/SerializerXML.hpp"
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <filesystem>
+#include <fstream>
 
 using namespace NodeJS::core;
 using namespace NodeJS::xml;
@@ -45,7 +48,6 @@ split_path(std::string str)
 	    }
 	    state = NORMAL;
 	}
-	std::cout << "Character " << c << std::endl;
     }
     if (state == ESCAPE) {
 	os << '\\';
@@ -79,18 +81,25 @@ ModuleLoaderNodeJSPath::loadModule(
 	return it->second.get();
     }
     
-    NodeJS::xml::Serializer ser = NodeJS::xml::Serializer::instance();
+    const SerializerXML & ser = SerializerXML::instance();
     for (const auto & pathElement : mPath) {
-// Construct filename based on path element and .xml extension.
-//      file = pathElement + "/" + aFullyQualifiedModuleName + ".xml";
-//	if (exists(file)) {
-	// std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>();
-	// ser.read(pathElement, reporter);
-	// if (!success) {
-	//     module = nullptr;
-	// }
-	// mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
-
+	std::string filename = aFullyQualifiedModuleName + std::string(".xml");
+	std::filesystem::path full_filename = std::filesystem::path(pathElement) / filename;
+	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>();
+	std::ifstream input_stream(full_filename);
+	bool success = ser.read(
+	    *module,
+	    input_stream,
+	    reporter
+	    );
+	if (!success) {
+	    module = nullptr;
+	}
+	// Even if we fail, we want to put the (null) module
+	// onto the list so we don't try (and fail) to load it again.
+	const NodeModule *ret_module = module.get();
+	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+	return ret_module;
     }
     return nullptr;
 }

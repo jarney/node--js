@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "node--js/xml/Serializer.hpp"
+#include "node--js/xml/SerializerXML.hpp"
 #include "node--js/SerializerError.hpp"
 #include "TestData.h"
 
@@ -12,7 +12,7 @@ using namespace NodeJS::test;
 
 TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
 {
-    const auto & ser = ::NodeJS::xml::Serializer::instance();
+    const auto & ser = SerializerXML::instance();
 
     std::ifstream in(testFilename("Test-Serializer-Basic.xml"));
 
@@ -35,7 +35,7 @@ TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
 
 TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
 {
-    const auto & ser = ::NodeJS::xml::Serializer::instance();
+    const auto & ser = SerializerXML::instance();
 
     std::ifstream in(testFilename("Test-xml-Serializer-parse-error.xml"));
 
@@ -47,13 +47,13 @@ TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
 	err);
     CHECK(!rc);
     CHECK(err.size() == 1);
-    CHECK(err.getErrors(::NodeJS::xml::Serializer::ERROR_XML_PARSE).size() == 1);
+    CHECK(err.getErrors(SerializerXML::ERROR_XML_PARSE).size() == 1);
 
 }
 
 TEST_CASE("xml::Serializer xml parse error with stream reporting", "[NodeJS][xml][Serializer]")
 {
-    const auto & ser = ::NodeJS::xml::Serializer::instance();
+    const auto & ser = SerializerXML::instance();
 
     std::ifstream in(testFilename("Test-xml-Serializer-parse-error.xml"));
 

@@ -1,6 +1,6 @@
 #include <catch2/catch_all.hpp>
+#include <iostream>
 
-//#include "node--js/xml/Serializer.hpp"
 #include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
 #include "node--js/SerializerError.hpp"
 #include "TestData.h"
@@ -14,11 +14,6 @@ void doTest(std::string given_path, const std::vector<std::string> & expected)
     ModuleLoaderNodeJSPath moduleLoader;
     moduleLoader.setNODEJS_PATH(given_path);
     const auto & path = moduleLoader.getNODEJS_PATH();
-    for (const auto & it : path) {
-	fprintf(stderr, "%s\n", it.c_str());
-    }
-    
-//    std::vector<std::string> expected{"one", "two", "thre;e", "four"};
     CHECK(path == expected);
 }
 
@@ -52,4 +47,31 @@ TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: escape other things", "[N
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: empty", "[NodeJS][xml][ModuleLoader]")
 {
     doTest("", std::vector<std::string>{});
+}
+
+TEST_CASE("xml::ModuleLoaderNodeJSPath setting path and loading file", "[NodeJS][xml][ModuleLoader]")
+{
+    ModuleLoaderNodeJSPath loader;
+    SerializerErrorReporterStream err(std::cerr);
+
+    std::string path = testDirectory();
+    loader.setNODEJS_PATH(path);
+    const NodeModule *module = loader.loadModule("org.ensor.nodejs.openscad", err);
+    CHECK(module != nullptr);
+
+    // Load it again.
+    const NodeModule *module2 = loader.loadModule("org.ensor.nodejs.openscad", err);
+    CHECK(module2 != nullptr);
+
+    // Check that we actually got the same cached module.
+    CHECK(module == module2);
+
+    // Check that we get a null pointer
+    // if the module doesn't exist.
+    const NodeModule *module_nonexistent = loader.loadModule("some-nonexistent-module", err);
+    CHECK(module_nonexistent == nullptr);
+    
+    loader.setNODEJS_PATH("");
+    const NodeModule *module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err);
+    CHECK(module_no_path == nullptr);
 }
