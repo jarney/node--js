@@ -925,9 +925,9 @@
     </node-type>
     <node-type id="function" visibility="public" type="native">
       <inputs>
-        <port id="r" description="r" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
+        <port id="out" description="Function Definition" data-type="function-definition" connection-policy="one"/>
       </outputs>
     </node-type>
     <!-- Type Test -->

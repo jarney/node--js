@@ -40,7 +40,7 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
     nodeData[nodeIds.at(0)] = input;
 
     for (const NodeId & nodeId : nodeIds) {
-	fprintf(stderr, "Processing node %s\n", nodeId.c_str());
+	//fprintf(stderr, "Processing node %s\n", nodeId.c_str());
         const Node & node = *graph.getNode(nodeId);
 
         // Get the type of the node.
@@ -54,10 +54,10 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         for (const Edge *edge : graph.getEdgesTo(nodeId)) {
 	    std::string data = nodeData[edge->fromNode].getValue(edge->fromPort);
             fromData.setValue(edge->toPort, data);
-	    fprintf(stderr, "Taking data from %s:%s -> %s:%s = %s\n",
-		    edge->fromNode.c_str(), edge->fromPort.c_str(),
-		    edge->toNode.c_str(), edge->toPort.c_str(),
-		    data.c_str());
+	    //fprintf(stderr, "Taking data from %s:%s -> %s:%s = %s\n",
+	    //      edge->fromNode.c_str(), edge->fromPort.c_str(),
+	    //	    edge->toNode.c_str(), edge->toPort.c_str(),
+	    //	    data.c_str());
 	}
         ConnectionData toData;
         processNodeType(graph, nodeType, node, fromData, toData);
@@ -65,7 +65,7 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         lastData = toData;
     }
     output = lastData;
-    dumpDict("Graph output:", output);
+    //dumpDict("Graph output:", output);
 }
 
 void
@@ -80,20 +80,20 @@ Processor::processNodeType(
 	NodeTypeId nodeTypeId = nodeType.getId();
 	const auto nodeProcessorIt = mNodeProcessors.find(nodeTypeId);
 	if (nodeProcessorIt == mNodeProcessors.end()) {
-	    default_processor(node, fromData, toData);
+	    default_processor(*this, node, fromData, toData);
 	    return;
 	}
-	fprintf(stderr, "Processing node type %s\n", nodeTypeId.c_str());
-	dumpDict("input:", fromData);
+	//fprintf(stderr, "Processing node type %s\n", nodeTypeId.c_str());
+	//dumpDict("input:", fromData);
 	NodeProcessor & processor = *nodeProcessorIt->second.get();
-	processor.process(node, fromData, toData);
-	dumpDict("output: ", toData);
+	processor.process(*this, node, fromData, toData);
+	//dumpDict("output: ", toData);
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
 	NodeModule & module = graph.getModule();
 	NodeGraph *subgraph = module.getGraph(nodeType.getId());
 	if (subgraph == nullptr) {
-	    default_processor(node, fromData, toData);
+	    default_processor(*this, node, fromData, toData);
 	    return;
 	}
 	// Rules:
@@ -111,6 +111,7 @@ Processor::processNodeType(
 
 void
 Processor::default_processor(
+    Processor & processor,
     const Node & node,
     const ConnectionData & input,
     ConnectionData & output

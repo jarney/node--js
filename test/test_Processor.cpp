@@ -12,22 +12,42 @@ using namespace NodeJS::xml;
 
 class NodeProcessor_binary : public NodeProcessor {
 public:
-    void process(const Node & node, const ConnectionData & fromData, ConnectionData & toData);
+    void process(
+	Processor & processor,
+	const Node & node,
+	const ConnectionData & fromData,
+	ConnectionData & toData
+	);
 };
 
 void
-NodeProcessor_binary::process(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
+NodeProcessor_binary::process(
+    Processor & processor,
+    const Node & node,
+    const ConnectionData & fromData,
+    ConnectionData & toData
+    )
 {
     toData.setValue("out", "binary call node(" + fromData.getValue("in1") + ", " + fromData.getValue("in2") + ")");
 }
 
 class NodeProcessor_unary : public NodeProcessor {
 public:
-    void process(const Node & node, const ConnectionData & fromData, ConnectionData & toData);
+    void process(
+	Processor & processor,
+	const Node & node,
+	const ConnectionData & fromData,
+	ConnectionData & toData
+	);
 };
 
 void
-NodeProcessor_unary::process(const Node & node, const ConnectionData & fromData, ConnectionData & toData)
+NodeProcessor_unary::process(
+    Processor & processor,
+    const Node & node,
+    const ConnectionData & fromData,
+    ConnectionData & toData
+    )
 {
     toData.setValue("out", "callDataFrom(" + node.getId() + ")");
 }

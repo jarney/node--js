@@ -6,7 +6,8 @@ using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
 #define _OPENSCAD_PROCESSOR_DEF(name)                  \
-    void Builtins::NodeProcessor_##name##_fn::process(      \
+    void Builtins::NodeProcessor_##name##_fn::process( \
+	Processor & processor,                         \
 	const Node & node,                             \
 	const ConnectionData & input,                  \
 	ConnectionData & output                        \
@@ -79,21 +80,20 @@ _OPENSCAD_PROCESSOR_DEF(syntax_module)
 ////////////////////////////////////////
 _OPENSCAD_PROCESSOR_DEF(syntax_function)
 {
-    std::string graph = node.getData().getValue("name", "undefined");
+    std::string graph = node.getData().getValue("graph", "undefined");
     
     NodeGraph *bodyGraph = node.getGraph().getModule().getGraph(graph);
     if (!bodyGraph) {
 	fprintf(stderr, "Body graph for %s does not exist\n", graph.c_str());
 	return;
     }
-#if 0
-    std::string bodyString = NodeProgramSerializerOpenSCAD::toString(*bodyGraph);
-#else
-    std::string bodyString = "TODO";
-#endif
-    
-    std::string out = std::string("function ") + graph + std::string("()") + bodyString;
-    output.setValue("Geometry", out);
+
+    ConnectionData bodyInput;
+    ConnectionData bodyOutput;
+    processor.processGraph(*bodyGraph, bodyInput, bodyOutput);
+
+    std::string out = std::string("function ") + graph + std::string("()") + bodyOutput.getValue("out");
+    output.setValue("out", out);
 
     // Get the graph for the body and process it to generate the output for it.
     // The output of the sub-graph is the function's body.

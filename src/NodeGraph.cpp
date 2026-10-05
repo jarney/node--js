@@ -7,7 +7,11 @@ using namespace NodeJS::core;
 
 NodeGraph::NodeGraph(NodeModule & aModule)
     : mModule(aModule)
-{}
+{
+    // Is this always what we want?
+    // Is the current module always in scope?
+    mScopes.push_back(&mModule);
+}
 
 NodeGraph::~NodeGraph()
 {}
@@ -144,6 +148,10 @@ const NodeType *
 NodeGraph::getNodeType(std::string aTypeName)
 {
     for (const auto & it : mScopes) {
+	if (aTypeName == "a") {
+	    fprintf(stderr, "Searching for node type %s in module %p\n",
+		    aTypeName.c_str(), it);
+	}
 	if (it->hasNodeType(aTypeName)) {
 	    return it->getNodeType(aTypeName);
 	}

@@ -28,16 +28,16 @@ public:
     static void registerProcessors(NodeJS::core::Processor & processor);
 
 #define _OPENSCAD_NODE_DECL(name)                                    \
-    class NodeProcessor_##name##_fn : public NodeJS::core::NodeProcessor {	\
-	public: \
-	    virtual void process( \
-		const NodeJS::core::Node & node, \
-		const NodeJS::core::ConnectionData & fromData,	\
-		NodeJS::core::ConnectionData & toData		\
-		); \
-	}; \
-
-//    static void f_##name##_process(const NodeJS::core::Node & node, const NodeJS::core::ConnectionData & input, NodeJS::core::ConnectionData & output);
+    class NodeProcessor_##name##_fn :                                \
+	public NodeJS::core::NodeProcessor {                         \
+	public:                                                      \
+	    virtual void process(                                    \
+		NodeJS::core::Processor & processor,                 \
+		const NodeJS::core::Node & node,                     \
+		const NodeJS::core::ConnectionData & fromData,       \
+		NodeJS::core::ConnectionData & toData                \
+		);                                                   \
+	};
 
     // Syntax
     _OPENSCAD_NODE_DECL(syntax_assign);

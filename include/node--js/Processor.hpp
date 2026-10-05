@@ -9,6 +9,8 @@
 namespace NodeJS {
     namespace core {
 
+	class Processor;
+	
 	/**
 	 * A node processor takes the information
 	 * from a node and the input data and calculates
@@ -19,6 +21,7 @@ namespace NodeJS {
 	    NodeProcessor() = default;
 	    virtual ~NodeProcessor() = default;
 	    virtual void process(
+		Processor & processor,
 		const Node & node,
 		const ConnectionData & fromData,
 		ConnectionData & toData
@@ -49,6 +52,7 @@ namespace NodeJS {
 		ConnectionData & output);
 
 	    static void default_processor(
+		Processor & processor,
 		const Node & node,
 		const ConnectionData & input,
 		ConnectionData & output);

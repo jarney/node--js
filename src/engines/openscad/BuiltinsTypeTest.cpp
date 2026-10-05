@@ -4,7 +4,8 @@ using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
 #define _OPENSCAD_PROCESSOR_DEF(name)                  \
-    void Builtins::NodeProcessor_##name##_fn::process(      \
+    void Builtins::NodeProcessor_##name##_fn::process( \
+	Processor & processor,                         \
 	const Node & node,                             \
 	const ConnectionData & input,                  \
 	ConnectionData & output                        \
