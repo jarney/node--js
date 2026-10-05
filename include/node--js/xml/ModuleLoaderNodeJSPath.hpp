@@ -14,6 +14,8 @@ namespace NodeJS {
 	 */
 	class ModuleLoaderNodeJSPath : public NodeJS::core::ModuleLoader {
 	public:
+	    ModuleLoaderNodeJSPath();
+	    
 	    /**
 	     * This overrides the value of the NODEJS_PATH
 	     * environment variable for testing and other purposes.

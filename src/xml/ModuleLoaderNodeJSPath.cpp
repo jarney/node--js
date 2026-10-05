@@ -58,6 +58,17 @@ split_path(std::string str)
     return path;
 }
 
+ModuleLoaderNodeJSPath::ModuleLoaderNodeJSPath()
+{
+    const char *nodejs_path = getenv("NODEJS_PATH");
+    if (nodejs_path != nullptr) {
+	mPath = split_path(std::string(nodejs_path));
+    }
+    else {
+	mPath.push_back(".");
+    }
+}
+
 void
 ModuleLoaderNodeJSPath::setNODEJS_PATH(std::string path)
 {
