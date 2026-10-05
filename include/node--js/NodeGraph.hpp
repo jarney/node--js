@@ -118,6 +118,8 @@ namespace NodeJS {
 	    const std::vector<const NodeModule *> & getScopes() const;
 
 	    void addScope(const NodeModule * node_module);
+
+	    void copyScope(const NodeGraph *other);
 	    
 	    const NodeType * getNodeType(std::string aTypeName);
 

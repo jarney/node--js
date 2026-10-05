@@ -130,6 +130,12 @@ NodeGraph::addScope(const NodeModule *node_module)
     mScopes.push_back(node_module);
 }
 
+void
+NodeGraph::copyScope(const NodeGraph *other)
+{
+    mScopes = other->mScopes;
+}
+
 const std::vector<const NodeModule *> &
 NodeGraph::getScopes() const
 { return mScopes; }
