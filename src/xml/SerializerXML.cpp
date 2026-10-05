@@ -578,10 +578,17 @@ writeGraphScopeNodes(
     NodeJS::core::SerializerErrorReporter & err
     )
 {
+    // Skip the first scope because that's
+    // always the 'current' scope, so we don't want
+    // to include it artificially
+    int i = 0;
     for (const auto & module : graph.getScopes()) {
-	XmlNodeWrapper packageNode("package");
-	packageNode.setAttribute("id", module->getPackage());
-	scopesNode.addChild(packageNode);
+	if (i != 0) {
+	    XmlNodeWrapper packageNode("package");
+	    packageNode.setAttribute("id", module->getPackage());
+	    scopesNode.addChild(packageNode);
+	}
+	i++;
     }
 }
     

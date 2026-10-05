@@ -81,22 +81,29 @@ _OPENSCAD_PROCESSOR_DEF(syntax_module)
 _OPENSCAD_PROCESSOR_DEF(syntax_function)
 {
     std::string graph = node.getData().getValue("graph", "undefined");
-    
-    NodeGraph *bodyGraph = node.getGraph().getModule().getGraph(graph);
+
+    NodeModule & nodeModule = node.getGraph().getModule();
+    NodeGraph *bodyGraph = nodeModule.getGraph(graph);
     if (!bodyGraph) {
 	fprintf(stderr, "Body graph for %s does not exist\n", graph.c_str());
 	return;
     }
 
+    // Linkage between graph and type is currently 'weak' and 'implicit'.
+    const NodeType *type = bodyGraph->getNodeType(graph);
+    std::vector<std::string> args;
+    if (type != nullptr) {
+	for (int i = 0; i < type->getInputPortCount(); ++i) {
+	    args.push_back(type->getInputPortName(i));
+	}
+    }
+    
     ConnectionData bodyInput;
     ConnectionData bodyOutput;
     processor.processGraph(*bodyGraph, bodyInput, bodyOutput);
 
-    std::string out = std::string("function ") + graph + std::string("()") + bodyOutput.getValue("out");
+    std::string out = std::string("function ") + graph + std::string("(") + joinArguments(args) + std::string(") = ") + bodyOutput.getValue("out");
     output.setValue("out", out);
-
-    // Get the graph for the body and process it to generate the output for it.
-    // The output of the sub-graph is the function's body.
 
 }
 
