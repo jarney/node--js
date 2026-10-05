@@ -126,12 +126,11 @@ TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
     NodeModule & module = *loader.newModule("anonymous");
     NodeGraph &graph = *module.addGraph("main");
     NodeType plain;
-    ConnectionData empty;
 
-    graph.newNode(plain, "C", empty);
-    graph.newNode(plain, "B", empty);
-    graph.newNode(plain, "A", empty);
-    graph.newNode(plain, "E", empty);
+    graph.newNode(plain, "C");
+    graph.newNode(plain, "B");
+    graph.newNode(plain, "A");
+    graph.newNode(plain, "E");
 
     graph.newEdge("A", "x", "B", "x");
     graph.newEdge("B", "x", "C", "x");
@@ -154,11 +153,10 @@ TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGrap
     NodeModule & module = *loader.newModule("anonymous");
     NodeGraph &graph = *module.addGraph("main");
     NodeType plain;
-    ConnectionData empty;
     
-    graph.newNode(plain, "C", empty);
-    graph.newNode(plain, "B", empty);
-    graph.newNode(plain, "A", empty);
+    graph.newNode(plain, "C");
+    graph.newNode(plain, "B");
+    graph.newNode(plain, "A");
     
     graph.newEdge("A", "x", "B", "x");
     graph.newEdge("B", "x", "C", "x");

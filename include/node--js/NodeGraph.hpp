@@ -53,12 +53,23 @@ namespace NodeJS {
 	     * and ensure each node gets a unique id.
 	     *
 	     * The node's internal data is initialized with
-	     * the given data.
+	     * the given data.  This is mainly used for loading
+	     * nodes from somewhere else.
 	     */
 	    Node & newNode(
 		const NodeType & aNodeType,
 		const std::string & aNodeIdCandidate,
 		const ConnectionData & aConnectionData
+		);
+
+	    /**
+	     * If we don't specify connection data for the node,
+	     * it will pull the default data from the node type.
+	     * This is mainly used for creating new nodes.
+	     */
+	    Node & newNode(
+		const NodeType & aNodeType,
+		const std::string & aNodeIdCandidate
 		);
 
 	    /**

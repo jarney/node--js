@@ -93,8 +93,8 @@ _OPENSCAD_PROCESSOR_DEF(syntax_function)
     const NodeType *type = bodyGraph->getNodeType(graph);
     std::vector<std::string> args;
     if (type != nullptr) {
-	for (int i = 0; i < type->getInputPortCount(); ++i) {
-	    args.push_back(type->getInputPortName(i));
+	for (int i = 0; i < type->getInputs().getCount(); ++i) {
+	    args.push_back(type->getInputs().getName(i));
 	}
     }
     
@@ -140,10 +140,10 @@ _OPENSCAD_PROCESSOR_DEF(syntax_custom_node)
     // If the output is 'value' then
     // it is a custom function.
     const NodeType & nodeType = node.getType();
-    if (nodeType.hasOutputPort("value")) {
+    if (nodeType.getOutputs().hasPort("value")) {
 	std::string out;
-	for (int i = 0; i < nodeType.getInputPortCount(); i++) {
-	    std::string argname = nodeType.getInputPortName(i);
+	for (int i = 0; i < nodeType.getInputs().getCount(); i++) {
+	    std::string argname = nodeType.getInputs().getName(i);
 	    conditionalArg(args, input, node, argname);
 	}
 

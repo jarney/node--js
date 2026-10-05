@@ -24,7 +24,7 @@ TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
     
     auto nodeType = std::make_unique<NodeType>();
     nodeType->setId("add");
-    nodeType->addInputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
+    nodeType->getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
     
     nodeModule.addNodeType(std::move(nodeType));
 
@@ -33,7 +33,7 @@ TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
     const NodeType *nt = nodeModule.getNodeType("add");
     
     CHECK(nt->getId() == "add");
-    CHECK(nt->getInputPortCount() == 1);
+    CHECK(nt->getInputs().getCount() == 1);
 
     const NodeType *nonexistent = nodeModule.getNodeType("invalid-node");
     CHECK(nonexistent == nullptr);
@@ -49,7 +49,7 @@ TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
     
     auto nodeType = std::make_unique<NodeType>();
     nodeType->setId("add");
-    nodeType->addInputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
+    nodeType->getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
     nodeModule.addNodeType(std::move(nodeType));
 
     int i = 0;

@@ -50,6 +50,8 @@ namespace NodeJS {
 	    bool hasValue(std::string key) const;
 
 	    const std::map<std::string, std::string> & getData() const;
+
+	    size_t size() const;
 	    
 	private:
 	    std::map<std::string, std::string> mData;

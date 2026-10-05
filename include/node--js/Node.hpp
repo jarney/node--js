@@ -2,6 +2,7 @@
 
 #include "node--js/NodeType.hpp"
 #include "node--js/ConnectionData.hpp"
+#include "node--js/NamedPorts.hpp"
 
 namespace NodeJS {
     namespace core {
@@ -40,6 +41,26 @@ namespace NodeJS {
 	    
 	    const NodeType & getType() const;
 
+	    /**
+	     * These provide the 'official' access to ports and indices.
+	     * In most cases, we delegate down to the node type,
+	     * but in some cases, the node itself decides what ports
+	     * it exposes.  If we call addInputPort or addOutputPort,
+	     * we are overriding the ports from the node type
+	     * with our own ports.
+	     */
+	    const NamedPorts & getInputs() const;
+	    const NamedPorts & getOutputs() const;
+	    
+	    NamedPorts & getOverrideInputs();
+	    NamedPorts & getOverrideOutputs();
+
+	    const NamedPorts & getOverrideInputs() const;
+	    const NamedPorts & getOverrideOutputs() const;
+
+	    void setOverrideInputs(bool aOverrideInputs);
+	    void setOverrideOutputs(bool aOverrideOutputs);
+
 	    NodeGraph & getGraph() const;
 
 	    ConnectionData & getData();
@@ -59,6 +80,13 @@ namespace NodeJS {
 	    ConnectionData mData;
 
 	    std::pair<float, float> mPos;
+
+	    bool mOverrideInputs;
+	    bool mOverrideOutputs;
+	    // Ports by name
+
+	    NamedPorts mInputs;
+	    NamedPorts mOutputs;
 	};
 	
     } // End core

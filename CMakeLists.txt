@@ -57,6 +57,7 @@ set(CPP_SOURCE_FILES
   src/DataType.cpp
   src/NodeType.cpp
   src/NodePort.cpp
+  src/NamedPorts.cpp
   src/NodeModule.cpp
   src/Node.cpp
   src/NodeGraph.cpp
@@ -88,6 +89,7 @@ set(HPP_HEADER_FILES
     include/node--js/DataType.hpp
     include/node--js/NodeType.hpp
     include/node--js/NodePort.hpp
+    include/node--js/NamedPorts.hpp
     include/node--js/NodeModule.hpp
     include/node--js/ConnectionData.hpp
     include/node--js/Edge.hpp

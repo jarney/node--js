@@ -38,6 +38,16 @@ NodeGraph::findNewNodeId(std::string aNodeIdCandidate)
 Node &
 NodeGraph::newNode(
     const NodeType & aNodeType,
+    const std::string & aNodeIdCandidate
+    )
+{
+    return newNode(aNodeType, aNodeIdCandidate, aNodeType.getDefaultNodeData());
+}
+
+
+Node &
+NodeGraph::newNode(
+    const NodeType & aNodeType,
     const std::string & aNodeIdCandidate,
     const ConnectionData & aConnectionData
     )

@@ -27,63 +27,63 @@ TEST_CASE("NodeType some ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
     nodeType.setId("add");
-    nodeType.addInputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
-    nodeType.addInputPort("second", std::make_unique<NodePort>("variable", "Second Argument"));
-    nodeType.addOutputPort("output", std::make_unique<NodePort>("variable", "Result"));
+    nodeType.getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
+    nodeType.getInputs().addPort("second", std::make_unique<NodePort>("variable", "Second Argument"));
+    nodeType.getOutputs().addPort("output", std::make_unique<NodePort>("variable", "Result"));
 
-    CHECK(nodeType.getInputPortCount() == 2);
-    CHECK(nodeType.getOutputPortCount() == 1);
+    CHECK(nodeType.getInputs().getCount() == 2);
+    CHECK(nodeType.getOutputs().getCount() == 1);
 
-    CHECK(nodeType.getInputPortByName("first")->getDescription() == "First Argument");
-    CHECK(nodeType.getInputPortName(0) == "first");
-    CHECK(nodeType.getInputPortByIndex(0)->getDescription() == "First Argument");
-    CHECK(nodeType.hasInputPort("first"));
+    CHECK(nodeType.getInputs().getByName("first")->getDescription() == "First Argument");
+    CHECK(nodeType.getInputs().getName(0) == "first");
+    CHECK(nodeType.getInputs().getByIndex(0)->getDescription() == "First Argument");
+    CHECK(nodeType.getInputs().hasPort("first"));
     
-    CHECK(nodeType.getInputPortByName("second")->getDescription() == "Second Argument");
-    CHECK(nodeType.getInputPortName(1) == "second");
-    CHECK(nodeType.getInputPortByIndex(1)->getDescription() == "Second Argument");
+    CHECK(nodeType.getInputs().getByName("second")->getDescription() == "Second Argument");
+    CHECK(nodeType.getInputs().getName(1) == "second");
+    CHECK(nodeType.getInputs().getByIndex(1)->getDescription() == "Second Argument");
 
-    CHECK(nodeType.getOutputPortByName("output")->getDescription() == "Result");
-    CHECK(nodeType.getOutputPortName(0) == "output");
-    CHECK(nodeType.getOutputPortByIndex(0)->getDescription() == "Result");
-    CHECK(nodeType.hasOutputPort("output"));
+    CHECK(nodeType.getOutputs().getByName("output")->getDescription() == "Result");
+    CHECK(nodeType.getOutputs().getName(0) == "output");
+    CHECK(nodeType.getOutputs().getByIndex(0)->getDescription() == "Result");
+    CHECK(nodeType.getOutputs().hasPort("output"));
 
     // Now, some edge cases:
-    CHECK(nodeType.getInputPortByName("non-existent") == nullptr);
-    CHECK(nodeType.getOutputPortByName("non-existent") == nullptr);
-    CHECK(!nodeType.hasInputPort("non-existent"));
-    CHECK(!nodeType.hasOutputPort("non-existent"));
-    CHECK(nodeType.getInputPortName(99) == "");
-    CHECK(nodeType.getOutputPortName(99) == "");
-    CHECK(nodeType.getInputPortByIndex(99) == nullptr);
-    CHECK(nodeType.getOutputPortByIndex(1) == nullptr);
+    CHECK(nodeType.getInputs().getByName("non-existent") == nullptr);
+    CHECK(nodeType.getOutputs().getByName("non-existent") == nullptr);
+    CHECK(!nodeType.getInputs().hasPort("non-existent"));
+    CHECK(!nodeType.getOutputs().hasPort("non-existent"));
+    CHECK(nodeType.getInputs().getName(99) == "");
+    CHECK(nodeType.getOutputs().getName(99) == "");
+    CHECK(nodeType.getInputs().getByIndex(99) == nullptr);
+    CHECK(nodeType.getOutputs().getByIndex(1) == nullptr);
 }
 
 TEST_CASE("NodeType unique input ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
-    bool rc1 = nodeType.addInputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
-    bool rc2 = nodeType.addInputPort("first", std::make_unique<NodePort>("variable", "Another"));
+    bool rc1 = nodeType.getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
+    bool rc2 = nodeType.getInputs().addPort("first", std::make_unique<NodePort>("variable", "Another"));
 
     CHECK(rc1 == true);
     CHECK(rc2 == false);
 
-    CHECK(nodeType.getInputPortCount() == 1);
-    CHECK(nodeType.getOutputPortCount() == 0);
-    CHECK(nodeType.getInputPortByName("first")->getDescription() == "First Argument");
+    CHECK(nodeType.getInputs().getCount() == 1);
+    CHECK(nodeType.getOutputs().getCount() == 0);
+    CHECK(nodeType.getInputs().getByName("first")->getDescription() == "First Argument");
 }
 
 TEST_CASE("NodeType unique output ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
-    bool rc1 = nodeType.addOutputPort("first", std::make_unique<NodePort>("variable", "First Argument"));
-    bool rc2 = nodeType.addOutputPort("first", std::make_unique<NodePort>("variable", "Another"));
+    bool rc1 = nodeType.getOutputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
+    bool rc2 = nodeType.getOutputs().addPort("first", std::make_unique<NodePort>("variable", "Another"));
 
     CHECK(rc1 == true);
     CHECK(rc2 == false);
 
-    CHECK(nodeType.getInputPortCount() == 0);
-    CHECK(nodeType.getOutputPortCount() == 1);
-    CHECK(nodeType.getOutputPortByName("first")->getDescription() == "First Argument");
+    CHECK(nodeType.getInputs().getCount() == 0);
+    CHECK(nodeType.getOutputs().getCount() == 1);
+    CHECK(nodeType.getOutputs().getByName("first")->getDescription() == "First Argument");
 }
 

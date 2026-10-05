@@ -6,6 +6,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <cstring>
+#include <cstdlib>
 
 #include <vector>
 
@@ -15,6 +16,7 @@ using NodeJS::core::Node;
 using NodeJS::core::EdgeId;
 using NodeJS::core::NodePort;
 using NodeJS::core::NodeType;
+using NodeJS::core::NamedPorts;
 using NodeJS::core::NodeModule;
 using NodeJS::core::DataType;
 using NodeJS::core::NodeGraph;
@@ -22,6 +24,22 @@ using NodeJS::core::ConnectionData;
 using NodeJS::core::ModuleLoader;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
+
+static void
+writeGraphNodeData(
+    const ConnectionData & data,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err    
+    );
+static void
+readGraphNodeData(
+    ConnectionData & node_data,
+    std::pair<float, float> *pos,
+    bool* didReadPos,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    );
+
 
 const SerializerXML &
 SerializerXML::instance()
@@ -135,7 +153,7 @@ readInputs(
 	    }
 	}
 
-	node_type.addInputPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
+	node_type.getInputs().addPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
 	
     }
 }
@@ -163,7 +181,7 @@ readOutputs(
 	    }
 	}
 
-	node_type.addOutputPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
+	node_type.getOutputs().addPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
 	
     }
 }
@@ -205,6 +223,11 @@ readNodeType(
 	else if (tagName == "outputs") {
 	    readOutputs(*nodeType.get(), child, err);
 	}
+	else if (tagName == "default-node-data") {
+	    ConnectionData node_data;
+	    readGraphNodeData(node_data, nullptr, nullptr, child, err);
+	    nodeType->setDefaultNodeData(node_data);
+	}
 	else {
 	    // Nothing to do, this is extraneous.
 	}
@@ -215,42 +238,23 @@ readNodeType(
 }
 
 static void
-writeInputs(
-    const NodeType & node_type,
-    XmlNodeWrapper inputsNode,
+writeNamedPorts(
+    const NamedPorts & namedPorts,
+    XmlNodeWrapper portsNode,
     NodeJS::core::SerializerErrorReporter & err
     )
 {
-    for (int i = 0; i < node_type.getInputPortCount(); i++) {
-	std::string id = node_type.getInputPortName(i);
-	const NodePort *port = node_type.getInputPortByIndex(i);
+    for (int i = 0; i < namedPorts.getCount(); i++) {
+	std::string id = namedPorts.getName(i);
+	const NodePort *port = namedPorts.getByIndex(i);
 	XmlNodeWrapper portNode("port");
 	portNode.setAttribute("id", id);
 	portNode.setAttribute("description", port->getDescription());
 	portNode.setAttribute("data-type", port->getDataType());
 	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
-	inputsNode.addChild(portNode);
+	portsNode.addChild(portNode);
     }
 
-}
-
-static void
-writeOutputs(
-    const NodeType & node_type,
-    XmlNodeWrapper outputsNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )    
-{
-    for (int i = 0; i < node_type.getOutputPortCount(); i++) {
-	std::string id = node_type.getOutputPortName(i);
-	const NodePort *port = node_type.getOutputPortByIndex(i);
-	XmlNodeWrapper portNode("port");
-	portNode.setAttribute("id", id);
-	portNode.setAttribute("description", port->getDescription());
-	portNode.setAttribute("data-type", port->getDataType());
-	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
-	outputsNode.addChild(portNode);
-    }
 }
 
 static void
@@ -277,12 +281,19 @@ writeNodeType(
     }
 
     XmlNodeWrapper inputsNode("inputs");
-    writeInputs(node_type, inputsNode, err);
+    writeNamedPorts(node_type.getInputs(), inputsNode, err);
     nodeType.addChild(inputsNode);
     
     XmlNodeWrapper outputsNode("outputs");
-    writeOutputs(node_type, outputsNode, err);
+    writeNamedPorts(node_type.getOutputs(), outputsNode, err);
     nodeType.addChild(outputsNode);
+
+    const ConnectionData & defaultNodeData = node_type.getDefaultNodeData();
+    if (defaultNodeData.size() != 0) {
+	XmlNodeWrapper defaultNodeDataNode("default-node-data");
+	writeGraphNodeData(defaultNodeData, defaultNodeDataNode, err);
+	nodeType.addChild(defaultNodeDataNode);
+    }
     
     nodeTypesNode.addChild(nodeType);
 }
@@ -325,6 +336,8 @@ writeNodeTypes(
 static void
 readGraphNodeData(
     ConnectionData & node_data,
+    std::pair<float, float> *pos,
+    bool *didReadPos,
     XmlNodeWrapper nodeNode,
     NodeJS::core::SerializerErrorReporter & err
     )
@@ -332,12 +345,32 @@ readGraphNodeData(
     for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
-	if (tagName != std::string("value")) {
-	    continue;
+	if (tagName == std::string("value")) {
+	    std::string key = child.getAttribute("key");
+	    std::string value = child.getContent();
+	    node_data.setValue(key, value);
 	}
-	std::string key = child.getAttribute("key");
-	std::string value = child.getContent();
-	node_data.setValue(key, value);
+	else if (tagName == "embedding" && child.hasAttribute("type")) {
+	    if (pos == nullptr) {
+		continue;
+	    }
+	    std::string embeddingType = child.getAttribute("type");
+	    if (embeddingType == "plane" && child.hasAttribute("x") && child.hasAttribute("y")) {
+		std::string xstr = child.getAttribute("x");
+		std::string ystr = child.getAttribute("y");
+		const char *xp = xstr.c_str();
+		char *endx{};
+		float x = strtof(xp, &endx);
+		const char *yp = ystr.c_str();
+		char *endy{};
+		float y = strtof(yp, &endy);
+		// Parse error.
+		if (endx != xp && endy != yp) {
+		    *pos = std::make_pair(x,y);
+		    *didReadPos = true;
+		}
+	    }
+	}
     }
 }
 
@@ -361,13 +394,16 @@ readGraphNode(
     // Read node data.
     //const ConnectionData & aConnectionData
     ConnectionData node_data;
-    readGraphNodeData(node_data, nodeNode, err);
+    std::pair<float, float> pos = std::make_pair(0,0);
+    bool readPos = false;
+    readGraphNodeData(node_data, &pos, &readPos, nodeNode, err);
 
-    node_graph.newNode(
+    Node & node = node_graph.newNode(
 	*nodeType,
 	nodeId,
 	node_data
 	);
+    node.setPosition(pos);
 }
 
 static void
@@ -384,6 +420,7 @@ readGraphNodes(
 	if (childName == std::string("node")) {
 	    readGraphNode(node_module, node_graph, child, err);
 	}
+
     }
 }
 
@@ -518,12 +555,12 @@ readGraphs(
 
 static void
 writeGraphNodeData(
-    const Node & node,
+    const ConnectionData & data,
     XmlNodeWrapper nodeNode,
     NodeJS::core::SerializerErrorReporter & err    
     )
 {
-    for (const auto & it : node.getData().getData()) {
+    for (const auto & it : data.getData()) {
 	XmlNodeWrapper valueNode("value");
 
 	valueNode.setAttribute("key", it.first);
@@ -542,13 +579,22 @@ writeGraphNodes(
 {
     for (const auto & it : graph.getNodes()) {
 	XmlNodeWrapper nodeNode("node");
+	Node &node = *it.second.get();
 
 	nodeNode.setAttribute("id", it.first);
 	nodeNode.setAttribute("type", it.second->getType().getId());
-	writeGraphNodeData(*it.second.get(), nodeNode, err);
+	writeGraphNodeData(node.getData(), nodeNode, err);
+	
+	XmlNodeWrapper embeddingsNode("embedding");
+	embeddingsNode.setAttribute("type", "plane");
+	std::pair<float, float> pos = node.getPosition();
+	embeddingsNode.setAttribute("x", std::to_string(pos.first));
+	embeddingsNode.setAttribute("y", std::to_string(pos.second));
+	nodeNode.addChild(embeddingsNode);
 	
 	nodesNode.addChild(nodeNode);
     }
+    
     
 }
     

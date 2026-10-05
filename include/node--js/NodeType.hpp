@@ -6,6 +6,8 @@
 #include <memory>
 
 #include "node--js/NodePort.hpp"
+#include "node--js/NamedPorts.hpp"
+#include "node--js/ConnectionData.hpp"
 
 namespace NodeJS {
     namespace core {
@@ -99,46 +101,27 @@ namespace NodeJS {
 	     */
 	    void setType(NodeJS::core::NodeType::Type impl);
 
-	    /**
-	     * Adds a new port to the node type.
-	     * This returns false if the node already existed.
-	     */
-	    bool addInputPort(std::string name, std::unique_ptr<NodePort> port);
+	    const NamedPorts & getInputs() const;
+	    const NamedPorts & getOutputs() const;
 
-	    const NodePort *getInputPortByName(std::string name) const;
-	    const NodePort *getInputPortByIndex(unsigned int index) const;
-	    bool hasInputPort(std::string name) const;
-	    std::string getInputPortName(unsigned int index) const;
-	    int getInputPortCount() const;
+	    NamedPorts & getInputs();
+	    NamedPorts & getOutputs();
 
 	    /**
-	     * Adds a new port to the node type.
-	     * This returns false if the node already existed.
+	     * Data to initialize new nodes with.
 	     */
-	    bool addOutputPort(std::string name, std::unique_ptr<NodePort> port);
-
-	    const NodePort *getOutputPortByName(std::string name) const;
-	    const NodePort *getOutputPortByIndex(unsigned int index) const;
-	    bool hasOutputPort(std::string name) const;
-	    std::string getOutputPortName(unsigned int index) const;
-	    int getOutputPortCount() const;
-	    
+	    const ConnectionData & getDefaultNodeData() const;
+	    void setDefaultNodeData(const ConnectionData & aConnectionData);
 	private:
 	    std::string mId;
 	    Visibility mVisibility;
 	    Type mType;
 
-	    // Ports by name
-	    std::map<std::string, std::unique_ptr<NodePort>> mInputsByName;
-	    std::map<std::string, std::unique_ptr<NodePort>> mOutputsByName;
+	    NamedPorts mInputs;
+	    NamedPorts mOutputs;
 
-	    // Ports by index (in order)
-	    std::vector<NodePort*> mInputs;
-	    std::vector<NodePort*> mOutputs;
-
-	    // Port names by index (in order)
-	    std::vector<std::string> mInputNames;
-	    std::vector<std::string> mOutputNames;
+	    // Default node data.
+	    ConnectionData mDefaultNodeData;
 	};
     }
 }

@@ -51,3 +51,9 @@ ConnectionData::getData() const
     return mData;
 }
 
+size_t
+ConnectionData::size() const
+{
+    return mData.size();
+}
+

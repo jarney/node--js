@@ -13,6 +13,10 @@ Node::Node(
     , mGraph(aGraph)
     , mData(aData)
     , mPos(std::make_pair(0,0))
+    , mOverrideInputs(false)
+    , mOverrideOutputs(false)
+    , mInputs()
+    , mOutputs()
 {}
 
 const NodeId &
@@ -42,4 +46,54 @@ Node::setPosition(std::pair<float,float> pos)
 std::pair<float, float>
 Node::getPosition()
 { return mPos; }
+
+
+const NamedPorts &
+Node::getInputs() const
+{
+    if (mOverrideInputs) return mInputs;
+    return mType.getInputs();
+}
+
+const NamedPorts &
+Node::getOutputs() const
+{
+    if (mOverrideOutputs) return mOutputs;
+    return mType.getOutputs();
+}
+
+void
+Node::setOverrideInputs(bool aOverrideInputs)
+{
+    mOverrideInputs = aOverrideInputs;
+}
+void
+Node::setOverrideOutputs(bool aOverrideOutputs)
+{
+    mOverrideOutputs = aOverrideOutputs;
+}
+
+NamedPorts &
+Node::getOverrideInputs()
+{
+    return mInputs;
+}
+
+NamedPorts &
+Node::getOverrideOutputs()
+{
+    return mOutputs;
+}
+
+const NamedPorts &
+Node::getOverrideInputs() const
+{
+    return mInputs;
+}
+
+const NamedPorts &
+Node::getOverrideOutputs() const
+{
+    return mOutputs;
+}
 

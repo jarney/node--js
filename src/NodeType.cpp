@@ -39,108 +39,30 @@ NodeType::setType(NodeJS::core::NodeType::Type type)
 }
 
 
-bool
-NodeType::addInputPort(std::string name, std::unique_ptr<NodePort> port)
-{
-    if (mInputsByName.count(name) != 0) return false;
+const NamedPorts &
+NodeType::getInputs() const
+{ return mInputs; }
 
-    mInputs.push_back(port.get());
-    mInputNames.push_back(name);
-    mInputsByName.insert(std::make_pair(name, std::move(port)));
-    return true;
+const NamedPorts &
+NodeType::getOutputs() const
+{ return mOutputs; }
+
+NamedPorts &
+NodeType::getInputs()
+{ return mInputs; }
+
+NamedPorts &
+NodeType::getOutputs()
+{ return mOutputs; }
+
+const ConnectionData &
+NodeType::getDefaultNodeData() const
+{
+    return mDefaultNodeData;
 }
 
-const NodePort *
-NodeType::getInputPortByName(std::string name) const
+void
+NodeType::setDefaultNodeData(const ConnectionData & aDefaultNodeData)
 {
-    const auto & it = mInputsByName.find(name);
-    if (it == mInputsByName.end()) {
-	return nullptr;
-    }
-    return it->second.get();
-}
-
-bool
-NodeType::hasInputPort(std::string name) const
-{
-    return mInputsByName.count(name) != 0;
-}
-
-const NodePort *
-NodeType::getInputPortByIndex(unsigned int index) const
-{
-    if (index >= mInputs.size()) {
-	return nullptr;
-    }
-    NodePort *port = mInputs.at(index);
-    return port;
-}
-
-std::string
-NodeType::getInputPortName(unsigned int index) const
-{
-    if (index >= mInputNames.size()) {
-	return std::string();
-    }
-    std::string portName = mInputNames.at(index);
-    return portName;
-}
-
-int
-NodeType::getInputPortCount(void) const
-{
-    return mInputs.size();
-}
-
-bool
-NodeType::addOutputPort(std::string name, std::unique_ptr<NodePort> port)
-{
-    if (mOutputsByName.count(name) != 0) return false;
-
-    mOutputs.push_back(port.get());
-    mOutputNames.push_back(name);
-    mOutputsByName.insert(std::make_pair(name, std::move(port)));
-    return true;
-}
-
-const NodePort *
-NodeType::getOutputPortByName(std::string name) const
-{
-    const auto & it = mOutputsByName.find(name);
-    if (it == mOutputsByName.end()) {
-	return nullptr;
-    }
-    return it->second.get();
-}
-
-bool
-NodeType::hasOutputPort(std::string name) const
-{
-    return mOutputsByName.count(name) != 0;
-}
-
-const NodePort *
-NodeType::getOutputPortByIndex(unsigned int index) const
-{
-    if (index >= mOutputs.size()) {
-	return nullptr;
-    }
-    NodePort *port = mOutputs.at(index);
-    return port;
-}
-
-std::string
-NodeType::getOutputPortName(unsigned int index) const
-{
-    if (index >= mOutputNames.size()) {
-	return std::string();
-    }
-    std::string portName = mOutputNames.at(index);
-    return portName;
-}
-
-int
-NodeType::getOutputPortCount(void) const
-{
-    return mOutputs.size();
+    mDefaultNodeData = aDefaultNodeData;
 }
