@@ -116,6 +116,10 @@ readPackage(
 	std::string id = packageNode.getAttribute("id");
 	node_module.setPackage(id);
     }
+    if (packageNode.hasAttribute("description")) {
+	std::string desc = packageNode.getAttribute("description");
+	node_module.setDescription(desc);
+    }
 }
 
 static void
@@ -127,6 +131,7 @@ writePackage(
 {
     XmlNodeWrapper package("package");
     package.setAttribute("id", node_module.getPackage());
+    package.setAttribute("description", node_module.getDescription());
     root.addChild(package);
 }
 

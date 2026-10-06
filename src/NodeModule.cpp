@@ -4,12 +4,14 @@ using namespace NodeJS::core;
 
 NodeModule::NodeModule(ModuleLoader & aModuleLoader)
     : mModuleLoader(aModuleLoader)
+    , mPackage("anonymous")
+    , mDescription("Uncategorized")
 {}
 
 void
-NodeModule::setPackage(std::string package)
+NodeModule::setPackage(std::string aPackage)
 {
-    mPackage = package;
+    mPackage = aPackage;
 }
 
 std::string
@@ -17,6 +19,19 @@ NodeModule::getPackage(void) const
 {
     return mPackage;
 }
+
+void
+NodeModule::setDescription(std::string aDescription)
+{
+    mDescription = aDescription;
+}
+
+std::string
+NodeModule::getDescription() const
+{
+    return mDescription;
+}
+
 
 ModuleLoader &
 NodeModule::getModuleLoader(void) const

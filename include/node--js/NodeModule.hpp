@@ -11,6 +11,8 @@
 namespace NodeJS {
     namespace core {
 	class ModuleLoader;
+
+	typedef std::string GraphId;
 	
 	/**
 	 * A NodeJS module consists of a collection of data types
@@ -34,12 +36,16 @@ namespace NodeJS {
 	    /**
 	     * Sets the fully-qualified package name.
 	     */
-	    void setPackage(std::string package);
+	    void setPackage(std::string aPackage);
 	    
 	    /**
 	     * Returns the fully-qualified package name.
 	     */
 	    std::string getPackage(void) const;
+
+	    void setDescription(std::string aDescription);
+	    
+	    std::string getDescription(void) const;
 	    
 	    ModuleLoader & getModuleLoader(void) const;
 	    
@@ -91,6 +97,7 @@ namespace NodeJS {
 	private:
 	    ModuleLoader & mModuleLoader;
 	    std::string mPackage;
+	    std::string mDescription;
 	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	    std::map<std::string, std::unique_ptr<NodeGraph>> mGraphs;

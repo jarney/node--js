@@ -7,7 +7,7 @@
     - node processor, it is possible to convert programs
     - in OpenSCAD to NodeJS language and vice-versa.
     -->
-  <package id="org.ensor.nodejs.openscad"/>
+  <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins"/>
   <data-types>
     <!--
       - These are (for now) purely documentary.
