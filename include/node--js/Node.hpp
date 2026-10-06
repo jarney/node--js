@@ -60,6 +60,8 @@ namespace NodeJS {
 
 	    void setOverrideInputs(bool aOverrideInputs);
 	    void setOverrideOutputs(bool aOverrideOutputs);
+	    bool hasOverrideInputs() const;
+	    bool hasOverrideOutputs() const;
 
 	    NodeGraph & getGraph() const;
 
@@ -68,7 +70,7 @@ namespace NodeJS {
 	    const ConnectionData & getData() const;
 
 	    void setPosition(std::pair<float,float> pos);
-	    std::pair<float, float> getPosition();
+	    std::pair<float, float> getPosition() const;
 	    
 	private:
 	    // Data purely about the abstract node

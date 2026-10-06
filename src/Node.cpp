@@ -44,7 +44,7 @@ Node::setPosition(std::pair<float,float> pos)
 { mPos = pos; }
 
 std::pair<float, float>
-Node::getPosition()
+Node::getPosition() const
 { return mPos; }
 
 
@@ -97,3 +97,13 @@ Node::getOverrideOutputs() const
     return mOutputs;
 }
 
+bool
+Node::hasOverrideInputs() const
+{
+    return mOverrideInputs;
+}
+bool
+Node::hasOverrideOutputs() const
+{
+    return mOverrideOutputs;
+}

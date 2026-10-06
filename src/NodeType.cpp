@@ -26,6 +26,17 @@ NodeType::setVisibility(NodeJS::core::NodeType::Visibility visibility)
     mVisibility = visibility;
 }
 
+void
+NodeType::setAllowPortOverride(bool aAllowPortOverride)
+{
+    mAllowPortOverride = aAllowPortOverride;
+}
+bool
+NodeType::getAllowPortOverride(void) const
+{
+    return mAllowPortOverride;
+}
+
 NodeJS::core::NodeType::Type
 NodeType::getType(void) const
 {

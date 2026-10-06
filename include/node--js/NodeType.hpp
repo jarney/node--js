@@ -87,6 +87,18 @@ namespace NodeJS {
 	    void setVisibility(NodeJS::core::NodeType::Visibility visibility);
 
 	    /**
+	     * Whether or not this type supports overriding
+	     * the ports at the node level.
+	     */
+	    bool getAllowPortOverride(void) const;
+
+	    /**
+	     * Sets whether or not this type supports
+	     * overriding the ports at the node level.
+	     */
+	    void setAllowPortOverride(bool aAllowPortOverride);
+	    
+	    /**
 	     * This returns the implementation type
 	     * for this type.  Some types may be
 	     * implemented on the underlying runtime
@@ -116,6 +128,7 @@ namespace NodeJS {
 	    std::string mId;
 	    Visibility mVisibility;
 	    Type mType;
+	    bool mAllowPortOverride;
 
 	    NamedPorts mInputs;
 	    NamedPorts mOutputs;

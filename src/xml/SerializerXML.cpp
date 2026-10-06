@@ -131,8 +131,8 @@ writePackage(
 }
 
 static void
-readInputs(
-    NodeType & node_type,
+readNamedPorts(
+    NamedPorts & namedPorts,
     XmlNodeWrapper inputsNode,
     NodeJS::core::SerializerErrorReporter & err
     )    
@@ -153,36 +153,7 @@ readInputs(
 	    }
 	}
 
-	node_type.getInputs().addPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
-	
-    }
-}
-
-static void
-readOutputs(
-    NodeType & node_type,
-    XmlNodeWrapper outputsNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )    
-{
-    for (XmlNodeWrapper::Iterator it = outputsNode.begin(); it != outputsNode.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName != "port") continue;
-
-	std::string id = child.getAttribute("id");
-	std::string description = child.getAttribute("description");
-	std::string dataType = child.getAttribute("data-type");
-	NodePort::ConnectionPolicy connectionPolicy = NodePort::ConnectionPolicy::One;
-	if (child.hasAttribute("connection-policy")) {
-	    std::string connectionPolicyStr = child.getAttribute("connection-policy");
-	    if (connectionPolicyStr == "multi") {
-		connectionPolicy = NodePort::ConnectionPolicy::Multiple;
-	    }
-	}
-
-	node_type.getOutputs().addPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
-	
+	namedPorts.addPort(id, std::make_unique<NodePort>(dataType, description, connectionPolicy));
     }
 }
 
@@ -207,21 +178,26 @@ readNodeType(
 	    type = NodeType::Type::NATIVE;
 	}
     }
-    
+
     std::string id = nodeTypeNode.getAttribute("id");
     std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
     nodeType->setId(id);
     nodeType->setVisibility(visibility);
     nodeType->setType(type);
 
+    if (nodeTypeNode.hasAttribute("allow-port-override")) {
+	bool allowOverride = nodeTypeNode.getAttribute("allow-port-override") == "true";
+	nodeType->setAllowPortOverride(allowOverride);
+    }
+    
     for (XmlNodeWrapper::Iterator it = nodeTypeNode.begin(); it != nodeTypeNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
 	std::string tagName = child.getName();
 	if (tagName == "inputs") {
-	    readInputs(*nodeType.get(), child, err);
+	    readNamedPorts(nodeType.get()->getInputs(), child, err);
 	}
 	else if (tagName == "outputs") {
-	    readOutputs(*nodeType.get(), child, err);
+	    readNamedPorts(nodeType.get()->getOutputs(), child, err);
 	}
 	else if (tagName == "default-node-data") {
 	    ConnectionData node_data;
@@ -388,11 +364,9 @@ readGraphNode(
 	err.reportError(-99, 22, "context", std::string("Node type ") + nodeTypeName + std::string(" does not exist"));
 	return;
     }
-
+    
     std::string nodeId = nodeNode.getAttribute("id");
 
-    // Read node data.
-    //const ConnectionData & aConnectionData
     ConnectionData node_data;
     std::pair<float, float> pos = std::make_pair(0,0);
     bool readPos = false;
@@ -404,6 +378,24 @@ readGraphNode(
 	node_data
 	);
     node.setPosition(pos);
+
+    if (nodeType->getAllowPortOverride()) {
+	for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
+	    XmlNodeWrapper child = it.get();
+	    std::string childName = child.getName();
+	    if (childName == std::string("inputs")) {
+		node.setOverrideInputs(true);
+		readNamedPorts(node.getOverrideInputs(), child, err);
+	    }
+	    else if (childName == std::string("outputs")) {
+		node.setOverrideOutputs(true);
+		readNamedPorts(node.getOverrideOutputs(), child, err);
+	    }
+	}
+    }
+
+
+    
 }
 
 static void
@@ -571,6 +563,40 @@ writeGraphNodeData(
 }
 
 static void
+writeGraphNode(
+    const Node & node,
+    XmlNodeWrapper nodeNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    const NodeType & type = node.getType();
+    nodeNode.setAttribute("type", type.getId());
+    writeGraphNodeData(node.getData(), nodeNode, err);
+    
+    if (type.getAllowPortOverride()) {
+	if (node.hasOverrideInputs()) {
+	    XmlNodeWrapper inputsNode("inputs");
+	    writeNamedPorts(node.getOverrideInputs(), inputsNode, err);
+	    nodeNode.addChild(inputsNode);
+	}
+	
+	if (node.hasOverrideOutputs()) {
+	    XmlNodeWrapper outputsNode("outputs");
+	    writeNamedPorts(node.getOverrideOutputs(), outputsNode, err);
+	    nodeNode.addChild(outputsNode);
+	}
+    }
+    
+    XmlNodeWrapper embeddingsNode("embedding");
+    embeddingsNode.setAttribute("type", "plane");
+    std::pair<float, float> pos = node.getPosition();
+    embeddingsNode.setAttribute("x", std::to_string(pos.first));
+    embeddingsNode.setAttribute("y", std::to_string(pos.second));
+    nodeNode.addChild(embeddingsNode);
+}
+
+
+static void
 writeGraphNodes(
     const NodeGraph & graph,
     XmlNodeWrapper nodesNode,
@@ -579,18 +605,10 @@ writeGraphNodes(
 {
     for (const auto & it : graph.getNodes()) {
 	XmlNodeWrapper nodeNode("node");
-	Node &node = *it.second.get();
+	const Node &node = *it.second.get();
 
 	nodeNode.setAttribute("id", it.first);
-	nodeNode.setAttribute("type", it.second->getType().getId());
-	writeGraphNodeData(node.getData(), nodeNode, err);
-	
-	XmlNodeWrapper embeddingsNode("embedding");
-	embeddingsNode.setAttribute("type", "plane");
-	std::pair<float, float> pos = node.getPosition();
-	embeddingsNode.setAttribute("x", std::to_string(pos.first));
-	embeddingsNode.setAttribute("y", std::to_string(pos.second));
-	nodeNode.addChild(embeddingsNode);
+	writeGraphNode(node, nodeNode, err);
 	
 	nodesNode.addChild(nodeNode);
     }

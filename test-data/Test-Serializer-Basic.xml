@@ -19,7 +19,7 @@
     <data-type id="geometry" name="OpenSCAD Geometry"/>
   </data-types>
   <node-types>
-    <node-type id="sphere" visibility="public" type="native">
+    <node-type id="sphere" visibility="public" type="native" allow-port-override="false">
       <inputs>
 	<port id="r" description="r" data-type="variable"/>
 	<port id="d" description="d" data-type="variable"/>
@@ -69,7 +69,7 @@
 	<port id="value" description="Value" data-type="variable"/>
       </outputs>
     </node-type>
-    <node-type id="const_undef" visibility="public" type="native">
+    <node-type id="const_undef" visibility="public" type="native" allow-port-override="true">
       <inputs>
       </inputs>
       <outputs>
@@ -89,6 +89,14 @@
 	  <value key="variable-name">x</value>
 	</node>
 	<node id="sphere" type="sphere">
+	</node>
+	<node id="const_undef" type="const_undef">
+	  <inputs>
+	    <port id="value" description="Value" data-type="variable"/>
+	  </inputs>
+	  <outputs>
+	    <port id="value" description="Value" data-type="variable"/>
+	  </outputs>
 	</node>
       </nodes>
       <edges>
