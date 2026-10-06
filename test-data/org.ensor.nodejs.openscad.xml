@@ -923,11 +923,20 @@
         <port id="variable" description="variable" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="function" visibility="public" type="native">
+    <node-type id="function" visibility="public" type="native" allow-port-override="true">
       <inputs>
+	<!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
       </inputs>
       <outputs>
         <port id="out" description="Function Definition" data-type="function-definition" connection-policy="one"/>
+      </outputs>
+    </node-type>
+    <node-type id="function-call" visibility="public" type="native" allow-port-override="true">
+      <inputs>
+	<!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
+      </inputs>
+      <outputs>
+	<port id="out" description="Result" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <!-- Type Test -->

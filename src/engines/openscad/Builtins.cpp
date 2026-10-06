@@ -15,6 +15,7 @@ Builtins::registerProcessors(Processor & processor)
     _OPENSCAD_NODE_REGISTER("variable", syntax_variable);
 //    _OPENSCAD_NODE_REGISTER(syntax_module);
     _OPENSCAD_NODE_REGISTER("function", syntax_function);
+    _OPENSCAD_NODE_REGISTER("function-call", syntax_function_call);
 //    _OPENSCAD_NODE_REGISTER(syntax_include);
 //    _OPENSCAD_NODE_REGISTER(syntax_use);
 

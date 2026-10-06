@@ -83,28 +83,42 @@ _OPENSCAD_PROCESSOR_DEF(syntax_function)
     std::string graph = node.getData().getValue("graph", "undefined");
 
     NodeModule & nodeModule = node.getGraph().getModule();
+    
     NodeGraph *bodyGraph = nodeModule.getGraph(graph);
     if (!bodyGraph) {
 	fprintf(stderr, "Body graph for %s does not exist\n", graph.c_str());
 	return;
     }
-
-    // Linkage between graph and type is currently 'weak' and 'implicit'.
-    const NodeType *type = bodyGraph->getNodeType(graph);
-    std::vector<std::string> args;
-    if (type != nullptr) {
-	for (int i = 0; i < type->getInputs().getCount(); ++i) {
-	    args.push_back(type->getInputs().getName(i));
-	}
-    }
-    
     ConnectionData bodyInput;
     ConnectionData bodyOutput;
     processor.processGraph(*bodyGraph, bodyInput, bodyOutput);
 
+    // Linkage between graph and type is currently 'weak' and 'implicit'.
+    std::vector<std::string> args;
+    for (int i = 0; i < node.getInputs().getCount(); ++i) {
+	args.push_back(node.getInputs().getName(i));
+    }
+    
     std::string out = std::string("function ") + graph + std::string("(") + joinArguments(args) + std::string(") = ") + bodyOutput.getValue("out");
     output.setValue("out", out);
 
+}
+////////////////////////////////////////
+// Function Call
+////////////////////////////////////////
+_OPENSCAD_PROCESSOR_DEF(syntax_function_call)
+{
+    std::string functionName = node.getData().getValue("function-name");
+    std::vector<std::string> args;
+
+    const NamedPorts & inputs = node.getInputs();
+    for (int i = 0; i < inputs.getCount(); i++) {
+	std::string portName = inputs.getName(i);
+	args.push_back(input.getValue(portName));
+    }
+    
+    std::string out = functionName + std::string("(") + joinArguments(args) + std::string(")");
+    output.setValue("out", out);    
 }
 
 ////////////////////////////////////////
