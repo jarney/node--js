@@ -622,7 +622,7 @@
         <port id="seed" description="seed" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="value" description="value" data-type="variable" connection-policy="multi"/>
+        <port id="out" description="value" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="min" visibility="public" type="native">

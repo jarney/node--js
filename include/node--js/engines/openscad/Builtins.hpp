@@ -222,6 +222,21 @@ private:
 	const NodeJS::core::Node & node,
 	std::string key
     );
+    
+    static void optionalUnnamed(
+	std::vector<std::string> & args,
+	const NodeJS::core::ConnectionData & input,
+	const NodeJS::core::Node & node,
+	std::string key
+	);
+    
+    static void optionalNamed(
+	std::vector<std::string> & args,
+	const NodeJS::core::ConnectionData & input,
+	const NodeJS::core::Node & node,
+	std::string argname,
+	std::string key
+	);
 };
 	
 

@@ -169,6 +169,8 @@ Builtins::joinArguments(std::vector<std::string> list)
     for (const std::string & s : list) {
 	if (!first) {
 	    out += std::string(",");
+	}
+	else {
 	    first = false;
 	}
 	out += s;
@@ -208,5 +210,32 @@ Builtins::conditionalArg(
     }
     else if (node.getData().hasValue(key)) {
 	args.push_back(key + std::string("=") + node.getData().getValue(key, ""));
+    }
+}
+
+void
+Builtins::optionalUnnamed(
+    std::vector<std::string> & args,
+    const ConnectionData & input,
+    const Node & node,
+    std::string key
+    )
+{
+    if (input.hasValue(key)) {
+	args.push_back(input.getValue(key));
+    }
+}
+
+void
+Builtins::optionalNamed(
+    std::vector<std::string> & args,
+    const ConnectionData & input,
+    const Node & node,
+    std::string argname,
+    std::string key
+    )
+{
+    if (input.hasValue(key)) {
+	args.push_back(argname + std::string("=") + input.getValue(key));
     }
 }
