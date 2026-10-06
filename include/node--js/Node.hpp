@@ -70,7 +70,10 @@ namespace NodeJS {
 	    const ConnectionData & getData() const;
 
 	    void setPosition(std::pair<float,float> pos);
-	    std::pair<float, float> getPosition() const;
+	    const std::pair<float, float> & getPosition() const;
+	    
+	    void setSize(std::pair<int,int> pos);
+	    const std::pair<int, int> & getSize() const;
 	    
 	private:
 	    // Data purely about the abstract node
@@ -82,6 +85,7 @@ namespace NodeJS {
 	    ConnectionData mData;
 
 	    std::pair<float, float> mPos;
+	    std::pair<int, int> mSize;
 
 	    bool mOverrideInputs;
 	    bool mOverrideOutputs;

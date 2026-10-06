@@ -43,9 +43,18 @@ void
 Node::setPosition(std::pair<float,float> pos)
 { mPos = pos; }
 
-std::pair<float, float>
+const std::pair<float, float> &
 Node::getPosition() const
 { return mPos; }
+
+
+void
+Node::setSize(std::pair<int, int> size)
+{ mSize = size; }
+
+const std::pair<int, int> &
+Node::getSize() const
+{ return mSize; }
 
 
 const NamedPorts &

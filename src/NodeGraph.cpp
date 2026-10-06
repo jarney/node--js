@@ -60,6 +60,24 @@ NodeGraph::newNode(
     return retNode;
 }
 
+void
+NodeGraph::removeNode(NodeId aNodeId)
+{
+    mEdgesByFromNode.erase(aNodeId);
+    mEdgesByToNode.erase(aNodeId);
+    std::set<EdgeId> edgesToRemove;
+    for (const auto & it : mEdges) {
+	if (it.second->fromNode == aNodeId ||
+	    it.second->toNode == aNodeId) {
+	    edgesToRemove.insert(it.first);
+	}
+    }
+    for (const auto & it : edgesToRemove) {
+	mEdges.erase(it);
+    }
+
+    mNodes.erase(aNodeId);
+}
 
 Node *
 NodeGraph::getNode(NodeId aNodeId) const
@@ -113,6 +131,40 @@ NodeGraph::newEdge(
     mEdges.insert(std::pair(id, std::move(connection)));
     return id;
 }
+
+void
+NodeGraph::removeEdge(
+    NodeId aFromNode,
+    PortId aFromPort,
+    NodeId aToNode,
+    PortId aToPort
+    )
+{
+    Edge tmpEdge(
+	aFromNode, aFromPort,
+	aToNode, aToPort
+	);
+
+    EdgeId id = tmpEdge.getId();
+    mEdges.erase(id);
+
+    std::vector<const Edge *> & edgesByFromNode = mEdgesByFromNode[aFromNode]; 
+    for (std::vector<const Edge *>::iterator it = edgesByFromNode.begin(); it != edgesByFromNode.end(); ++it) {
+	if ((*it)->getId() == id) {
+	    edgesByFromNode.erase(it);
+	    break;
+	}
+    }
+
+    std::vector<const Edge *> & edgesByToNode = mEdgesByFromNode[aToNode]; 
+    for (std::vector<const Edge *>::iterator it = edgesByToNode.begin(); it != edgesByToNode.end(); ++it) {
+	if ((*it)->getId() == id) {
+	    edgesByToNode.erase(it);
+	    break;
+	}
+    }
+}
+
 
 static const std::vector<const Edge *> empty_edges;
 
@@ -277,3 +329,58 @@ NodeGraph::getNodeIdsInTopologicalOrder(void) const
     return std::optional(order);
 }
 
+
+const std::map<GroupId, std::unique_ptr<Group>> &
+NodeGraph::getGroups() const
+{
+    return mGroups;
+}
+
+void
+NodeGraph::addGroup(GroupId aGroupId)
+{
+    mGroups.insert(std::pair(aGroupId, std::make_unique<Group>()));
+}
+
+void
+NodeGraph::removeGroup(GroupId aGroupId)
+{
+    mGroups.erase(aGroupId);
+}
+
+Group *
+NodeGraph::getGroup(GroupId aGroupId) const
+{
+    const auto it = mGroups.find(aGroupId);
+    if (it == mGroups.end()) {
+	return  nullptr;
+    }
+    return it->second.get();
+}
+
+
+void
+Group::addNode(NodeId aNodeId)
+{
+    mNodes.insert(aNodeId);
+}
+
+void
+Group::removeNode(NodeId aNodeId)
+{
+    mNodes.erase(aNodeId);
+}
+
+
+const std::set<NodeId> &
+Group::getNodes() const
+{
+    return mNodes;
+}
+
+
+bool
+Group::contains(NodeId aNodeId) const
+{
+    return (mNodes.find(aNodeId) != mNodes.end());
+}

@@ -18,6 +18,25 @@ namespace NodeJS {
 	};
 
 	class NodeModule;
+
+	typedef std::string GroupId;
+	
+	class Group {
+	public:
+	    Group() = default;
+	    ~Group() = default;
+
+	    void addNode(NodeId aNodeId);
+	    
+	    void removeNode(NodeId aNodeId);
+
+	    const std::set<NodeId> & getNodes() const;
+
+	    bool contains(NodeId aNodeId) const;
+	    
+	private:
+	    std::set<NodeId> mNodes;
+	};
 	
 	/**
 	 * A graph in NodeJS is the unit of computation much like a
@@ -90,6 +109,11 @@ namespace NodeJS {
 	    bool hasNode(NodeId aNodeId) const;
 
 	    /**
+	     * Removed a node from the graph along with any associated edges.
+	     */
+	    void removeNode(NodeId aNodeId);
+	    
+	    /**
 	     * Returns a map of nodes
 	     */
 	    const std::map<NodeId, std::unique_ptr<Node>> & getNodes() const;
@@ -104,6 +128,13 @@ namespace NodeJS {
 	     * connection id indicating that it could not be created.
 	     */
 	    std::optional<EdgeId> newEdge(
+		NodeId aFromNode,
+		PortId aFromPort,
+		NodeId aToNode,
+		PortId aToPort
+		);
+
+	    void removeEdge(
 		NodeId aFromNode,
 		PortId aFromPort,
 		NodeId aToNode,
@@ -145,6 +176,22 @@ namespace NodeJS {
 	     */
 	    std::optional<std::vector<NodeId>> getNodeIdsInTopologicalOrder(void) const;
 
+	    /**
+	     * Node groups are simply named sets of nodes.
+	     * A node may belong to zero or more groups.
+	     * Groups may have zero or more nodes.
+	     * Node grouping is a useful meta-programming
+	     * construct as well as an organizational tool
+	     * for viewing and thinking about nodes and their
+	     * purposes.
+	     */
+	    const std::map<GroupId, std::unique_ptr<Group>> & getGroups() const;
+
+	    void addGroup(GroupId aGroupId);
+
+	    void removeGroup(GroupId aGroupId);
+
+	    Group *getGroup(GroupId aGroupId) const;
 	    
 	private:
 	    NodeModule & mModule;
@@ -153,6 +200,7 @@ namespace NodeJS {
 	    
 	    // The core of a graph is the nodes and edges.
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
+	    std::map<GroupId, std::unique_ptr<Group>> mGroups;
 	    
 	    std::map<EdgeId, std::unique_ptr<Edge>> mEdges;
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByFromNode;
