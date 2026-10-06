@@ -95,7 +95,7 @@ _OPENSCAD_PROCESSOR_DEF(syntax_function)
 
     // Linkage between graph and type is currently 'weak' and 'implicit'.
     std::vector<std::string> args;
-    for (int i = 0; i < node.getInputs().getCount(); ++i) {
+    for (size_t i = 0; i < node.getInputs().getCount(); ++i) {
 	args.push_back(node.getInputs().getName(i));
     }
     
@@ -112,7 +112,7 @@ _OPENSCAD_PROCESSOR_DEF(syntax_function_call)
     std::vector<std::string> args;
 
     const NamedPorts & inputs = node.getInputs();
-    for (int i = 0; i < inputs.getCount(); i++) {
+    for (size_t i = 0; i < inputs.getCount(); i++) {
 	std::string portName = inputs.getName(i);
 	args.push_back(input.getValue(portName));
     }
@@ -156,7 +156,7 @@ _OPENSCAD_PROCESSOR_DEF(syntax_custom_node)
     const NodeType & nodeType = node.getType();
     if (nodeType.getOutputs().hasPort("value")) {
 	std::string out;
-	for (int i = 0; i < nodeType.getInputs().getCount(); i++) {
+	for (size_t i = 0; i < nodeType.getInputs().getCount(); i++) {
 	    std::string argname = nodeType.getInputs().getName(i);
 	    conditionalArg(args, input, node, argname);
 	}

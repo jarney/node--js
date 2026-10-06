@@ -23,6 +23,18 @@ NamedPorts::getByName(std::string name) const
     return it->second.get();
 }
 
+size_t
+NamedPorts::getPortIndex(std::string name) const
+{
+    size_t i = 0;
+    for (i = 0; i < mPortNames.size(); i++) {
+	if (name == mPortNames.at(i)) {
+	    return i;
+	}
+    }
+    return 0;
+}
+
 const NodePort *
 NamedPorts::getByIndex(unsigned int index) const
 {
@@ -49,7 +61,7 @@ NamedPorts::getName(unsigned int index) const
     return portName;
 }
 
-int
+size_t
 NamedPorts::getCount() const
 {
     return mPorts.size();

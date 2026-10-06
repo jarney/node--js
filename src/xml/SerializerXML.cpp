@@ -225,7 +225,7 @@ writeNamedPorts(
     NodeJS::core::SerializerErrorReporter & err
     )
 {
-    for (int i = 0; i < namedPorts.getCount(); i++) {
+    for (size_t i = 0; i < namedPorts.getCount(); i++) {
 	std::string id = namedPorts.getName(i);
 	const NodePort *port = namedPorts.getByIndex(i);
 	XmlNodeWrapper portNode("port");

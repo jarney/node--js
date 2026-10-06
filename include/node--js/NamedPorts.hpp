@@ -19,7 +19,8 @@ namespace NodeJS {
 	    const NodePort *getByIndex(unsigned int index) const;
 	    bool hasPort(std::string name) const;
 	    std::string getName(unsigned int index) const;
-	    int getCount() const;
+	    size_t getPortIndex(std::string name) const;
+	    size_t getCount() const;
 
 	private:
 	    std::map<std::string, std::unique_ptr<NodePort>> mPortsByName;
