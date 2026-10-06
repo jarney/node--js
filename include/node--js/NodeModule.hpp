@@ -12,8 +12,6 @@ namespace NodeJS {
     namespace core {
 	class ModuleLoader;
 
-	typedef std::string GraphId;
-	
 	/**
 	 * A NodeJS module consists of a collection of data types
 	 * and node types.  These represent the possible types available
@@ -30,6 +28,8 @@ namespace NodeJS {
 	 */
 	class NodeModule {
 	public:
+	    typedef std::string GraphId;
+	
 	    NodeModule(ModuleLoader & moduleLoader);
 	    ~NodeModule() = default;
 
