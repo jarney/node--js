@@ -81,7 +81,7 @@ ModuleLoaderNodeJSPath::getNODEJS_PATH()
     return mPath;
 }
 
-const NodeModule *
+NodeModule *
 ModuleLoaderNodeJSPath::loadModule(
     std::string aFullyQualifiedModuleName,
     SerializerErrorReporter & reporter
@@ -93,26 +93,25 @@ ModuleLoaderNodeJSPath::loadModule(
     }
     
     const SerializerXML & ser = SerializerXML::instance();
+    std::unique_ptr<NodeModule> module;
     for (const auto & pathElement : mPath) {
 	std::string filename = aFullyQualifiedModuleName + std::string(".xml");
 	std::filesystem::path full_filename = std::filesystem::path(pathElement) / filename;
-	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this);
+	module = std::make_unique<NodeModule>(*this);
 	std::ifstream input_stream(full_filename);
 	bool success = ser.read(
 	    *module,
 	    input_stream,
 	    reporter
 	    );
-	if (!success) {
-	    module = nullptr;
-	}
-	// Even if we fail, we want to put the (null) module
-	// onto the list so we don't try (and fail) to load it again.
-	const NodeModule *ret_module = module.get();
-	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
-	return ret_module;
+	if (success) break;
+	module = nullptr;
     }
-    return nullptr;
+    // Even if we fail, we want to put the (null) module
+    // onto the list so we don't try (and fail) to load it again.
+    NodeModule *ret_module = module.get();
+    mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+    return ret_module;
 }
 
 NodeModule *

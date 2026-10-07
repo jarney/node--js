@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<node-module xmlns="http://jarney.github.io/nodejs-schema">
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
   <!--
       - This is the interface to OpenSCAD.
       - This consists of a bunch of nodes that are designed

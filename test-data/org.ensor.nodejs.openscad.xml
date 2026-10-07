@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<node-module xmlns="http://jarney.github.io/nodejs-schema">
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
   <!--
     - This is the interface to OpenSCAD.
     - This consists of a bunch of nodes that are designed
@@ -8,6 +8,13 @@
     - in OpenSCAD to NodeJS language and vice-versa.
     -->
   <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins"/>
+
+  <metadata>
+    <data namespace="">
+      <asdf></asdf>
+    </data>
+  </metadata>
+  
   <data-types>
     <!--
       - These are (for now) purely documentary.

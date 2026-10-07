@@ -33,7 +33,7 @@ namespace NodeJS {
 	     * Errors in loading modules are reported by the error
 	     * reporter.
 	     */
-	    virtual const NodeJS::core::NodeModule *loadModule(
+	    virtual NodeJS::core::NodeModule *loadModule(
 		std::string aFullyQualifiedModuleName,
 		NodeJS::core::SerializerErrorReporter & reporter
 		) override;

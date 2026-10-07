@@ -32,7 +32,7 @@ namespace NodeJS {
 	     * This function may block and may cache the results in memory
 	     * to avoid loading the same module over again.
 	     */
-	    virtual const NodeModule *loadModule(
+	    virtual NodeModule *loadModule(
 		std::string aFullyQualifiedModuleName,
 		SerializerErrorReporter & reporter
 		) = 0;

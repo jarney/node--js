@@ -23,7 +23,7 @@ using NodeJS::core::NodeGraph;
 using NodeJS::core::ConnectionData;
 using NodeJS::core::ModuleLoader;
 
-static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs-schema";
+static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
 
 static void
 writeGraphNodeData(
