@@ -1,6 +1,7 @@
 #pragma once
 
 #include "node--js/DataType.hpp"
+#include "node--js/Metadata.hpp"
 
 #include <string>
 
@@ -95,11 +96,20 @@ namespace NodeJS {
 	     * Returns the connection policy associated with this port.
 	     */
 	    const ConnectionPolicy & getConnectionPolicy() const;
+
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
 	    
 	private:
 	    std::string mDataType;
 	    std::string mDescription;
 	    ConnectionPolicy mConnectionPolicy;
+	    Metadata mMetadata;
 	};
     } // End core
 } // End JNodes

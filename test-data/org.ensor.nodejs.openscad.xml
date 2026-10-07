@@ -38,7 +38,13 @@
     <!-- Output to be rendered -->
     <node-type id="output" visibility="public" type="native">
       <inputs>
-	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"/>
+	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi">
+	  <metadata>
+	    <data namespace="Documentation">
+	      <value key="docs">This is some robust documentation for this node.</value>
+	    </data>
+	  </metadata>
+	</port>
 	<port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
 	<port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
 	<port id="module-instantiations" description="Output to render" data-type="geometry" connection-policy="multi"/>

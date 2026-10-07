@@ -224,24 +224,23 @@ NodeGraph::getNodeType(std::string aTypeName)
     return nullptr;
 }
 
-#if 0
-NodeId
-NodeGraph::addNode(std::string aNodeTypeId)
+const DataType *
+NodeGraph::getDataType(std::string aTypeName)
 {
-    const NodeType *nodeType = getNodeType(aNodeTypeId);
-    if (nodeType == nullptr) {
-	fprintf(stderr, "Error loading node of type %s\n", aNodeTypeId.c_str());
-	return "";
+    for (const auto & it : mScopes) {
+	if (aTypeName == "a") {
+	    fprintf(stderr, "Searching for node type %s in module %p\n",
+		    aTypeName.c_str(), it);
+	}
+	if (it->hasDataType(aTypeName)) {
+	    return it->getDataType(aTypeName);
+	}
     }
-    ConnectionData defaultData;
-    Node & n = newNode(
-	*nodeType,
-	aNodeTypeId,
-	defaultData
-	);
-    return n.getId();
+    if (mScopes.size() == 0) {
+	fprintf(stderr, "This graph doesn't have any scopes?!\n");
+    }
+    return nullptr;
 }
-#endif
 
 std::set<NodeId>
 NodeGraph::getNodeIds(void) const

@@ -12,7 +12,6 @@ Node::Node(
     , mType(aType)
     , mGraph(aGraph)
     , mData(aData)
-    , mPos(std::make_pair(0,0))
     , mOverrideInputs(false)
     , mOverrideOutputs(false)
     , mInputs()
@@ -38,24 +37,6 @@ Node::getData()
 const ConnectionData &
 Node::getData() const
 { return mData; }
-
-void
-Node::setPosition(std::pair<float,float> pos)
-{ mPos = pos; }
-
-const std::pair<float, float> &
-Node::getPosition() const
-{ return mPos; }
-
-
-void
-Node::setSize(std::pair<int, int> size)
-{ mSize = size; }
-
-const std::pair<int, int> &
-Node::getSize() const
-{ return mSize; }
-
 
 const NamedPorts &
 Node::getInputs() const

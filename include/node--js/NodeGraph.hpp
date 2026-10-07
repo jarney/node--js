@@ -165,6 +165,7 @@ namespace NodeJS {
 	    void copyScope(const NodeGraph *other);
 	    
 	    const NodeType * getNodeType(std::string aTypeName);
+	    const DataType * getDataType(std::string aTypeName);
 
 	    std::set<NodeId> getNodeIds(void) const;
 

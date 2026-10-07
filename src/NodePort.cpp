@@ -35,3 +35,10 @@ const NodePort::ConnectionPolicy &
 NodePort::getConnectionPolicy() const
 { return mConnectionPolicy; }
 
+const Metadata &
+NodePort::getMetadata(void) const
+{ return mMetadata; }
+
+Metadata &
+NodePort::getMetadata(void)
+{ return mMetadata; }

@@ -70,12 +70,6 @@ namespace NodeJS {
 	    
 	    const ConnectionData & getData() const;
 
-	    void setPosition(std::pair<float,float> pos);
-	    const std::pair<float, float> & getPosition() const;
-	    
-	    void setSize(std::pair<int,int> pos);
-	    const std::pair<int, int> & getSize() const;
-	    
 	    /**
 	     * Metadata is data that can be associated
 	     * with a node module that can be used by other
@@ -92,9 +86,6 @@ namespace NodeJS {
 	    const NodeType & mType;
 	    NodeGraph & mGraph;
 	    ConnectionData mData;
-
-	    std::pair<float, float> mPos;
-	    std::pair<int, int> mSize;
 
 	    bool mOverrideInputs;
 	    bool mOverrideOutputs;
