@@ -1,6 +1,7 @@
 #include "node--js/xml/SerializerXML.hpp"
 #include "node--js/xml/XmlNodeWrapper.hpp"
 #include "node--js/ModuleLoader.hpp"
+#include "node--js/Metadata.hpp"
 
 #include <istream>
 #include <libxml/parser.h>
@@ -22,6 +23,7 @@ using NodeJS::core::DataType;
 using NodeJS::core::NodeGraph;
 using NodeJS::core::ConnectionData;
 using NodeJS::core::ModuleLoader;
+using NodeJS::core::Metadata;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
 
@@ -40,6 +42,44 @@ readGraphNodeData(
     NodeJS::core::SerializerErrorReporter & err
     );
 
+static void
+writeMetadata(
+    const Metadata & metadata,
+    XmlNodeWrapper & metadataNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (const auto & ns : metadata.getNamespaces()) {
+	XmlNodeWrapper data("data");
+	data.setAttribute("namespace", ns);
+	writeGraphNodeData(metadata.getMetadata(ns),
+			   data,
+			   err);
+	metadataNode.addChild(data);
+    }
+}
+
+void
+readMetadata(
+    Metadata & metadata,
+    XmlNodeWrapper & parentNode,
+    NodeJS::core::SerializerErrorReporter & err
+    )
+{
+    for (XmlNodeWrapper::Iterator it = parentNode.begin(); it != parentNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (childName == "data") {
+	    fprintf(stderr, "Reading metadata node: data\n");
+	    std::string ns = child.getAttribute("namespace");
+	    fprintf(stderr, "Reading metadata node: %s\n", ns.c_str());
+	    readGraphNodeData(
+		metadata.getMetadata(ns),
+		nullptr, nullptr,
+		child, err);
+	}
+    }
+}
 
 const SerializerXML &
 SerializerXML::instance()
@@ -144,8 +184,8 @@ readNamedPorts(
 {
     for (XmlNodeWrapper::Iterator it = inputsNode.begin(); it != inputsNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName != "port") continue;
+	std::string childName = child.getName();
+	if (childName != "port") continue;
 
 	std::string id = child.getAttribute("id");
 	std::string description = child.getAttribute("description");
@@ -197,17 +237,20 @@ readNodeType(
     
     for (XmlNodeWrapper::Iterator it = nodeTypeNode.begin(); it != nodeTypeNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == "inputs") {
+	std::string childName = child.getName();
+	if (childName == "inputs") {
 	    readNamedPorts(nodeType.get()->getInputs(), child, err);
 	}
-	else if (tagName == "outputs") {
+	else if (childName == "outputs") {
 	    readNamedPorts(nodeType.get()->getOutputs(), child, err);
 	}
-	else if (tagName == "default-node-data") {
+	else if (childName == "default-node-data") {
 	    ConnectionData node_data;
 	    readGraphNodeData(node_data, nullptr, nullptr, child, err);
 	    nodeType->setDefaultNodeData(node_data);
+	}
+	else if (childName == std::string("metadata")) {
+	    readMetadata(nodeType.get()->getMetadata(), child, err);
 	}
 	else {
 	    // Nothing to do, this is extraneous.
@@ -261,6 +304,10 @@ writeNodeType(
 	nodeType.setAttribute("type", "native");
     }
 
+    XmlNodeWrapper metadataNode("metadata");
+    writeMetadata(node_type.getMetadata(), metadataNode, err);
+    nodeType.addChild(metadataNode);
+
     XmlNodeWrapper inputsNode("inputs");
     writeNamedPorts(node_type.getInputs(), inputsNode, err);
     nodeType.addChild(inputsNode);
@@ -288,8 +335,8 @@ readNodeTypes(
 {
     for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName != std::string("node-type")) {
+	std::string childName = child.getName();
+	if (childName != std::string("node-type")) {
 	    continue;
 	}
 	if (!child.hasAttribute("id")) {
@@ -325,13 +372,14 @@ readGraphNodeData(
 {
     for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == std::string("value")) {
+	std::string childName = child.getName();
+	if (childName == std::string("value")) {
 	    std::string key = child.getAttribute("key");
 	    std::string value = child.getContent();
+	    fprintf(stderr, "Reading metadata key: %s %s\n", key.c_str(), value.c_str());
 	    node_data.setValue(key, value);
 	}
-	else if (tagName == "embedding" && child.hasAttribute("type")) {
+	else if (childName == "embedding" && child.hasAttribute("type")) {
 	    if (pos == nullptr) {
 		continue;
 	    }
@@ -384,23 +432,23 @@ readGraphNode(
 	);
     node.setPosition(pos);
 
-    if (nodeType->getAllowPortOverride()) {
-	for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
-	    XmlNodeWrapper child = it.get();
-	    std::string childName = child.getName();
+    for (XmlNodeWrapper::Iterator it = nodeNode.begin(); it != nodeNode.end(); ++it) {
+	XmlNodeWrapper child = it.get();
+	std::string childName = child.getName();
+	if (nodeType->getAllowPortOverride()) {
 	    if (childName == std::string("inputs")) {
 		node.setOverrideInputs(true);
 		readNamedPorts(node.getOverrideInputs(), child, err);
 	    }
-	    else if (childName == std::string("outputs")) {
+	    if (childName == std::string("outputs")) {
 		node.setOverrideOutputs(true);
 		readNamedPorts(node.getOverrideOutputs(), child, err);
 	    }
 	}
+	if (childName == std::string("metadata")) {
+	    readMetadata(node.getMetadata(), child, err);
+	}
     }
-
-
-    
 }
 
 static void
@@ -488,7 +536,6 @@ readGraphScope(
     }
 }
 
-
 static void
 readGraph(
     NodeModule & node_module,
@@ -509,6 +556,9 @@ readGraph(
 	std::string childName = child.getName();
 	if (childName == std::string("scope")) {
 	    readGraphScope(node_module, *graph, child, err);
+	}
+	else if (childName == std::string("metadata")) {
+	    readMetadata(graph->getMetadata(), child, err);
 	}
     }
     
@@ -592,6 +642,10 @@ writeGraphNode(
 	}
     }
     
+    XmlNodeWrapper metadataNode("metadata");
+    writeMetadata(node.getMetadata(), metadataNode, err);
+    nodeNode.addChild(metadataNode);
+
     XmlNodeWrapper embeddingsNode("embedding");
     embeddingsNode.setAttribute("type", "plane");
     std::pair<float, float> pos = node.getPosition();
@@ -673,6 +727,10 @@ writeGraph(
     XmlNodeWrapper graphNode("graph");
     graphNode.setAttribute("id", id);
 
+    XmlNodeWrapper metadataNode("metadata");
+    writeMetadata(graph.getMetadata(), metadataNode, err);
+    graphNode.addChild(metadataNode);
+    
     XmlNodeWrapper scopeNode("scope");
     writeGraphScopeNodes(graph, scopeNode, err);
     graphNode.addChild(scopeNode);
@@ -716,6 +774,11 @@ SerializerXML::write(
     rootNode.setAttribute("xmlns", NODEJS_XML_NAMESPACE);
 
     writePackage(node_module, rootNode, err);
+
+    XmlNodeWrapper metadataNode("metadata");
+    writeMetadata(node_module.getMetadata(), metadataNode, err);
+    rootNode.addChild(metadataNode);
+    
     writeDataTypes(node_module, rootNode, err);
     writeNodeTypes(node_module, rootNode, err);
     writeGraphs(node_module, rootNode, err);
@@ -761,8 +824,8 @@ SerializerXML::read(
     // other data is registered.
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == std::string("package")) {
+	std::string childName = child.getName();
+	if (childName == std::string("package")) {
 	    readPackage(node_module, child, err);
 	}
     }
@@ -771,17 +834,20 @@ SerializerXML::read(
     // even if they appear later in the file.
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == std::string("data-types")) {
+	std::string childName = child.getName();
+	if (childName == std::string("data-types")) {
 	    readDataTypes(node_module, child, err);
 	}
+	else if (childName == std::string("metadata")) {
+	    readMetadata(node_module.getMetadata(), child, err);
+	}
     }
-
+    
     // Node types must be loaded before we load any nodes
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == std::string("node-types")) {
+	std::string childName = child.getName();
+	if (childName == std::string("node-types")) {
 	    readNodeTypes(node_module, child, err);
 	}
     }
@@ -790,8 +856,8 @@ SerializerXML::read(
     // the node types and graphs from the file.
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
 	XmlNodeWrapper child = it.get();
-	std::string tagName = child.getName();
-	if (tagName == std::string("graphs")) {
+	std::string childName = child.getName();
+	if (childName == std::string("graphs")) {
 	    readGraphs(node_module, child, err);
 	}
     }

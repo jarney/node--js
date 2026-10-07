@@ -1,15 +1,15 @@
 set(CALC_SOURCE_FILES
-  example.cpp
+  passthrough.cpp
 )
 
 set(CALC_HEADER_FILES
 
 )
 
-add_executable(example
+add_executable(passthrough
   ${CALC_SOURCE_FILES}
   ${CALC_HEADER_FILES}
 )
 
-target_link_libraries(example NodeJS)
+target_link_libraries(passthrough NodeJS)
 

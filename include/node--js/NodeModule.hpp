@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "node--js/DataType.hpp"
+#include "node--js/Metadata.hpp"
 #include "node--js/NodeType.hpp"
 #include "node--js/NodeGraph.hpp"
 
@@ -94,6 +95,14 @@ namespace NodeJS {
 
 	    const std::map<std::string, std::unique_ptr<NodeGraph>> & getGraphs() const;
 
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
+	    
 	private:
 	    ModuleLoader & mModuleLoader;
 	    std::string mPackage;
@@ -101,6 +110,8 @@ namespace NodeJS {
 	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	    std::map<std::string, std::unique_ptr<NodeGraph>> mGraphs;
+	    
+	    Metadata mMetadata;
 	};
     }
 }

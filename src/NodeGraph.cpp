@@ -358,6 +358,17 @@ NodeGraph::getGroup(GroupId aGroupId) const
     return it->second.get();
 }
 
+const Metadata &
+NodeGraph::getMetadata(void) const
+{
+    return mMetadata;
+}
+
+Metadata &
+NodeGraph::getMetadata(void)
+{
+    return mMetadata;
+}
 
 void
 Group::addNode(NodeId aNodeId)
@@ -384,3 +395,4 @@ Group::contains(NodeId aNodeId) const
 {
     return (mNodes.find(aNodeId) != mNodes.end());
 }
+

@@ -7,6 +7,7 @@
 
 #include "node--js/NodePort.hpp"
 #include "node--js/NamedPorts.hpp"
+#include "node--js/Metadata.hpp"
 #include "node--js/ConnectionData.hpp"
 
 namespace NodeJS {
@@ -124,6 +125,15 @@ namespace NodeJS {
 	     */
 	    const ConnectionData & getDefaultNodeData() const;
 	    void setDefaultNodeData(const ConnectionData & aConnectionData);
+
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
+	    
 	private:
 	    std::string mId;
 	    Visibility mVisibility;
@@ -135,6 +145,8 @@ namespace NodeJS {
 
 	    // Default node data.
 	    ConnectionData mDefaultNodeData;
+	    
+	    Metadata mMetadata;
 	};
     }
 }

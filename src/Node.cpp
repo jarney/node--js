@@ -116,3 +116,15 @@ Node::hasOverrideOutputs() const
 {
     return mOverrideOutputs;
 }
+
+const Metadata &
+Node::getMetadata(void) const
+{
+    return mMetadata;
+}
+
+Metadata &
+Node::getMetadata(void)
+{
+    return mMetadata;
+}

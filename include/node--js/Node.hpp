@@ -1,5 +1,6 @@
 #pragma once
 
+#include "node--js/Metadata.hpp"
 #include "node--js/NodeType.hpp"
 #include "node--js/ConnectionData.hpp"
 #include "node--js/NamedPorts.hpp"
@@ -75,6 +76,14 @@ namespace NodeJS {
 	    void setSize(std::pair<int,int> pos);
 	    const std::pair<int, int> & getSize() const;
 	    
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
+
 	private:
 	    // Data purely about the abstract node
 	    // that is the same for each instance.  Factor this out
@@ -93,6 +102,8 @@ namespace NodeJS {
 
 	    NamedPorts mInputs;
 	    NamedPorts mOutputs;
+	    
+	    Metadata mMetadata;
 	};
 	
     } // End core

@@ -10,8 +10,8 @@
   <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins"/>
 
   <metadata>
-    <data namespace="">
-      <asdf></asdf>
+    <data namespace="module-level metadata">
+      <value key="version">2.4</value>
     </data>
   </metadata>
   
@@ -44,6 +44,11 @@
 	<port id="module-instantiations" description="Output to render" data-type="geometry" connection-policy="multi"/>
       </inputs>
       <outputs/>
+      <metadata>
+	<data namespace="node type-level metadata">
+	  <value key="description">This is some really interesting stuff that the output node does</value>
+	</data>
+  </metadata>
     </node-type>
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">

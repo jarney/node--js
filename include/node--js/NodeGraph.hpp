@@ -1,5 +1,6 @@
 #pragma once
 
+#include "node--js/Metadata.hpp"
 #include "node--js/Edge.hpp"
 #include "node--js/Node.hpp"
 
@@ -193,6 +194,14 @@ namespace NodeJS {
 
 	    Group *getGroup(GroupId aGroupId) const;
 	    
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
+
 	private:
 	    NodeModule & mModule;
 
@@ -207,6 +216,8 @@ namespace NodeJS {
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByToNode;
 
 	    std::vector<const NodeModule*> mScopes;
+	    
+	    Metadata mMetadata;
 	};
     }
 }

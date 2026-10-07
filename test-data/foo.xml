@@ -1,2 +1,34 @@
-Data directory 
-/home/jona/NetBeansProjects/SparkStudios/Projects/NodeSCAD/openscad2/submodules/node--js/test-data/
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="anonymous" description="Uncategorized"/>
+  <data-types/>
+  <node-types/>
+  <graphs>
+    <graph id="main">
+      <metadata>
+	<data namespace="graph-level metadata">
+	  <value key="owner">Jon</value>
+	</data>
+      </metadata>
+      <scope>
+        <package id="org.ensor.nodejs.openscad"/>
+      </scope>
+      <nodes>
+        <node id="output" type="output">
+          <embedding type="plane" x="0.000000" y="0.000000"/>
+        </node>
+        <node id="sphere" type="sphere">
+          <embedding type="plane" x="-400.000000" y="0.000000"/>
+	  <metadata>
+	    <data namespace="node-level stuff here....">
+	      <value key="processing-instructions">Auditors</value>
+	    </data>
+	  </metadata>
+        </node>
+      </nodes>
+      <edges>
+        <edge from-node="sphere" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
+      </edges>
+    </graph>
+  </graphs>
+</node-module>

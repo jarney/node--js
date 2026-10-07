@@ -139,3 +139,14 @@ NodeModule::getGraphs() const
     return mGraphs;
 }
 
+const Metadata &
+NodeModule::getMetadata(void) const
+{
+    return mMetadata;
+}
+
+Metadata &
+NodeModule::getMetadata(void)
+{
+    return mMetadata;
+}

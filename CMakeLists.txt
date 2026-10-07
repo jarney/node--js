@@ -53,8 +53,9 @@ endif()
 
 set(CPP_SOURCE_FILES
   src/main.cpp
-  src/Edge.cpp
   src/DataType.cpp
+  src/Edge.cpp
+  src/Metadata.cpp
   src/NodeType.cpp
   src/NodePort.cpp
   src/NamedPorts.cpp

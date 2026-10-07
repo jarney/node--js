@@ -77,3 +77,15 @@ NodeType::setDefaultNodeData(const ConnectionData & aDefaultNodeData)
 {
     mDefaultNodeData = aDefaultNodeData;
 }
+
+const Metadata &
+NodeType::getMetadata(void) const
+{
+    return mMetadata;
+}
+
+Metadata &
+NodeType::getMetadata(void)
+{
+    return mMetadata;
+}
