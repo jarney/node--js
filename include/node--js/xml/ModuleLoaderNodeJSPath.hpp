@@ -7,6 +7,17 @@ namespace NodeJS {
 	class NodeModule;
     }
     namespace xml {
+
+#if defined(__WINDOWS__) || defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
+        static const char NODEJS_PATH_DELIMITER_CHARACTER = ';';
+        static const std::string NODEJS_PATH_DELIMITER_STRING(";");
+#else
+	static const char NODEJS_PATH_DELIMITER_CHARACTER = ':';
+	static const std::string NODEJS_PATH_DELIMITER_STRING(":");
+#endif
+        static const char NODEJS_PATH_ESCAPE_CHARACTER = '\\';
+        static const std::string NODEJS_PATH_ESCAPE_STRING("\\");
+
         /**
          * Singleton implementation of a module loader
 	 * that knows how to load (and cache) modules

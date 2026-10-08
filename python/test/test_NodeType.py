@@ -2,6 +2,7 @@ import pytest
 
 from nodejs.NodeType import NodeType
 from nodejs.NodePort import NodePort
+from nodejs.ConnectionData import ConnectionData
 
 def test_NodeType_empty():
     nodeType = NodeType()
@@ -76,4 +77,12 @@ def test_NodeType_unique_output_ports():
     assert (nodeType.getOutputs().getCount() == 1);
     assert (nodeType.getOutputs().getByName("first").getDescription() == "First Argument");
 
+def test_NodeType_default_node_data():
+    nodeType = NodeType()
 
+    defaultData = ConnectionData()
+    defaultData.setValue("x", "foo")
+    nodeType.setDefaultNodeData(defaultData)
+
+    assert(nodeType.getDefaultNodeData().getValue("x") == "foo");
+    

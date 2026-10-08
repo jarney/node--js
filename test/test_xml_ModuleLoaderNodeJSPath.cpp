@@ -19,29 +19,61 @@ void doTest(std::string given_path, const std::vector<std::string> & expected)
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: ordinary", "[NodeJS][xml][ModuleLoader]")
 {
-    doTest("one;two;three;four", std::vector<std::string>{"one", "two", "three", "four"});
+    doTest(
+	std::string("one") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("two") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("three") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("four"),
+	std::vector<std::string>{"one", "two", "three", "four"}
+	);
 }
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: escape semicolon", "[NodeJS][xml][ModuleLoader]")
 {
-    doTest("one;two;thre\\;e;four", std::vector<std::string>{"one", "two", "thre;e", "four"});
+    doTest(
+	std::string("one") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("two") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("thre") + NODEJS_PATH_ESCAPE_STRING + NODEJS_PATH_DELIMITER_STRING + std::string("e") + NODEJS_PATH_DELIMITER_STRING + 
+	std::string("four"),
+	std::vector<std::string>{"one", "two", std::string("thre") + NODEJS_PATH_DELIMITER_STRING + std::string("e"), "four"});
 }
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: Just a stray escape", "[NodeJS][xml][ModuleLoader]")
 {
-    doTest("\\", std::vector<std::string>{"\\"});
+    doTest(NODEJS_PATH_ESCAPE_STRING, std::vector<std::string>{NODEJS_PATH_ESCAPE_STRING});
 }
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: double escape backslash", "[NodeJS][xml][ModuleLoader]")
 {
-    doTest("\\\\", std::vector<std::string>{"\\\\"});
-    doTest("a\\\\b", std::vector<std::string>{"a\\\\b"});
+    doTest(NODEJS_PATH_ESCAPE_STRING + NODEJS_PATH_ESCAPE_STRING, std::vector<std::string>{NODEJS_PATH_ESCAPE_STRING + NODEJS_PATH_ESCAPE_STRING});
+    doTest(
+	std::string("a") +
+	NODEJS_PATH_ESCAPE_STRING + NODEJS_PATH_ESCAPE_STRING +
+	std::string("b"),
+	std::vector<std::string>{
+	    std::string("a") +
+	    NODEJS_PATH_ESCAPE_STRING + NODEJS_PATH_ESCAPE_STRING +
+	    std::string("b"),
+	});
 }
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: escape other things", "[NodeJS][xml][ModuleLoader]")
 {
-    doTest("\\a", std::vector<std::string>{"\\a"});
-    doTest("\\a;\\c", std::vector<std::string>{"\\a", "\\c"});
+    doTest(
+	NODEJS_PATH_ESCAPE_STRING + std::string("a"),
+	std::vector<std::string>{
+	    NODEJS_PATH_ESCAPE_STRING + std::string("a")
+	}
+	);
+    doTest(
+	NODEJS_PATH_ESCAPE_STRING + std::string("a") +
+	NODEJS_PATH_DELIMITER_STRING +
+	NODEJS_PATH_ESCAPE_STRING + std::string("c"),
+	std::vector<std::string>{
+	    NODEJS_PATH_ESCAPE_STRING + std::string("a"),
+	    NODEJS_PATH_ESCAPE_STRING + std::string("c")
+	}
+	);
 }
 
 TEST_CASE("xml::ModuleLoaderNodeJSPath path splitting: empty", "[NodeJS][xml][ModuleLoader]")
@@ -74,4 +106,19 @@ TEST_CASE("xml::ModuleLoaderNodeJSPath setting path and loading file", "[NodeJS]
     loader.setNODEJS_PATH("");
     const NodeModule *module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err);
     CHECK(module_no_path == nullptr);
+}
+
+TEST_CASE("xml::ModuleLoaderNodeJSPath test environment variable", "[NodeJS][xml][ModuleLoader]")
+{
+    std::string pathstr =
+	std::string("a") +
+	NODEJS_PATH_DELIMITER_STRING +
+	std::string("b");
+
+    // Force the resolution to use the environment variable.
+    unsetenv("NODEJS_PATH");
+    setenv("NODEJS_PATH", pathstr.c_str(), 1);
+    ModuleLoaderNodeJSPath loader;
+
+    CHECK(loader.getNODEJS_PATH() == std::vector<std::string>{"a", "b"});
 }

@@ -87,3 +87,14 @@ TEST_CASE("NodeType unique output ports", "[NodeJS][core][NodeType]")
     CHECK(nodeType.getOutputs().getByName("first")->getDescription() == "First Argument");
 }
 
+TEST_CASE("NodeType default node data", "[NodeJS][core][NodeType]")
+{
+    NodeType nodeType;
+
+    ConnectionData defaultData;
+    defaultData.setValue("x", "foo");
+    nodeType.setDefaultNodeData(defaultData);
+
+    CHECK(nodeType.getDefaultNodeData().getValue("x") == "foo");
+    
+}

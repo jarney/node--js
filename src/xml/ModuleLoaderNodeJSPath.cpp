@@ -13,6 +13,7 @@ using namespace NodeJS::xml;
 static const int NORMAL = 0;
 static const int ESCAPE = 1;
 
+
 static std::vector<std::string>
 split_path(std::string str)
 {
@@ -22,10 +23,10 @@ split_path(std::string str)
     for (std::string::const_iterator it = str.cbegin(); it != str.cend(); it++) {
 	char c = *it;
 	if (state == NORMAL) {
-	    if (c == '\\') {
+	    if (c == NODEJS_PATH_ESCAPE_CHARACTER) {
 		state = ESCAPE;
 	    }
-	    else if (c == ';') {
+	    else if (c == NODEJS_PATH_DELIMITER_CHARACTER) {
 		path.push_back(os.str());
 		os.str("");
 		os.clear();
@@ -36,21 +37,21 @@ split_path(std::string str)
 	    }
 	}
 	else /*if (state == ESCAPE)*/ {
-	    if (c == ';') {
+	    if (c == NODEJS_PATH_DELIMITER_CHARACTER) {
 		os << c;
 		state = NORMAL;
 	    }
-	    else if (c == '\\') {
-		os << "\\\\";
+	    else if (c == NODEJS_PATH_ESCAPE_CHARACTER) {
+		os << NODEJS_PATH_ESCAPE_CHARACTER << NODEJS_PATH_ESCAPE_CHARACTER;
 	    }
 	    else {
-		os << '\\' << c;
+		os <<  NODEJS_PATH_ESCAPE_CHARACTER << c;
 	    }
 	    state = NORMAL;
 	}
     }
     if (state == ESCAPE) {
-	os << '\\';
+	os << NODEJS_PATH_ESCAPE_CHARACTER;
     }
     if (os.str().size() > 0) {
 	path.push_back(os.str());
