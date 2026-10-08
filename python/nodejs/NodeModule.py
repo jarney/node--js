@@ -1,10 +1,13 @@
 
+from .NodeGraph import NodeGraph
 
 class NodeModule:
     def __init__(self):
         self.package = ""
         self.dataTypes = {}
         self.nodeTypes = {}
+        self.mGraphs = {}
+        self.mMetadata = {}
 
     def setPackage(self, package):
         """
@@ -42,4 +45,23 @@ class NodeModule:
 
     def getNodeType(self, id):
         return self.nodeTypes[id]
-    
+
+    def addGraph(self, aId):
+        # Duplicate graphs are not allowed.
+        if aId in self.mGraphs:
+            return None
+
+        graph = NodeGraph(self)
+        self.mGraphs[aId] = graph
+        return graph
+
+    def getGraph(self, aId):
+        if not aId in self.mGraphs:
+            return None
+        return self.mGraphs[aId]
+
+    def getGraphs(self):
+        return self.mGraphs
+
+    def getMetadata(self):
+        return self.mMetadata

@@ -1,3 +1,5 @@
+import pytest
+
 from nodejs.ConnectionData import ConnectionData
 
 def test_ConnectionData_constructor():

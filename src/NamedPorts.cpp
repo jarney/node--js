@@ -1,5 +1,7 @@
 #include "node--js/NamedPorts.hpp"
 
+#include <limits.h>
+
 using namespace NodeJS::core;
 
 bool
@@ -32,7 +34,7 @@ NamedPorts::getPortIndex(std::string name) const
 	    return i;
 	}
     }
-    return 0;
+    return INT_MAX;
 }
 
 const NodePort *

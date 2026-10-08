@@ -1,11 +1,14 @@
 import pytest
 
+from nodejs.xml import ModuleLoaderNodeJSPath
 from nodejs.NodeGraph import NodeGraph
 from nodejs.NodeType import NodeType
 from nodejs.ConnectionData import ConnectionData
 
 def test_NodeGraph_create_node():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     nodeData = ConnectionData()
     nodeType = NodeType()
 
@@ -19,7 +22,9 @@ def test_NodeGraph_create_node():
     assert(nextNode1.getId() == "main-1")
 
 def test_NodeGraph_registered_node_type():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     nodeData = ConnectionData()
     nodeType = NodeType()
 
@@ -29,7 +34,9 @@ def test_NodeGraph_registered_node_type():
     
 
 def test_NodeGraph_copied_data():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     nodeData = ConnectionData()
     nodeType = NodeType()
 
@@ -52,7 +59,9 @@ def test_NodeGraph_copied_data():
 
 
 def test_NodeGraph_node_existence():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     nodeData = ConnectionData()
     nodeType = NodeType()
     
@@ -71,13 +80,17 @@ def test_NodeGraph_node_existence():
     assert(graph.getNode("something-else") == None)
 
 def test_NodeGraph_create_edge():    
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     
     edgeId = graph.newEdge("a", "first", "b", "second");
     assert(edgeId != None)
 
 def test_NodeGraph_edge_duplicate():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     
     edgeId = graph.newEdge("a", "first", "b", "second");
     edgeId2 = graph.newEdge("a", "first", "b", "second");
@@ -85,7 +98,9 @@ def test_NodeGraph_edge_duplicate():
     assert(edgeId2 == None)
 
 def test_NodeGraph_topological_sort():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     plain = NodeType()
     empty = ConnectionData()
 
@@ -104,7 +119,9 @@ def test_NodeGraph_topological_sort():
     assert(nodesSorted != ['C', 'B', 'A', 'E'])
 
 def test_NodeGraph_topological_sort_cycle():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     plain = NodeType()
     empty = ConnectionData()
 

@@ -1,5 +1,6 @@
 import pytest
 
+from nodejs.xml import ModuleLoaderNodeJSPath
 from nodejs.NodeGraph import NodeGraph
 from nodejs.NodeType import NodeType
 from nodejs.ConnectionData import ConnectionData
@@ -14,7 +15,9 @@ def unary_processor(node, fromData, toData):
     return
 
 def test_Process_minimal():
-    graph = NodeGraph()
+    loader = ModuleLoaderNodeJSPath()
+    module = loader.newModule("anonymous")
+    graph = module.addGraph("graph");
     nodeData = ConnectionData()
 
     unaryType = NodeType()

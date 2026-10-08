@@ -42,6 +42,20 @@ namespace NodeJS {
 	    
 	    const NodeType & getType() const;
 
+	    NodeGraph & getGraph() const;
+
+	    ConnectionData & getData();
+	    
+	    const ConnectionData & getData() const;
+
+	    /**
+	     * Metadata is data that can be associated
+	     * with a node module that can be used by other
+	     * extensions to the system.
+	     */
+	    const Metadata & getMetadata(void) const;
+	    Metadata & getMetadata(void);
+
 	    /**
 	     * These provide the 'official' access to ports and indices.
 	     * In most cases, we delegate down to the node type,
@@ -61,31 +75,23 @@ namespace NodeJS {
 
 	    void setOverrideInputs(bool aOverrideInputs);
 	    void setOverrideOutputs(bool aOverrideOutputs);
+	    
 	    bool hasOverrideInputs() const;
 	    bool hasOverrideOutputs() const;
-
-	    NodeGraph & getGraph() const;
-
-	    ConnectionData & getData();
-	    
-	    const ConnectionData & getData() const;
-
-	    /**
-	     * Metadata is data that can be associated
-	     * with a node module that can be used by other
-	     * extensions to the system.
-	     */
-	    const Metadata & getMetadata(void) const;
-	    Metadata & getMetadata(void);
 
 	private:
 	    // Data purely about the abstract node
 	    // that is the same for each instance.  Factor this out
 	    // to a node-type class.
 	    NodeId mId;
+	    
 	    const NodeType & mType;
+	    
 	    NodeGraph & mGraph;
+	    
 	    ConnectionData mData;
+	    
+	    Metadata mMetadata;
 
 	    bool mOverrideInputs;
 	    bool mOverrideOutputs;
@@ -94,7 +100,6 @@ namespace NodeJS {
 	    NamedPorts mInputs;
 	    NamedPorts mOutputs;
 	    
-	    Metadata mMetadata;
 	};
 	
     } // End core

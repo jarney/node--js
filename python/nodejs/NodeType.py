@@ -1,5 +1,9 @@
 from enum import Enum
 
+from .NamedPorts import NamedPorts
+from .ConnectionData import ConnectionData
+from .Metadata import Metadata
+
 class NodeType:
     """
 	 * This class represents a type of node in a node program.
@@ -31,14 +35,13 @@ class NodeType:
         
     def __init__(self):
         self.mId = ""
-        self.mVisibility = ""
-        self.mType = ""
-        self.mInputsByName = {}
-        self.mOutputsByName = {}
-        self.mInputs = []
-        self.mOutputs = []
-        self.mInputNames = []
-        self.mOutputNames = []
+        self.mVisibility = NodeType.Visibility.PUBLIC
+        self.mAllowPortOverride = False
+        self.mType = NodeType.Type.GRAPH
+        self.mInputs = NamedPorts()
+        self.mOutputs = NamedPorts()
+        self.mDefaultNodeData = ConnectionData()
+        self.mMetadata = Metadata()
 
     def getId(self):
         return self.mId
@@ -52,67 +55,29 @@ class NodeType:
     def setVisibility(self, aVisibility):
         self.mVisibility = aVisibility
 
+    def getAllowPortOverride(self):
+        return self.mAllowPortOverride
+
+    def setAllowPortOverride(self, aAllowPortOverride):
+        self.mAllowPortOverride = aAllowPortOverride
+            
     def getType(self):
         return self.mType
 
     def setType(self, aType):
         self.mType = aType
 
-    def addInputPort(self, aName, aPort):
-        if aName in self.mInputsByName:
-            return False
-        self.mInputsByName[aName] = aPort
-        self.mInputs.append(aPort)
-        self.mInputNames.append(aName)
-        return True
+    def getInputs(self):
+        return self.mInputs
 
-    def getInputPortByName(self, aName):
-        if not aName in self.mInputsByName:
-            return None
-        return self.mInputsByName[aName]
+    def getOutputs(self):
+        return self.mOutputs
 
-    def getInputPortByIndex(self, aIndex):
-        if aIndex >= len(self.mInputs):
-            return None
-        return self.mInputs[aIndex]
-    
-    def hasInputPort(self, aName):
-        return aName in self.mInputsByName
-    
-    def getInputPortName(self, aIndex):
-        if aIndex >= len(self.mInputNames):
-            return ""
-        return self.mInputNames[aIndex]
-    
-    def getInputPortCount(self):
-        return len(self.mInputs)
+    def getDefaultNodeData(self):
+        return self.mDefaultNodeData
 
-    def addOutputPort(self, aName, aPort):
-        if aName in self.mOutputsByName:
-            return False
-        self.mOutputsByName[aName] = aPort
-        self.mOutputs.append(aPort)
-        self.mOutputNames.append(aName)
-        return True
+    def setDefaultNodeData(self, aConnectionData):
+        self.mDefaultNodeData = aConnectionData
 
-    def getOutputPortByName(self, aName):
-        if not aName in self.mOutputsByName:
-            return None
-        return self.mOutputsByName[aName]
-
-    def getOutputPortByIndex(self, aIndex):
-        if aIndex >= len(self.mOutputs):
-            return None
-        return self.mOutputs[aIndex]
-    
-    def hasOutputPort(self, aName):
-        return aName in self.mOutputsByName
-    
-    def getOutputPortName(self, aIndex):
-        if aIndex >= len(self.mOutputNames):
-            return ""
-        return self.mOutputNames[aIndex]
-    
-    def getOutputPortCount(self):
-        return len(self.mOutputs)
-
+    def getMetadata(self):
+        return self.mMetadata

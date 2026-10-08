@@ -21,59 +21,59 @@ def test_NodeType_empty():
 def test_NodeType_some_ports():
     nodeType = NodeType()
     nodeType.setId("add")
-    nodeType.addInputPort("first", NodePort("variable", "First Argument"))
-    nodeType.addInputPort("second", NodePort("variable", "Second Argument"))
-    nodeType.addOutputPort("output", NodePort("variable", "Result"))
+    nodeType.getInputs().addPort("first", NodePort("variable", "First Argument"))
+    nodeType.getInputs().addPort("second", NodePort("variable", "Second Argument"))
+    nodeType.getOutputs().addPort("output", NodePort("variable", "Result"))
 
-    assert (nodeType.getInputPortCount() == 2);
-    assert (nodeType.getOutputPortCount() == 1);
+    assert (nodeType.getInputs().getCount() == 2);
+    assert (nodeType.getOutputs().getCount() == 1);
 
-    assert (nodeType.getInputPortByName("first").getDescription() == "First Argument");
-    assert (nodeType.getInputPortName(0) == "first");
-    assert (nodeType.getInputPortByIndex(0).getDescription() == "First Argument");
-    assert (nodeType.hasInputPort("first"))
+    assert (nodeType.getInputs().getByName("first").getDescription() == "First Argument");
+    assert (nodeType.getInputs().getName(0) == "first");
+    assert (nodeType.getInputs().getByIndex(0).getDescription() == "First Argument");
+    assert (nodeType.getInputs().hasPort("first"))
     
-    assert (nodeType.getInputPortByName("second").getDescription() == "Second Argument");
-    assert (nodeType.getInputPortName(1) == "second");
-    assert (nodeType.getInputPortByIndex(1).getDescription() == "Second Argument");
+    assert (nodeType.getInputs().getByName("second").getDescription() == "Second Argument");
+    assert (nodeType.getInputs().getName(1) == "second");
+    assert (nodeType.getInputs().getByIndex(1).getDescription() == "Second Argument");
 
-    assert (nodeType.getOutputPortByName("output").getDescription() == "Result");
-    assert (nodeType.getOutputPortName(0) == "output");
-    assert (nodeType.hasOutputPort("output"))
-    assert (nodeType.getOutputPortByIndex(0).getDescription() == "Result");
+    assert (nodeType.getOutputs().getByName("output").getDescription() == "Result");
+    assert (nodeType.getOutputs().getName(0) == "output");
+    assert (nodeType.getOutputs().hasPort("output"))
+    assert (nodeType.getOutputs().getByIndex(0).getDescription() == "Result");
 
     # Now, some edge cases:
-    assert (nodeType.getInputPortByName("non-existent") == None);
-    assert (nodeType.getOutputPortByName("non-existent") == None);
-    assert (not nodeType.hasInputPort("non-existent"))
-    assert (not nodeType.hasOutputPort("non-existent"))
-    assert (nodeType.getInputPortName(99) == "");
-    assert (nodeType.getOutputPortName(99) == "");
-    assert (nodeType.getInputPortByIndex(99) == None);
-    assert (nodeType.getOutputPortByIndex(1) == None);
+    assert (nodeType.getInputs().getByName("non-existent") == None);
+    assert (nodeType.getOutputs().getByName("non-existent") == None);
+    assert (not nodeType.getInputs().hasPort("non-existent"))
+    assert (not nodeType.getOutputs().hasPort("non-existent"))
+    assert (nodeType.getInputs().getName(99) == "");
+    assert (nodeType.getOutputs().getName(99) == "");
+    assert (nodeType.getInputs().getByIndex(99) == None);
+    assert (nodeType.getOutputs().getByIndex(1) == None);
 
 def test_NodeType_unique_input_ports():
     nodeType = NodeType()
-    rc1 = nodeType.addInputPort("first", NodePort("variable", "First Argument"))
-    rc2 = nodeType.addInputPort("first", NodePort("variable", "Another"))
+    rc1 = nodeType.getInputs().addPort("first", NodePort("variable", "First Argument"))
+    rc2 = nodeType.getInputs().addPort("first", NodePort("variable", "Another"))
 
     assert (rc1 == True);
     assert (rc2 == False);
 
-    assert (nodeType.getInputPortCount() == 1);
-    assert (nodeType.getOutputPortCount() == 0);
-    assert (nodeType.getInputPortByName("first").getDescription() == "First Argument");
+    assert (nodeType.getInputs().getCount() == 1);
+    assert (nodeType.getOutputs().getCount() == 0);
+    assert (nodeType.getInputs().getByName("first").getDescription() == "First Argument");
 
 def test_NodeType_unique_output_ports():
     nodeType = NodeType()
-    rc1 = nodeType.addOutputPort("first", NodePort("variable", "First Argument"))
-    rc2 = nodeType.addOutputPort("first", NodePort("variable", "Another"))
+    rc1 = nodeType.getOutputs().addPort("first", NodePort("variable", "First Argument"))
+    rc2 = nodeType.getOutputs().addPort("first", NodePort("variable", "Another"))
 
     assert (rc1 == True);
     assert (rc2 == False);
 
-    assert (nodeType.getInputPortCount() == 0);
-    assert (nodeType.getOutputPortCount() == 1);
-    assert (nodeType.getOutputPortByName("first").getDescription() == "First Argument");
+    assert (nodeType.getInputs().getCount() == 0);
+    assert (nodeType.getOutputs().getCount() == 1);
+    assert (nodeType.getOutputs().getByName("first").getDescription() == "First Argument");
 
 

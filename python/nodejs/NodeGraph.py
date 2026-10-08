@@ -9,7 +9,8 @@ TOPOSORT_STATE_IN_PROGRESS = 1
 TOPOSORT_STATE_PROCESSED = 2
 
 class NodeGraph:
-    def __init__(self):
+    def __init__(self, aModule):
+        self.mModule = aModule
         self.mNodes = {}
         self.mEdges = {}
         self.mEdgesByFromNode = {}
@@ -126,3 +127,6 @@ class NodeGraph:
                     if state[neighbor] == TOPOSORT_STATE_TODO:
                         stack.append((neighbor, False))
         return order
+
+    def getModule(self):
+        return self.mModule

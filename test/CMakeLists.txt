@@ -4,6 +4,8 @@ find_package(Catch2 3 QUIET)
 set(TEST_SOURCES
     main.cpp
     test_test.cpp
+    test_NamedPorts.cpp
+    test_Node.cpp
     test_NodePort.cpp
     test_Metadata.cpp
     test_DataType.cpp
