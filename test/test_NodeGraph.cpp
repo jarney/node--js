@@ -10,8 +10,8 @@ using namespace NodeJS::xml;
 TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
 
@@ -34,8 +34,8 @@ TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
 {
 
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
 
@@ -55,8 +55,8 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
 {
 
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
 
@@ -81,8 +81,8 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     ConnectionData nodeData;
     NodeType nodeType;
     
@@ -104,8 +104,8 @@ TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
     CHECK(edgeId.has_value());
 }
@@ -113,8 +113,8 @@ TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
 TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule.addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
     std::optional<EdgeId> edgeId2 = graph->newEdge("a", "first", "b", "second");
     CHECK(edgeId.has_value());
@@ -123,8 +123,8 @@ TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
 TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph &graph = *module.addGraph("main");
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph &graph = *nodeModule.addGraph("main");
     NodeType plain;
 
     graph.newNode(plain, "C");
@@ -150,8 +150,8 @@ TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
 TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGraph][Algorithms]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph &graph = *module.addGraph("main");
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph &graph = *nodeModule.addGraph("main");
     NodeType plain;
     
     graph.newNode(plain, "C");
@@ -166,3 +166,104 @@ TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGrap
     CHECK(!maybeNodesSorted.has_value());    
 }
 
+TEST_CASE("NodeGraph getModule", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+
+    CHECK(&nodeModule == &graph.getModule());
+
+}
+
+TEST_CASE("NodeGraph erase node", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+    NodeType nodeType;
+
+    graph.newNode(nodeType, "main");
+
+    CHECK(graph.hasNode("main"));
+    
+    graph.removeNode("main");
+
+    CHECK(!graph.hasNode("main"));
+}
+
+TEST_CASE("NodeGraph erase node with edges", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+    NodeType nodeType;
+
+    graph.newNode(nodeType, "a");
+    graph.newNode(nodeType, "b");
+
+    CHECK(graph.hasNode("a"));
+    CHECK(graph.hasNode("b"));
+
+    graph.newEdge("a", "x", "b", "x");
+    graph.newEdge("b", "x", "a", "x");
+    
+    CHECK(graph.getEdgesFrom("a").size() == 1);
+    CHECK(graph.getEdgesTo("a").size() == 1);
+    CHECK(graph.getEdgesFrom("b").size() == 1);
+    CHECK(graph.getEdgesTo("b").size() == 1);
+
+    graph.removeNode("a");
+
+    CHECK(!graph.hasNode("a"));
+
+    CHECK(graph.getEdgesFrom("a").size() == 0);
+    CHECK(graph.getEdgesTo("a").size() == 0);
+
+    CHECK(graph.getEdgesFrom("b").size() == 0);
+    CHECK(graph.getEdgesTo("b").size() == 0);
+
+    CHECK(graph.getEdges().size() == 0);
+}
+
+TEST_CASE("NodeGraph erase node with extra edges", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+    NodeType nodeType;
+
+    graph.newNode(nodeType, "a");
+    graph.newNode(nodeType, "b");
+    graph.newNode(nodeType, "c");
+    graph.newNode(nodeType, "d");
+
+    CHECK(graph.hasNode("a"));
+    CHECK(graph.hasNode("b"));
+
+    graph.newEdge("a", "x", "b", "x");
+    graph.newEdge("b", "x", "a", "x");
+
+    graph.newEdge("a", "x", "c", "x");
+    graph.newEdge("b", "x", "d", "x");
+
+    graph.newEdge("c", "x", "d", "x");
+    graph.newEdge("d", "x", "c", "x");
+    
+    CHECK(graph.getEdgesFrom("a").size() == 2);
+    CHECK(graph.getEdgesTo("a").size() == 1);
+    CHECK(graph.getEdgesFrom("b").size() == 2);
+    CHECK(graph.getEdgesTo("b").size() == 1);
+
+    graph.removeNode("a");
+
+    CHECK(!graph.hasNode("a"));
+
+    CHECK(graph.getEdgesFrom("a").size() == 0);
+    CHECK(graph.getEdgesTo("a").size() == 0);
+
+    CHECK(graph.getEdgesFrom("b").size() == 1);
+    CHECK(graph.getEdgesTo("b").size() == 0);
+
+    CHECK(graph.getEdges().size() == 3);
+}

@@ -96,3 +96,28 @@ TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][core][NodeModule]")
     // Check that we actually iterated.
     CHECK(i == 1);
 }
+
+TEST_CASE("NodeModule getModuleLoader", "[NodeJS][core][NodeModule]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+
+    CHECK(&loader == &nodeModule.getModuleLoader());
+}
+
+TEST_CASE("NodeModule add graph uniqueness conditions", "[NodeJS][core][NodeModule]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+
+    NodeGraph *graph1 = nodeModule.addGraph("graph");
+    NodeGraph *graph1_out = nodeModule.getGraph("graph");
+    CHECK(graph1 == graph1_out);
+
+    NodeGraph *graph2 = nodeModule.addGraph("graph");
+
+    CHECK(graph1 != nullptr);
+    CHECK(graph2 == nullptr);
+
+    CHECK(nodeModule.getGraph("nonexistent") == nullptr);
+}

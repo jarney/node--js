@@ -122,3 +122,16 @@ TEST_CASE("xml::ModuleLoaderNodeJSPath test environment variable", "[NodeJS][xml
 
     CHECK(loader.getNODEJS_PATH() == std::vector<std::string>{"a", "b"});
 }
+
+TEST_CASE("xml::ModuleLoaderNodeJSPath new module is same", "[NodeJS][xml][ModuleLoader]")
+{
+    ModuleLoaderNodeJSPath loader;
+
+    NodeModule *newModule = loader.newModule("unique-module-name");
+
+    NodeModule *nextModule = loader.newModule("unique-module-name");
+
+    // Module names are unique.  If we ask for a new one, we
+    // should expect to get the same one.
+    CHECK(newModule == nextModule);
+}

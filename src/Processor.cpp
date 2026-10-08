@@ -11,6 +11,7 @@ Processor::setNativeImpl(NodeTypeId aNodeTypeId, std::unique_ptr<NodeProcessor> 
     mNodeProcessors[aNodeTypeId] = std::move(processor);
 }
         
+#ifdef __NODEJS_DEBUGGING_PRINTS
 static void
 dumpDict(std::string msg, const ConnectionData & data)
 {
@@ -19,6 +20,7 @@ dumpDict(std::string msg, const ConnectionData & data)
 	fprintf(stderr, "        %s : %s\n", it.first.c_str(), it.second.c_str());
     }
 }
+#endif
 
 void
 Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, ConnectionData & output)

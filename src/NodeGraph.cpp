@@ -63,12 +63,38 @@ NodeGraph::newNode(
 void
 NodeGraph::removeNode(NodeId aNodeId)
 {
+    for (auto & it : mEdgesByFromNode) {
+	for (std::vector<const Edge *>::iterator edgeIt = it.second.begin(); edgeIt != it.second.end();) {
+	    const Edge *e = *edgeIt;
+	    if ((e->fromNode == aNodeId) ||
+		(e->toNode == aNodeId)) {
+		edgeIt = it.second.erase(edgeIt);
+	    }
+	    else {
+		++edgeIt;
+	    }
+	}
+    }
+    for (auto & it : mEdgesByToNode) {
+	for (std::vector<const Edge *>::iterator edgeIt = it.second.begin(); edgeIt != it.second.end();) {
+	    const Edge *e = *edgeIt;
+	    if ((e->fromNode == aNodeId) ||
+		(e->toNode == aNodeId)) {
+		edgeIt = it.second.erase(edgeIt);
+	    }
+	    else {
+		++edgeIt;
+	    }
+	}
+    }
+    
     mEdgesByFromNode.erase(aNodeId);
     mEdgesByToNode.erase(aNodeId);
+    
     std::set<EdgeId> edgesToRemove;
     for (const auto & it : mEdges) {
-	if (it.second->fromNode == aNodeId ||
-	    it.second->toNode == aNodeId) {
+	if ((it.second->fromNode == aNodeId) ||
+	    (it.second->toNode == aNodeId)) {
 	    edgesToRemove.insert(it.first);
 	}
     }
