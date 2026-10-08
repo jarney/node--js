@@ -42,12 +42,6 @@ int main( int argc, char* argv[] )
   if( returnCode != 0 ) // Indicates a command line error
       return returnCode;
 
-  std::string filename = test_data_directory + "/" + "foo.xml";
-  std::ofstream data(filename);
-  
-  data << "Data directory " << std::endl;
-  data << test_data_directory << std::endl;
-
   return session.run();
 }
 
