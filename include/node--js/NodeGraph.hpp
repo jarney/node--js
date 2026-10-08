@@ -3,6 +3,7 @@
 #include "node--js/Metadata.hpp"
 #include "node--js/Edge.hpp"
 #include "node--js/Node.hpp"
+#include "node--js/Group.hpp"
 
 #include <optional>
 #include <set>
@@ -20,25 +21,6 @@ namespace NodeJS {
 
 	class NodeModule;
 
-	typedef std::string GroupId;
-	
-	class Group {
-	public:
-	    Group() = default;
-	    ~Group() = default;
-
-	    void addNode(NodeId aNodeId);
-	    
-	    void removeNode(NodeId aNodeId);
-
-	    const std::set<NodeId> & getNodes() const;
-
-	    bool contains(NodeId aNodeId) const;
-	    
-	private:
-	    std::set<NodeId> mNodes;
-	};
-	
 	/**
 	 * A graph in NodeJS is the unit of computation much like a
 	 * function is the unit of computation in a procedural
@@ -190,6 +172,8 @@ namespace NodeJS {
 	    const std::map<GroupId, std::unique_ptr<Group>> & getGroups() const;
 
 	    void addGroup(GroupId aGroupId);
+	    
+	    bool hasGroup(GroupId aGroupId);
 
 	    void removeGroup(GroupId aGroupId);
 

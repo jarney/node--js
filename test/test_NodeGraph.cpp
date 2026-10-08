@@ -267,3 +267,126 @@ TEST_CASE("NodeGraph erase node with extra edges", "[NodeJS][core][NodeGraph][No
 
     CHECK(graph.getEdges().size() == 3);
 }
+
+TEST_CASE("NodeGraph erase single edge", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+    NodeType nodeType;
+
+    graph.newNode(nodeType, "a");
+    graph.newNode(nodeType, "b");
+    graph.newNode(nodeType, "c");
+
+    CHECK(graph.hasNode("a"));
+    CHECK(graph.hasNode("b"));
+
+    graph.newEdge("a", "x", "b", "x");
+    graph.newEdge("a", "p", "c", "q");
+    graph.newEdge("c", "p", "b", "q");
+
+    CHECK(graph.getEdgesFrom("a").size() == 2);
+    CHECK(graph.getEdgesTo("b").size() == 2);
+
+    graph.removeEdge("a", "x", "b", "x");
+
+    CHECK(graph.getEdgesFrom("a").size() == 1);
+    CHECK(graph.getEdgesTo("b").size() == 1);
+}
+
+TEST_CASE("NodeGraph search scopes", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+
+    NodeModule & typesScope = *loader.newModule("where-we-define-the-types");
+    auto nodeType1 = std::make_unique<NodeType>();
+    nodeType1->setId("type1-node");
+    typesScope.addNodeType(std::move(nodeType1));
+
+    auto dataType1 = std::make_unique<DataType>("foo", "bar");
+    typesScope.addDataType(std::move(dataType1));
+
+    // Before we add the search scope,
+    // we cannot resolve this type.
+    CHECK(graph.getNodeType("type1-node") == nullptr);
+    CHECK(graph.getDataType("foo") == nullptr);
+
+    // Add nodeModule to our search scope.
+    graph.addScope(&typesScope);
+
+    // After we add the scope, we can find it.
+    CHECK(graph.getNodeType("type1-node") != nullptr);
+    CHECK(graph.getDataType("foo") != nullptr);
+
+    NodeGraph & graphCopy = *nodeModule.addGraph("graph-copy");
+
+    // Before we copy the scope, we can't resolve it.
+    CHECK(graphCopy.getNodeType("type1-node") == nullptr);
+    CHECK(graphCopy.getDataType("foo") == nullptr);
+
+    graphCopy.copyScope(&graph);
+
+    // After copying the scopes, we can resolve the names.
+    CHECK(graphCopy.getNodeType("type1-node") != nullptr);
+    CHECK(graphCopy.getDataType("foo") != nullptr);
+
+    
+}
+
+TEST_CASE("NodeGraph groups", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule.addGraph("graph");
+
+    // Check that basic add and remove works.
+    
+    CHECK(!graph.hasGroup("node-group"));
+    CHECK(graph.getGroup("node-group") == nullptr);
+    CHECK(graph.getGroups().size() == 0);
+    
+    graph.addGroup("node-group");
+    
+    CHECK(graph.hasGroup("node-group"));
+    CHECK(graph.getGroup("node-group") != nullptr);
+    CHECK(graph.getGroups().size() == 1);
+
+    graph.removeGroup("node-group");
+
+    CHECK(!graph.hasGroup("node-group"));
+    CHECK(graph.getGroup("node-group") == nullptr);
+    CHECK(graph.getGroups().size() == 0);
+}
+
+TEST_CASE("Graph specific metadata", "[NodeJS][core][NodeGraph][Node]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & module = *loader.newModule("anonymous");
+    NodeGraph *graph = module.addGraph("graph");
+
+    Metadata & metadata = graph->getMetadata();
+
+    // Check that we don't have any specific metadata yet.
+    CHECK(!metadata.hasMetadata("foo.bar.org"));
+
+    // Check that when we ask for metadata, it's created
+    ConnectionData & cd = metadata.getMetadata("foo.bar.org");
+    CHECK(metadata.hasMetadata("foo.bar.org"));
+
+    cd.setValue("x", "some-value");
+
+    // Check that we can make a const-version of this.
+    const NodeGraph * constGraph = graph;
+    const Metadata & constMetadata = constGraph->getMetadata();
+    const ConnectionData & constData = constMetadata.getMetadata("foo.bar.org");
+    CHECK(constData.hasValue("x"));
+
+    const ConnectionData & readonly = constMetadata.getMetadata("some-other-namespace");
+    // Check that in the const context, we didn't actually add the namespace,
+    // just faked it by returning an empty connection data.
+    CHECK(!constMetadata.hasMetadata("some-other-namespace"));
+    CHECK(!readonly.hasValue("x"));
+}

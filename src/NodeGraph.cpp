@@ -170,25 +170,30 @@ NodeGraph::removeEdge(
 	aFromNode, aFromPort,
 	aToNode, aToPort
 	);
-
     EdgeId id = tmpEdge.getId();
-    mEdges.erase(id);
 
     std::vector<const Edge *> & edgesByFromNode = mEdgesByFromNode[aFromNode]; 
-    for (std::vector<const Edge *>::iterator it = edgesByFromNode.begin(); it != edgesByFromNode.end(); ++it) {
+    for (std::vector<const Edge *>::iterator it = edgesByFromNode.begin(); it != edgesByFromNode.end();) {
 	if ((*it)->getId() == id) {
-	    edgesByFromNode.erase(it);
-	    break;
+	    it = edgesByFromNode.erase(it);
+	}
+	else {
+	    ++it;
 	}
     }
 
-    std::vector<const Edge *> & edgesByToNode = mEdgesByFromNode[aToNode]; 
-    for (std::vector<const Edge *>::iterator it = edgesByToNode.begin(); it != edgesByToNode.end(); ++it) {
+    std::vector<const Edge *> & edgesByToNode = mEdgesByToNode[aToNode]; 
+    for (std::vector<const Edge *>::iterator it = edgesByToNode.begin(); it != edgesByToNode.end();) {
 	if ((*it)->getId() == id) {
-	    edgesByToNode.erase(it);
-	    break;
+	    it = edgesByToNode.erase(it);
+	}
+	else {
+	    ++it;
 	}
     }
+
+    mEdges.erase(id);
+
 }
 
 
@@ -236,16 +241,9 @@ const NodeType *
 NodeGraph::getNodeType(std::string aTypeName)
 {
     for (const auto & it : mScopes) {
-	if (aTypeName == "a") {
-	    fprintf(stderr, "Searching for node type %s in module %p\n",
-		    aTypeName.c_str(), it);
-	}
 	if (it->hasNodeType(aTypeName)) {
 	    return it->getNodeType(aTypeName);
 	}
-    }
-    if (mScopes.size() == 0) {
-	fprintf(stderr, "This graph doesn't have any scopes?!\n");
     }
     return nullptr;
 }
@@ -254,16 +252,9 @@ const DataType *
 NodeGraph::getDataType(std::string aTypeName)
 {
     for (const auto & it : mScopes) {
-	if (aTypeName == "a") {
-	    fprintf(stderr, "Searching for node type %s in module %p\n",
-		    aTypeName.c_str(), it);
-	}
 	if (it->hasDataType(aTypeName)) {
 	    return it->getDataType(aTypeName);
 	}
-    }
-    if (mScopes.size() == 0) {
-	fprintf(stderr, "This graph doesn't have any scopes?!\n");
     }
     return nullptr;
 }
@@ -373,6 +364,13 @@ NodeGraph::removeGroup(GroupId aGroupId)
     mGroups.erase(aGroupId);
 }
 
+bool
+NodeGraph::hasGroup(GroupId aGroupId)
+{
+    const auto it = mGroups.find(aGroupId);
+    return (it != mGroups.end());
+}
+
 Group *
 NodeGraph::getGroup(GroupId aGroupId) const
 {
@@ -393,31 +391,5 @@ Metadata &
 NodeGraph::getMetadata(void)
 {
     return mMetadata;
-}
-
-void
-Group::addNode(NodeId aNodeId)
-{
-    mNodes.insert(aNodeId);
-}
-
-void
-Group::removeNode(NodeId aNodeId)
-{
-    mNodes.erase(aNodeId);
-}
-
-
-const std::set<NodeId> &
-Group::getNodes() const
-{
-    return mNodes;
-}
-
-
-bool
-Group::contains(NodeId aNodeId) const
-{
-    return (mNodes.find(aNodeId) != mNodes.end());
 }
 

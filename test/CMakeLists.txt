@@ -6,6 +6,7 @@ set(TEST_SOURCES
     test_test.cpp
     test_NamedPorts.cpp
     test_Node.cpp
+    test_Group.cpp
     test_NodePort.cpp
     test_Metadata.cpp
     test_DataType.cpp
