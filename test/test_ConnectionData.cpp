@@ -65,3 +65,11 @@ TEST_CASE("ConnectionData data", "[NodeJS][core][ConnectionData]")
     CHECK(it != d.end());
     CHECK(it->second == "actual value");
 }
+
+TEST_CASE("ConnectionData append", "[NodeJS][core][ConnectionData]")
+{
+    ConnectionData cd;
+    cd.setValue("well-known-value", "value-1");
+    cd.appendValue("well-known-value", "value-2");
+    CHECK(cd.getValue("well-known-value") == "value-1value-2");
+}

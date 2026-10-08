@@ -12,3 +12,5 @@ def test_DataType_equality():
     # Things may compare equal as long as the ID is the same.
     # even if they have different names.
     assert dataType1.getName() != dataType2.getName()
+    assert dataType1.getId() == dataType2.getId()
+

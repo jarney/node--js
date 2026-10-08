@@ -49,3 +49,11 @@ def test_ConnectionData_data():
 
     assert("well-known-value" in d)
     assert(d["well-known-value"] == "actual value")
+
+
+def test_ConnectionData_append():
+    cd = ConnectionData()
+    cd.setValue("well-known-value", "value-1")
+    cd.appendValue("well-known-value", "value-2")
+    assert(cd.getValue("well-known-value") == "value-1value-2")
+

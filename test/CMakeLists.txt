@@ -5,6 +5,7 @@ set(TEST_SOURCES
     main.cpp
     test_test.cpp
     test_NodePort.cpp
+    test_Metadata.cpp
     test_DataType.cpp
     test_NodeType.cpp
     test_NodeModule.cpp

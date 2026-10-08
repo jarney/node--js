@@ -12,6 +12,9 @@ class ConnectionData:
     def setValue(self, key, value):
         self.mData[key] = value
 
+    def appendValue(self, key, value):
+        self.mData[key] = self.mData[key] + value
+        
     def getValue(self, key, default_value = ""):
         if key in self.mData:
             return self.mData[key]
