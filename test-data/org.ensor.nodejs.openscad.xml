@@ -23,11 +23,10 @@
       - exist purely as identifiers that tie ports together.
       -->
     <data-type id="variable" name="OpenSCAD Variable"/>
-    <data-type id="geometry" name="OpenSCAD Geometry"/>
-    
+    <data-type id="module-instantiation" name="OpenSCAD Geometry"/>
     <data-type id="assignment" name="OpenSCAD Variable Assignment"/>
-    <data-type id="function-definition" name="OpenSCAD Function Definition"/>
-    <data-type id="module-definition" name="OpenSCAD Module Definition"/>
+    <data-type id="function-definition" name="OpenSCAD Function Def"/>
+    <data-type id="module-definition" name="OpenSCAD Module"/>
   </data-types>
   <!--
     - This is the set of nodes provided by the OpenSCAD
@@ -38,41 +37,52 @@
     <!-- Output to be rendered -->
     <node-type id="output" visibility="public" type="native">
       <inputs>
-	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi">
-	  <metadata>
-	    <data namespace="Documentation">
-	      <value key="docs">This is some robust documentation for this node.</value>
-	    </data>
-	  </metadata>
-	</port>
+	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"></port>
 	<port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
 	<port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
-	<port id="module-instantiations" description="Output to render" data-type="geometry" connection-policy="multi"/>
+	<port id="module-instantiations" description="Output to render" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs/>
       <metadata>
-	<data namespace="node type-level metadata">
-	  <value key="description">This is some really interesting stuff that the output node does</value>
+	<data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="caption">Output</value>
+	  <value key="tooltip">
+	    This is the output node that formats the data from the graph into an OpenSCAD file for rendering.
+	  </value>
 	</data>
-  </metadata>
+      </metadata>
     </node-type>
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">
+      <metadata>
+	<data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="caption">Circle</value>
+	  <value key="tooltip">Produces a 2d circle based on either a radius or diameter.</value>
+	</data>
+      </metadata>
       <inputs>
         <port id="r" description="r" data-type="variable" connection-policy="one"/>
         <port id="d" description="d" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="square" visibility="public" type="native">
+      <metadata>
+	<data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="caption">Square</value>
+	  <value key="tooltip">Produces a 2d square with a given size.
+	  Starts at the origin and goes to positive x,y unless 'center'
+	  is selected, in which case it centers.</value>
+	</data>
+      </metadata>
       <inputs>
         <port id="size" description="size" data-type="variable" connection-policy="one"/>
         <port id="center" description="center" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="polygon" visibility="public" type="native">
@@ -82,7 +92,7 @@
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="text" visibility="public" type="native">
@@ -99,7 +109,7 @@
         <port id="em" description="em" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="projection" visibility="public" type="native">
@@ -107,7 +117,7 @@
         <port id="cut" description="cut" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <!-- 3d Primitives -->
@@ -117,8 +127,13 @@
         <port id="d" description="d" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
+      <metadata>
+	<data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="caption">Sphere</value>
+	</data>
+      </metadata>
     </node-type>
     <node-type id="cube" visibility="public" type="native">
       <inputs>
@@ -126,7 +141,7 @@
         <port id="center" description="center" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="cylinder" visibility="public" type="native">
@@ -141,7 +156,7 @@
         <port id="d2" description="d2" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="polyhedron" visibility="public" type="native">
@@ -151,7 +166,7 @@
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="import" visibility="public" type="native">
@@ -166,7 +181,7 @@
         <port id="$fs" description="$fs" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="linear_extrude" visibility="public" type="native">
@@ -183,7 +198,7 @@
         <port id="$fn" description="$fn" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="rotate_extrude" visibility="public" type="native">
@@ -194,7 +209,7 @@
         <port id="a" description="a" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="surface" visibility="public" type="native">
@@ -205,7 +220,7 @@
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="dxf_dim" visibility="public" type="native">
@@ -283,35 +298,35 @@
         <port id="increment" description="increment" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="intersection_for" visibility="public" type="native">
       <inputs>
         <port id="var" description="var" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="if" visibility="public" type="native">
       <inputs>
         <port id="condition" description="condition" data-type="variable" connection-policy="one"/>
-        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
-        <port id="b" description="b" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
+        <port id="b" description="b" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="let" visibility="public" type="native">
       <inputs>
         <port id="var" description="var" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="comment" visibility="public" type="native">
@@ -322,15 +337,15 @@
     </node-type>
     <node-type id="group" visibility="public" type="native">
       <inputs>
-        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="module_output" visibility="public" type="native">
       <inputs>
-        <port id="out" description="" data-type="geometry" connection-policy="multi"/>
+        <port id="out" description="" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
       </outputs>
@@ -681,27 +696,27 @@
     <!-- Boolean Operations -->
     <node-type id="union" visibility="public" type="native">
       <inputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="difference" visibility="public" type="native">
       <inputs>
-        <port id="a" description="a" data-type="geometry" connection-policy="one"/>
-        <port id="b" description="b" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="one"/>
+        <port id="b" description="b" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="intersection" visibility="public" type="native">
       <inputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <!-- Operators -->
@@ -903,10 +918,10 @@
     <node-type id="render" visibility="public" type="native">
       <inputs>
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="children" visibility="public" type="native">
@@ -914,7 +929,7 @@
         <port id="index" description="index" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="assert" visibility="public" type="native">
@@ -922,7 +937,7 @@
         <port id="condition" description="condition" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <!-- Syntax -->
@@ -1010,29 +1025,29 @@
     <node-type id="translate" visibility="public" type="native">
       <inputs>
         <port id="v" description="v" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="rotate" visibility="public" type="native">
       <inputs>
         <port id="a" description="a" data-type="variable" connection-policy="one"/>
         <port id="v" description="v" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="scale" visibility="public" type="native">
       <inputs>
         <port id="v" description="v" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="resize" visibility="public" type="native">
@@ -1040,38 +1055,38 @@
         <port id="newsize" description="newsize" data-type="variable" connection-policy="one"/>
         <port id="auto" description="auto" data-type="variable" connection-policy="one"/>
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="mirror" visibility="public" type="native">
       <inputs>
         <port id="v" description="v" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="multmatrix" visibility="public" type="native">
       <inputs>
         <port id="m" description="m" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="color" visibility="public" type="native">
       <inputs>
         <port id="color" description="c" data-type="variable" connection-policy="one"/>
         <port id="alpha" description="alpha" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="offset" visibility="public" type="native">
@@ -1079,43 +1094,43 @@
         <port id="r" description="r" data-type="variable" connection-policy="one"/>
         <port id="delta" description="delta" data-type="variable" connection-policy="one"/>
         <port id="chamfer" description="chamfer" data-type="variable" connection-policy="one"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="hull" visibility="public" type="native">
       <inputs>
-        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="fill" visibility="public" type="native">
       <inputs>
-        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="minkowski" visibility="public" type="native">
       <inputs>
         <port id="convexity" description="convexity" data-type="variable" connection-policy="one"/>
-        <port id="a" description="a" data-type="geometry" connection-policy="multi"/>
+        <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="graph" visibility="public" type="graph">
       <inputs>
       </inputs>
       <outputs>
-        <port id="assignments" description="Assignments" data-type="geometry" connection-policy="multi"/>
-        <port id="Geometry" description="Geometry" data-type="geometry" connection-policy="multi"/>
+        <port id="assignments" description="Assignments" data-type="module-instantiation" connection-policy="multi"/>
+        <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
   </node-types>

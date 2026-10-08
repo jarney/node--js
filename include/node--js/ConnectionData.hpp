@@ -30,6 +30,11 @@ namespace NodeJS {
 	    void setValue(std::string key, std::string value);
 
 	    /**
+	     * Appends new value with current value.
+	     */
+	    void appendValue(std::string key, std::string value);
+	    
+	    /**
 	     * Retrieves the value stored at 'key' from the connection,
 	     * or 'default_value' if no value was stored.
 	     */

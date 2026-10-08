@@ -10,17 +10,21 @@
       </scope>
       <nodes>
         <node id="output" type="output"/>
+        <node id="circle" type="circle"/>
+        <node id="square" type="square"/>
         <node id="sphere" type="sphere">
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
               <value key="pos-x">-400.000000</value>
-              <value key="pos-y">0.000000</value>
+              <value key="pos-y">-800.000000</value>
             </data>
           </metadata>
         </node>
       </nodes>
       <edges>
         <edge from-node="sphere" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
+        <edge from-node="square" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
+        <edge from-node="circle" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
       </edges>
     </graph>
   </graphs>

@@ -53,7 +53,7 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         ConnectionData fromData;
         for (const Edge *edge : graph.getEdgesTo(nodeId)) {
 	    std::string data = nodeData[edge->fromNode].getValue(edge->fromPort);
-            fromData.setValue(edge->toPort, data);
+            fromData.appendValue(edge->toPort, data);
 	    //fprintf(stderr, "Taking data from %s:%s -> %s:%s = %s\n",
 	    //      edge->fromNode.c_str(), edge->fromPort.c_str(),
 	    //	    edge->toNode.c_str(), edge->toPort.c_str(),

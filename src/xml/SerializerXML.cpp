@@ -74,9 +74,7 @@ readMetadata(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == "data") {
-	    fprintf(stderr, "Reading metadata node: data\n");
 	    std::string ns = child.getAttribute("namespace");
-	    fprintf(stderr, "Reading metadata node: %s\n", ns.c_str());
 	    readGraphNodeData(
 		metadata.getMetadata(ns),
 		child, err);
@@ -387,7 +385,6 @@ readGraphNodeData(
 	if (childName == std::string("value")) {
 	    std::string key = child.getAttribute("key");
 	    std::string value = child.getContent();
-	    fprintf(stderr, "Reading metadata key: %s %s\n", key.c_str(), value.c_str());
 	    node_data.setValue(key, value);
 	}
     }

@@ -12,6 +12,12 @@ ConnectionData::ConnectionData(const ConnectionData & other)
 void
 ConnectionData::setValue(std::string key, std::string value)
 {
+    mData[key] = value;
+}
+
+void
+ConnectionData::appendValue(std::string key, std::string value)
+{
     if (!hasValue(key)) {
 	mData[key] = value;
     }
