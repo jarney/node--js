@@ -20,7 +20,7 @@ def test_NodePort_default():
     assert (nodePort.getConnectionPolicy() == NodePort.ConnectionPolicy.One)
 
 
-def test_NodePort_explicit():
+def test_NodePort_explicit_one():
     nodePort = NodePort(DATA_TYPE, DESCRIPTION, NodePort.ConnectionPolicy.One)
 
     assert(nodePort.getDataType() == DATA_TYPE)

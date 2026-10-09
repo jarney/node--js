@@ -4,12 +4,12 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("ConnectionData basics", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_constructor", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 }
 
-TEST_CASE("ConnectionData default values", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_default_values", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 
@@ -22,7 +22,7 @@ TEST_CASE("ConnectionData default values", "[NodeJS][core][ConnectionData]")
     CHECK(cd.getValue("unknown-value") == "");
 }
 
-TEST_CASE("ConnectionData actual values", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_actual_values", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
 
@@ -34,7 +34,7 @@ TEST_CASE("ConnectionData actual values", "[NodeJS][core][ConnectionData]")
 
 }
 
-TEST_CASE("ConnectionData copy", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_copy", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
     // If we actually have a value, make sure it works.
@@ -54,7 +54,7 @@ TEST_CASE("ConnectionData copy", "[NodeJS][core][ConnectionData]")
 
 }
 
-TEST_CASE("ConnectionData data", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_data", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
     cd.setValue("well-known-value", "actual value");
@@ -66,7 +66,7 @@ TEST_CASE("ConnectionData data", "[NodeJS][core][ConnectionData]")
     CHECK(it->second == "actual value");
 }
 
-TEST_CASE("ConnectionData append", "[NodeJS][core][ConnectionData]")
+TEST_CASE("test_ConnectionData_append", "[NodeJS][core][ConnectionData]")
 {
     ConnectionData cd;
     cd.setValue("well-known-value", "value-1");

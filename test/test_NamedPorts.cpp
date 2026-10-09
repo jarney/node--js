@@ -7,7 +7,7 @@ using namespace NodeJS::core;
 
 static const char *DATA_TYPE = "variable";
 
-TEST_CASE("NamedPorts ", "[NodeJS][core][DataType]")
+TEST_CASE("test_NamedPorts_features ", "[NodeJS][core][DataType]")
 {
     NamedPorts namedPort;
 

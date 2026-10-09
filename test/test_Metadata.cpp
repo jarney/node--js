@@ -5,7 +5,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("Metadata equality", "[NodeJS][core][Metadata]")
+TEST_CASE("test_Metadata_equality", "[NodeJS][core][Metadata]")
 {
     Metadata metadata;
     const Metadata & cmetadata = metadata;

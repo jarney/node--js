@@ -10,7 +10,7 @@ using namespace NodeJS::xml;
 
 static const char *DATA_TYPE = "variable";
 
-TEST_CASE("Node create node", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Node_create_node", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");
@@ -24,7 +24,7 @@ TEST_CASE("Node create node", "[NodeJS][core][NodeGraph][Node]")
     CHECK(&createdNode.getType() == &nodeType);
 }
 
-TEST_CASE("Node type i/o", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Node_type_io", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");
@@ -51,7 +51,7 @@ TEST_CASE("Node type i/o", "[NodeJS][core][NodeGraph][Node]")
     CHECK(node.getOutputs().getByName("out")->getDescription() == "out");
 }
 
-TEST_CASE("Node specific i/o", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Node_specific_io", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");
@@ -87,7 +87,7 @@ TEST_CASE("Node specific i/o", "[NodeJS][core][NodeGraph][Node]")
     CHECK(node.getOutputs().getCount() == 1);
 }
 
-TEST_CASE("Node initialize with data", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Node_initialize_with_data", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");
@@ -117,7 +117,7 @@ TEST_CASE("Node initialize with data", "[NodeJS][core][NodeGraph][Node]")
 
 }
 
-TEST_CASE("Node specific metadata", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Node_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");

@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("Edge equality", "[NodeJS][core][Edge]")
+TEST_CASE("test_Edge_equality", "[NodeJS][core][Edge]")
 {
     Edge conn0{"n0", "p0", "n1", "p1"};
     // Only one way that they can be the same.
@@ -23,7 +23,7 @@ TEST_CASE("Edge equality", "[NodeJS][core][Edge]")
     CHECK(conn0 != conn5);
 }
 
-TEST_CASE("Edge id", "[NodeJS][core][Edge]")
+TEST_CASE("test_Edge_id", "[NodeJS][core][Edge]")
 {
     Edge conn0{"n0", "p0", "n1", "p1"};
     CHECK(conn0.getId() == "n0-p0|n1-p1");

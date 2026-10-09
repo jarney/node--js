@@ -52,7 +52,7 @@ NodeProcessor_unary::process(
     toData.setValue("out", "callDataFrom(" + node.getId() + ")");
 }
 
-TEST_CASE("Processor minimal", "[NodeJS][core][Processor]")
+TEST_CASE("test_Processor_minimal", "[NodeJS][core][Processor]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");

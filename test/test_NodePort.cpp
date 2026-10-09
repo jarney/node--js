@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("NodePort multiple", "[NodeJS][core][NodePort]")
+TEST_CASE("test_NodePort_multiple", "[NodeJS][core][NodePort]")
 {
     const char *DATA_TYPE = "variable";
     const char *DESCRIPTION = "Input A";
@@ -16,7 +16,7 @@ TEST_CASE("NodePort multiple", "[NodeJS][core][NodePort]")
 
 }
 
-TEST_CASE("NodePort default", "[NodeJS][core][NodePort]")
+TEST_CASE("test_NodePort_default", "[NodeJS][core][NodePort]")
 {
     const char *DATA_TYPE = "variable";
     const char *DESCRIPTION = "Input A";
@@ -28,7 +28,7 @@ TEST_CASE("NodePort default", "[NodeJS][core][NodePort]")
 
 }
 
-TEST_CASE("NodePort explicit one", "[NodeJS][core][NodePort]")
+TEST_CASE("test_NodePort_explicit_one", "[NodeJS][core][NodePort]")
 {
     const char *DATA_TYPE = "variable";
     const char *DESCRIPTION = "Input A";

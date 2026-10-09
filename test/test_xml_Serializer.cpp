@@ -11,7 +11,7 @@ using namespace NodeJS::core;
 using namespace NodeJS::xml;
 using namespace NodeJS::test;
 
-TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
+TEST_CASE("test_xml_Serializer", "[NodeJS][xml][Serializer]")
 {
     const auto & ser = SerializerXML::instance();
 
@@ -35,7 +35,7 @@ TEST_CASE("xml::Serializer", "[NodeJS][xml][Serializer]")
 
 }
 
-TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
+TEST_CASE("test_xml_Serializer xml parse error", "[NodeJS][xml][Serializer]")
 {
     const auto & ser = SerializerXML::instance();
 
@@ -54,7 +54,7 @@ TEST_CASE("xml::Serializer xml parse error", "[NodeJS][xml][Serializer]")
 
 }
 
-TEST_CASE("xml::Serializer xml parse error with stream reporting", "[NodeJS][xml][Serializer]")
+TEST_CASE("test_xml_Serializer xml parse error with stream reporting", "[NodeJS][xml][Serializer]")
 {
     const auto & ser = SerializerXML::instance();
 

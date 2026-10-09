@@ -17,7 +17,7 @@ Reporter::reportError(ErrorType type, std::string message)
 }
 
 
-TEST_CASE("Validator", "[NodeJS][core][Validator]")
+TEST_CASE("test_Validator_basic", "[NodeJS][core][Validator]")
 {
     Reporter err;
     ModuleLoaderNodeJSPath loader;

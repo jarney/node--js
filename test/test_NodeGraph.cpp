@@ -7,7 +7,7 @@
 using namespace NodeJS::core;
 using namespace NodeJS::xml;
 
-TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_create_node", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -30,7 +30,7 @@ TEST_CASE("NodeGraph create node", "[NodeJS][core][NodeGraph][Node]")
 
 }
 
-TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_registered_node_type", "[NodeJS][core][NodeGraph][Node]")
 {
 
     ModuleLoaderNodeJSPath loader;
@@ -51,7 +51,7 @@ TEST_CASE("NodeGraph registered node type", "[NodeJS][core][NodeGraph][Node]")
     CHECK(&createdNode.getGraph() == graph);
 }
 
-TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_copied_data", "[NodeJS][core][NodeGraph][Node]")
 {
 
     ModuleLoaderNodeJSPath loader;
@@ -78,7 +78,7 @@ TEST_CASE("NodeGraph copied data", "[NodeJS][core][NodeGraph][Node]")
     CHECK(nodeData.hasValue("runtime-for-initializer"));
 }
 
-TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_node_existence", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -101,7 +101,7 @@ TEST_CASE("NodeGraph node existence", "[NodeJS][core][NodeGraph][Node]")
     CHECK(graph->getNode("something-else") == nullptr);
 }
 
-TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
+TEST_CASE("test_NodeGraph_create_edge", "[NodeJS][core][NodeGraph][Edge]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -110,7 +110,7 @@ TEST_CASE("NodeGraph create edge", "[NodeJS][core][NodeGraph][Edge]")
     CHECK(edgeId.has_value());
 }
 
-TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
+TEST_CASE("test_NodeGraph_edge_duplicate", "[NodeJS][core][NodeGraph][Edge]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -120,7 +120,7 @@ TEST_CASE("NodeGraph edge duplicate", "[NodeJS][core][NodeGraph][Edge]")
     CHECK(edgeId.has_value());
     CHECK(!edgeId2.has_value());
 }
-TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
+TEST_CASE("test_NodeGraph_topological_sort", "[NodeJS][core][NodeGraph][Algorithms]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -147,7 +147,7 @@ TEST_CASE("NodeGraph topological sort", "[NodeJS][core][NodeGraph][Algorithms]")
     CHECK(nodesSorted != incorrectOrder);
 }
 
-TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGraph][Algorithms]")
+TEST_CASE("test_NodeGraph_topological_sort_cycle_detection", "[NodeJS][core][NodeGraph][Algorithms]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -166,7 +166,7 @@ TEST_CASE("NodeGraph topological sort cycle detection", "[NodeJS][core][NodeGrap
     CHECK(!maybeNodesSorted.has_value());    
 }
 
-TEST_CASE("NodeGraph getModule", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_getModule", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -176,7 +176,7 @@ TEST_CASE("NodeGraph getModule", "[NodeJS][core][NodeGraph][Node]")
 
 }
 
-TEST_CASE("NodeGraph erase node", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_erase_node", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -192,7 +192,7 @@ TEST_CASE("NodeGraph erase node", "[NodeJS][core][NodeGraph][Node]")
     CHECK(!graph.hasNode("main"));
 }
 
-TEST_CASE("NodeGraph erase node with edges", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_erase_node_with_edges", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -226,7 +226,7 @@ TEST_CASE("NodeGraph erase node with edges", "[NodeJS][core][NodeGraph][Node]")
     CHECK(graph.getEdges().size() == 0);
 }
 
-TEST_CASE("NodeGraph erase node with extra edges", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_erase_node_with_extra_edges", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -268,7 +268,7 @@ TEST_CASE("NodeGraph erase node with extra edges", "[NodeJS][core][NodeGraph][No
     CHECK(graph.getEdges().size() == 3);
 }
 
-TEST_CASE("NodeGraph erase single edge", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_erase_single_edge", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -295,7 +295,7 @@ TEST_CASE("NodeGraph erase single edge", "[NodeJS][core][NodeGraph][Node]")
     CHECK(graph.getEdgesTo("b").size() == 1);
 }
 
-TEST_CASE("NodeGraph search scopes", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_search_scopes", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -336,7 +336,7 @@ TEST_CASE("NodeGraph search scopes", "[NodeJS][core][NodeGraph][Node]")
     
 }
 
-TEST_CASE("NodeGraph groups", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_groups", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -361,7 +361,7 @@ TEST_CASE("NodeGraph groups", "[NodeJS][core][NodeGraph][Node]")
     CHECK(graph.getGroups().size() == 0);
 }
 
-TEST_CASE("Graph specific metadata", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_NodeGraph_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & module = *loader.newModule("anonymous");

@@ -7,7 +7,7 @@
 using namespace NodeJS::core;
 using namespace NodeJS::xml;
 
-TEST_CASE("Node Module package id", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_Node_Module_package_id", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -17,7 +17,7 @@ TEST_CASE("Node Module package id", "[NodeJS][core][NodeModule]")
     CHECK(nodeModule.getPackage() == "simple.package.name");
 }
 
-TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -42,7 +42,7 @@ TEST_CASE("NodeModule single type", "[NodeJS][core][NodeModule]")
     CHECK(!nodeModule.hasNodeType("add"));
 }
 
-TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_iterator", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -61,7 +61,7 @@ TEST_CASE("NodeModule Iterator", "[NodeJS][core][NodeModule]")
     CHECK(i == 1);
 }
 
-TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_check_basic_data_type_stuff", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -79,7 +79,7 @@ TEST_CASE("NodeModule Check basic data type stuff", "[NodeJS][core][NodeModule]"
     
 }
 
-TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_data_type_iterator", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -97,7 +97,7 @@ TEST_CASE("NodeModule Data Type Iterator", "[NodeJS][core][NodeModule]")
     CHECK(i == 1);
 }
 
-TEST_CASE("NodeModule getModuleLoader", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_getModuleLoader", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
@@ -105,7 +105,7 @@ TEST_CASE("NodeModule getModuleLoader", "[NodeJS][core][NodeModule]")
     CHECK(&loader == &nodeModule.getModuleLoader());
 }
 
-TEST_CASE("NodeModule add graph uniqueness conditions", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_add_graph_uniqueness_conditions", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");

@@ -4,7 +4,7 @@
 
 using namespace NodeJS::core;
 
-TEST_CASE("Group check basic stuff", "[NodeJS][core][NodeGraph][Node]")
+TEST_CASE("test_Group_check_basic_stuff", "[NodeJS][core][NodeGraph][Node]")
 {
     Group g;
 
