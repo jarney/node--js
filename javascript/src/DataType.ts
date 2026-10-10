@@ -18,6 +18,12 @@ class DataType {
 	this.mName = aName;
     }
 
+    public copy(other: DataType) {
+        this.mId = other.mId;
+        this.mName = other.mName;
+    }
+    
+
     /**
      * Returns the unique identifier for this data type.
      */

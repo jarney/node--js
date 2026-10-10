@@ -1,27 +1,4 @@
-/**
- * Connection policy for a port.  This determines
- * how many connections are permitted.  A port
- * may support only a single connection and may
- * support multiple connections.  It is up to
- * the node to decide how many connections are
- * reasonable and appropriate.  Note that when
- * data is carried along a connection, if there
- * are multiple connections, the order of processing
- * or arrival may not be predictable.
- */
-enum ConnectionPolicy {
-    /**
-     * This value indicates that the port supports only
-     * a single connection.
-     */
-    One = 0,
-    /**
-     * This value indicates that the port supports
-     * multiple connections.
-     */
-    Multiple = 1
-};
-
+import { Metadata } from "./Metadata.ts";
 /**
  * A port is a part of a node that can exchange data.
  * Ports may play the role of either input or output data
@@ -32,10 +9,11 @@ enum ConnectionPolicy {
  * the data carried in the port, but ideally, multiple
  * nodes will agree on an encoding so that they can inter-operate.
  */
-class NodePort {
+export class NodePort {
     mDataType: string;
     mDescription: string;
-    mConnectionPolicy: ConnectionPolicy;
+    mConnectionPolicy: NodePort.ConnectionPolicy;
+    mMetadata : Metadata;
 
     /**
      * Creates a port that can handle a particular
@@ -56,10 +34,11 @@ class NodePort {
      *               connection is permitted or whether
      *               multiple connections can be supported.
      */
-    constructor(aDataType: string, aDescription: string, aConnectionPolicy: ConnectionPolicy) {
+    constructor(aDataType: string, aDescription: string, aConnectionPolicy: NodePort.ConnectionPolicy) {
         this.mDataType = aDataType;
         this.mDescription = aDescription;
         this.mConnectionPolicy = aConnectionPolicy;
+	this.mMetadata = new Metadata();
     }
 
     /**
@@ -84,9 +63,41 @@ class NodePort {
     /**
      * Returns the connection policy associated with this port.
      */
-    getConnectionPolicy() : ConnectionPolicy {
+    getConnectionPolicy() : NodePort.ConnectionPolicy {
         return this.mConnectionPolicy;
+    }
+
+    /**
+     * Returns the metadata
+     */
+    getMetadata() : Metadata {
+        return this.mMetadata;
     }
 }
 
-export {NodePort};
+export namespace NodePort {
+/**
+ * Connection policy for a port.  This determines
+ * how many connections are permitted.  A port
+ * may support only a single connection and may
+ * support multiple connections.  It is up to
+ * the node to decide how many connections are
+ * reasonable and appropriate.  Note that when
+ * data is carried along a connection, if there
+ * are multiple connections, the order of processing
+ * or arrival may not be predictable.
+ */
+export enum ConnectionPolicy {
+    /**
+     * This value indicates that the port supports only
+     * a single connection.
+     */
+    One = 0,
+    /**
+     * This value indicates that the port supports
+     * multiple connections.
+     */
+    Multiple = 1
+};
+
+};
