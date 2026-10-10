@@ -1,4 +1,7 @@
+
 from nodejs.NodeModule import NodeModule
+from nodejs.xml import Serializer
+
 import os
 
 NODEJS_PATH_DELIMITER_CHARACTER = ';'
@@ -56,6 +59,27 @@ class ModuleLoaderNodeJSPath:
 
     def getNODEJS_PATH(self):
         return self.mPath
+
+    def loadModule(self, moduleName, err):
+        if moduleName in self.mLoadedModules:
+            return self.mLoadedModules[moduleName]
+
+        loadedModule = None
+        for directory in self.mPath:
+            filename = os.path.join(directory, moduleName + ".xml");
+            ser = Serializer.instance()
+            loadedModule = NodeModule(self)
+            try:
+                with open(filename, "r") as stream:
+                    ser.read(loadedModule, stream)
+                    break
+                loadedModule = None
+            except FileNotFoundError as x:
+                print(x)
+                loadedModule = None
+
+        self.mLoadedModules[moduleName] = loadedModule
+        return loadedModule
 
     def newModule(self, moduleName):
         if moduleName in self.mLoadedModules:

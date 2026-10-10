@@ -1,3 +1,5 @@
+import pytest
+
 from nodejs.xml import ModuleLoaderNodeJSPath
 from nodejs.xml import NODEJS_PATH_DELIMITER_CHARACTER
 from nodejs.xml import NODEJS_PATH_DELIMITER_STRING
@@ -59,6 +61,41 @@ def test_xml_ModuleLoaderNodeJSPath_path_splitting_escape_other_things():
 def test_xml_ModuleLoaderNodeJSPath_path_splitting_empty():
     doTest("", [])
 
+@pytest.fixture
+def data_directory(request: pytest.FixtureRequest) -> Path:
+    if request.config.getoption("--data-directory"):
+        return request.config.getoption("--data-directory")
+    return "."
+
+def test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file(data_directory):
+    loader = ModuleLoaderNodeJSPath()
+    err = {} #SerializerErrorReporterStream()
+
+    path = data_directory
+    loader.setNODEJS_PATH(path)
+    print("Loading through module");
+    nodeModule = loader.loadModule("org.ensor.nodejs.openscad", err)
+    print("Done loading through module")
+    print(nodeModule)
+    assert(nodeModule != None)
+
+    # Load it again.
+    nodeModule2 = loader.loadModule("org.ensor.nodejs.openscad", err)
+    assert(nodeModule2 != None)
+
+    # Check that we actually got the same cached module.
+    assert(nodeModule == nodeModule2)
+
+    # Check that we get a null pointer
+    # if the module doesn't exist.
+    module_nonexistent = loader.loadModule("some-nonexistent-module", err)
+    assert(module_nonexistent == None);
+    
+    loader.setNODEJS_PATH("");
+    module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err)
+    assert(module_no_path == None)
+
+    
 def test_xml_ModuleLoaderNodeJSPath_new_module_is_same():
     loader = ModuleLoaderNodeJSPath()
 

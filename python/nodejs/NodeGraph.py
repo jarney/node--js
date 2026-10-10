@@ -42,12 +42,10 @@ class NodeGraph:
 
     def removeNode(self, aNodeId):
         for it in self.mEdgesByFromNode:
-            print("Before edges by from node " + str(it))
             newEdgesByFromNode = []
             for edge in self.mEdgesByFromNode[it]:
                 if edge.fromNode == aNodeId or edge.toNode == aNodeId:
                     continue
-                print("  e " + str(edge))
                 newEdgesByFromNode.append(edge)
             self.mEdgesByFromNode[it] = newEdgesByFromNode
 
@@ -55,12 +53,10 @@ class NodeGraph:
             del self.mEdgesByFromNode[aNodeId]
 
         for it in self.mEdgesByToNode:
-            print("Before edges by to node " + str(it))
             newEdgesByToNode = []
             for edge in self.mEdgesByToNode[it]:
                 if edge.fromNode == aNodeId or edge.toNode == aNodeId:
                     continue
-                print("  e " + str(edge))
                 newEdgesByToNode.append(edge)
             self.mEdgesByToNode[it] = newEdgesByToNode
 
@@ -86,13 +82,7 @@ class NodeGraph:
         edgeId = tmpEdge.getId()
 
         for cnId in self.mEdgesByFromNode:
-            print("Calling cnid " + str(cnId));
             newEdgesByFromNode = []
-            print("---")
-            print(self.mEdgesByFromNode)
-            print(cnId)
-            print(self.mEdgesByFromNode[cnId])
-            print("---")
             edgesByFromNode = self.mEdgesByFromNode[cnId]
             for edge in edgesByFromNode:
                 if not edge.getId() == edgeId:

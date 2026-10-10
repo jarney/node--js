@@ -23,7 +23,7 @@ cat ${CMAKE_PROJECT_DIRECTORY}/python/test/*.py | \
     grep 'def test_' | \
     grep -v '_py_specific' | \
     sed 's/#\?def test_/test_/g' | \
-    sed 's/():.*//g' | \
+    sed 's/(.*):.*//g' | \
     awk '{print($1 "");}' | \
     sort > ${CMAKE_PROJECT_DIRECTORY}/build/tests-py.txt
 

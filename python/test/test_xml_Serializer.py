@@ -28,7 +28,7 @@ def test_xml_Serializer(data_directory):
     
     fname = getDataFile(data_directory, "Test-Serializer-Basic.xml")
     print(fname)
-    stream = open(fname, "r");
-    s.read(nm, stream)
+    with open(fname, "r") as stream:
+        s.read(nm, stream)
     s.write(nm, sys.stdout)
 

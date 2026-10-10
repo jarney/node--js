@@ -81,7 +81,7 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_path_splitting_empty", "[NodeJS][xml]
     doTest("", std::vector<std::string>{});
 }
 
-TEST_CASE("test_xml_ModuleLoaderNodeJSPath setting path and loading file", "[NodeJS][xml][ModuleLoader]")
+TEST_CASE("test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file", "[NodeJS][xml][ModuleLoader]")
 {
     ModuleLoaderNodeJSPath loader;
     SerializerErrorReporterStream err(std::cerr);
