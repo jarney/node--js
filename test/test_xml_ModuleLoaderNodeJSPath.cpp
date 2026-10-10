@@ -123,7 +123,7 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath test environment variable", "[NodeJS]
     CHECK(loader.getNODEJS_PATH() == std::vector<std::string>{"a", "b"});
 }
 
-TEST_CASE("test_xml_ModuleLoaderNodeJSPath new module is same", "[NodeJS][xml][ModuleLoader]")
+TEST_CASE("test_xml_ModuleLoaderNodeJSPath_new_module_is_same", "[NodeJS][xml][ModuleLoader]")
 {
     ModuleLoaderNodeJSPath loader;
 

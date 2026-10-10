@@ -1,4 +1,5 @@
 from nodejs.NodeModule import NodeModule
+import os
 
 NODEJS_PATH_DELIMITER_CHARACTER = ';'
 NODEJS_PATH_DELIMITER_STRING = ";"
@@ -43,12 +44,12 @@ def split_path(pathstr):
 
 class ModuleLoaderNodeJSPath:
     def __init__(self):
-        #const char *nodejs_path = getenv("NODEJS_PATH");
-        #if (nodejs_path != nullptr):
-        #    mPath = split_path(std::string(nodejs_path));
-        #else:
-        self.mPath = ["."]
-
+        nodejs_path = os.environ.get("NODEJS_PATH")
+        if not nodejs_path == None:
+            self.mPath = split_path(nodejs_path)
+        else:
+            self.mPath = ["."]
+        self.mLoadedModules = {}
 
     def setNODEJS_PATH(self, path):
         self.mPath = split_path(path)
@@ -57,6 +58,9 @@ class ModuleLoaderNodeJSPath:
         return self.mPath
 
     def newModule(self, moduleName):
+        if moduleName in self.mLoadedModules:
+            return self.mLoadedModules[moduleName]
         module = NodeModule(self)
+        self.mLoadedModules[moduleName] = module
         return module
 

@@ -59,3 +59,14 @@ def test_xml_ModuleLoaderNodeJSPath_path_splitting_escape_other_things():
 def test_xml_ModuleLoaderNodeJSPath_path_splitting_empty():
     doTest("", [])
 
+def test_xml_ModuleLoaderNodeJSPath_new_module_is_same():
+    loader = ModuleLoaderNodeJSPath()
+
+    newModule = loader.newModule("unique-module-name")
+
+    nextModule = loader.newModule("unique-module-name")
+
+    # Module names are unique.  If we ask for a new one, we
+    # should expect to get the same one.
+    assert(newModule == nextModule)
+
