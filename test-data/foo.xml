@@ -4,27 +4,109 @@
   <data-types/>
   <node-types/>
   <graphs>
-    <graph id="main">
+    <graph id="custom_function">
       <scope>
         <package id="org.ensor.nodejs.openscad"/>
       </scope>
       <nodes>
-        <node id="output" type="output"/>
-        <node id="circle" type="circle"/>
-        <node id="square" type="square"/>
-        <node id="sphere" type="sphere">
+        <node id="add" type="add">
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
-              <value key="pos-x">-400.000000</value>
-              <value key="pos-y">-800.000000</value>
+              <value key="pos-x">-800.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="const_int" type="const_int">
+          <value key="value">1</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-1200.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="function_output" type="function_output"/>
+        <node id="variable" type="variable">
+          <value key="variable_name">x</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-1200.000000</value>
+              <value key="pos-y">0.000000</value>
             </data>
           </metadata>
         </node>
       </nodes>
       <edges>
-        <edge from-node="sphere" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
-        <edge from-node="square" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
-        <edge from-node="circle" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
+        <edge from-node="add" from-port="out" to-node="function_output" to-port="out"/>
+        <edge from-node="const_int" from-port="value" to-node="add" to-port="b"/>
+        <edge from-node="variable" from-port="variable" to-node="add" to-port="a"/>
+      </edges>
+    </graph>
+    <graph id="main">
+      <scope>
+        <package id="org.ensor.nodejs.openscad"/>
+      </scope>
+      <nodes>
+        <node id="assign" type="assign">
+          <value key="variable_name">q</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-400.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="const_int" type="const_int">
+          <value key="value">99</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-800.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="const_int-0" type="const_int">
+          <value key="value">4</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-1600.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="custom_function" type="function-call">
+          <value key="function-name">custom_function</value>
+          <inputs>
+            <port id="x" description="x" data-type="variable" connection-policy="one"/>
+          </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-1200.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="function" type="function">
+          <value key="graph">custom_function</value>
+          <inputs>
+            <port id="x" description="x" data-type="variable" connection-policy="one"/>
+          </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="pos-x">-400.000000</value>
+              <value key="pos-y">0.000000</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="output" type="output"/>
+      </nodes>
+      <edges>
+        <edge from-node="assign" from-port="assignment" to-node="output" to-port="assignments"/>
+        <edge from-node="const_int-0" from-port="value" to-node="custom_function" to-port="x"/>
+        <edge from-node="const_int" from-port="value" to-node="function" to-port="x"/>
+        <edge from-node="custom_function" from-port="out" to-node="assign" to-port="value"/>
+        <edge from-node="function" from-port="out" to-node="output" to-port="function-definitions"/>
       </edges>
     </graph>
   </graphs>

@@ -5,13 +5,13 @@
 
 using namespace NodeJS::xml;
 
-TEST_CASE("test_xml_XmlNodeWrapper_ownership_text", "[NodeJS][xml][XmlNodeWrapper]")
+TEST_CASE("test_xml_XmlNodeWrapper_ownership_text_cpp_specific", "[NodeJS][xml][XmlNodeWrapper]")
 {
     // This pointer is owned by us and we're not transferring it anywhere.
     XmlNodeWrapper otherNode("q");
 }
 
-TEST_CASE("test_xml_XmlNodeWrapper_pointer_logic_test", "[NodeJS][xml][XmlNodeWrapper]")
+TEST_CASE("test_xml_XmlNodeWrapper_pointer_logic_test_cpp_specific", "[NodeJS][xml][XmlNodeWrapper]")
 {
     // This pointer is owned by someone else,
     // and we didn't do anything with it,
@@ -24,7 +24,7 @@ TEST_CASE("test_xml_XmlNodeWrapper_pointer_logic_test", "[NodeJS][xml][XmlNodeWr
 
 }
 
-TEST_CASE("test_xml_XmlNodeWrapper_text_content_tests", "[NodeJS][xml][XmlNodeWrapper]")
+TEST_CASE("test_xml_XmlNodeWrapper_text_content_tests_cpp_specific", "[NodeJS][xml][XmlNodeWrapper]")
 {
     // If we don't add content, it's the empty string.
     xmlNodePtr nocontent = xmlNewNode(nullptr, BAD_CAST "no-text-content");

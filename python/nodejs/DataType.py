@@ -11,6 +11,10 @@ class DataType:
         self.mName = aName
         pass
 
+    def copy(self, other):
+        self.mId = other.mId
+        self.mName = other.mName
+    
     def getId(self):
         return self.mId
     
@@ -22,6 +26,12 @@ class DataType:
         Two data-types are considered equal if they both have
         the same ID.
         """
+        if a is None and b is None:
+            return True
+        if b is None:
+            return False
+        if a is None:
+            return False
         return a.mId == b.mId
 
     def __ne__(a,b):

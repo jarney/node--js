@@ -2,10 +2,12 @@
 from .NodeGraph import NodeGraph
 
 class NodeModule:
-    def __init__(self):
+    def __init__(self, moduleLoader):
         self.package = ""
-        self.dataTypes = {}
-        self.nodeTypes = {}
+        self.mDescription = ""
+        self.mModuleLoader = moduleLoader
+        self.mDataTypes = {}
+        self.mNodeTypes = {}
         self.mGraphs = {}
         self.mMetadata = {}
 
@@ -17,34 +19,46 @@ class NodeModule:
 
     def getPackage(self):
         return self.package
-        
+
+    def setDescription(self, aDescription):
+        self.mDescription = aDescription
+
+    def getDescription(self):
+        return self.mDescription
+
+    def getModuleLoader(self):
+        return self.mModuleLoader
+
     def addDataType(self, dataType: DataType):
-        self.dataTypes[dataType.getId()] = dataType
+        self.mDataTypes[dataType.getId()] = dataType
         pass
 
     def removeDataType(self, id):
-        del self.dataTypes[id]
+        del self.mDataTypes[id]
 
     def getDataTypes(self):
-        return self.dataTypes
+        return self.mDataTypes
 
     def hasDataType(self, id):
-        return (id in self.dataTypes)
+        return (id in self.mDataTypes)
 
     def getDataType(self, id):
-        return self.dataTypes[id]
+        return self.mDataTypes[id] if id in self.mDataTypes else None
 
     def addNodeType(self, nodeType: NodeType):
-        self.nodeTypes[nodeType.getId()] = nodeType
+        self.mNodeTypes[nodeType.getId()] = nodeType
+
+    def removeNodeType(self, id):
+        del self.mNodeTypes[id]
 
     def getNodeTypes(self):
-        return self.nodeTypes;
+        return self.mNodeTypes;
 
     def hasNodeType(self, id):
-        return (id in self.nodeTypes)
+        return (id in self.mNodeTypes)
 
     def getNodeType(self, id):
-        return self.nodeTypes[id]
+        return self.mNodeTypes[id] if id in self.mNodeTypes else None
 
     def addGraph(self, aId):
         # Duplicate graphs are not allowed.
@@ -65,3 +79,4 @@ class NodeModule:
 
     def getMetadata(self):
         return self.mMetadata
+

@@ -1,4 +1,5 @@
 from enum import Enum
+from nodejs.Metadata import Metadata
 
 class NodePort:
     class ConnectionPolicy:
@@ -9,6 +10,7 @@ class NodePort:
         self.mDataType = aDataType
         self.mDescription = aDescription
         self.mConnectionPolicy = aConnectionPolicy
+        self.mMetadata = Metadata()
 
     def getDataType(self):
         return self.mDataType
@@ -18,3 +20,6 @@ class NodePort:
 
     def getConnectionPolicy(self):
         return self.mConnectionPolicy
+
+    def getMetadata(self):
+        return self.mMetadata

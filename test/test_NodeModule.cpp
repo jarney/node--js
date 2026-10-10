@@ -7,14 +7,16 @@
 using namespace NodeJS::core;
 using namespace NodeJS::xml;
 
-TEST_CASE("test_Node_Module_package_id", "[NodeJS][core][NodeModule]")
+TEST_CASE("test_NodeModule_package_id", "[NodeJS][core][NodeModule]")
 {
     ModuleLoaderNodeJSPath loader;
     NodeModule & nodeModule = *loader.newModule("anonymous");
 
     nodeModule.setPackage("simple.package.name");
+    nodeModule.setDescription("Some Desc");
 
     CHECK(nodeModule.getPackage() == "simple.package.name");
+    CHECK(nodeModule.getDescription() == "Some Desc");
 }
 
 TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
@@ -38,6 +40,9 @@ TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
     const NodeType *nonexistent = nodeModule.getNodeType("invalid-node");
     CHECK(nonexistent == nullptr);
 
+    // This is actually really dangerous and maybe we should
+    // not even have such a method because it would
+    // orphan actual nodes in graphs.
     nodeModule.removeNodeType("add");
     CHECK(!nodeModule.hasNodeType("add"));
 }

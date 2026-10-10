@@ -14,13 +14,14 @@ def getDataFile(data_directory, fname):
     fname = data_directory + "/" + fname
     return fname
     
-def test_serializer(data_directory):
+def test_xml_Serializer(data_directory):
     print("Project is");
     print(__package__);
 
     s = Serializer.instance();
 
-    nm = NodeModule();
+    loader = ModuleLoaderNodeJSPath()
+    nm = loader.newModule("anonymous")
 
     print(str(type(data_directory)))
     print(data_directory)

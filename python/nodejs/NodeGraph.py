@@ -1,5 +1,7 @@
 from .Node import Node
 from .Edge import Edge
+from .Group import Group
+from .Metadata import Metadata
 
 # Useful for states in the
 # topological sort algorithm used
@@ -11,10 +13,13 @@ TOPOSORT_STATE_PROCESSED = 2
 class NodeGraph:
     def __init__(self, aModule):
         self.mModule = aModule
+        self.mScopes = []
         self.mNodes = {}
         self.mEdges = {}
         self.mEdgesByFromNode = {}
         self.mEdgesByToNode = {}
+        self.mGroups = {}
+        self.mMetadata = Metadata()
 
     def findNewNodeId(self, aNodeIdCandidate):
         actualNewId = aNodeIdCandidate
@@ -35,6 +40,96 @@ class NodeGraph:
         
         return retNode
 
+    def removeNode(self, aNodeId):
+        for it in self.mEdgesByFromNode:
+            print("Before edges by from node " + str(it))
+            newEdgesByFromNode = []
+            for edge in self.mEdgesByFromNode[it]:
+                if edge.fromNode == aNodeId or edge.toNode == aNodeId:
+                    continue
+                print("  e " + str(edge))
+                newEdgesByFromNode.append(edge)
+            self.mEdgesByFromNode[it] = newEdgesByFromNode
+
+        if aNodeId in self.mEdgesByFromNode:
+            del self.mEdgesByFromNode[aNodeId]
+
+        for it in self.mEdgesByToNode:
+            print("Before edges by to node " + str(it))
+            newEdgesByToNode = []
+            for edge in self.mEdgesByToNode[it]:
+                if edge.fromNode == aNodeId or edge.toNode == aNodeId:
+                    continue
+                print("  e " + str(edge))
+                newEdgesByToNode.append(edge)
+            self.mEdgesByToNode[it] = newEdgesByToNode
+
+        if aNodeId in self.mEdgesByToNode:
+            del self.mEdgesByToNode[aNodeId]
+
+        edgesToRemove = []
+        for edgeId in self.mEdges:
+            edge = self.mEdges[edgeId]
+            if edge.fromNode == aNodeId or edge.toNode == aNodeId:
+                edgesToRemove.append(edgeId)
+        
+        for edgeId in edgesToRemove:
+            del self.mEdges[edgeId]
+            
+        del self.mNodes[aNodeId]
+
+    def removeEdge(self, aFromNode, aFromPort, aToNode, aToPort):
+        tmpEdge = Edge(
+            aFromNode, aFromPort,
+            aToNode, aToPort
+        )
+        edgeId = tmpEdge.getId()
+
+        for cnId in self.mEdgesByFromNode:
+            print("Calling cnid " + str(cnId));
+            newEdgesByFromNode = []
+            print("---")
+            print(self.mEdgesByFromNode)
+            print(cnId)
+            print(self.mEdgesByFromNode[cnId])
+            print("---")
+            edgesByFromNode = self.mEdgesByFromNode[cnId]
+            for edge in edgesByFromNode:
+                if not edge.getId() == edgeId:
+                    newEdgesByFromNode.append(edge)
+            self.mEdgesByFromNode[cnId] = newEdgesByFromNode
+
+        for cnId in self.mEdgesByToNode:
+            newEdgesByToNode = []
+            edgesByToNode = self.mEdgesByToNode[cnId]
+            for edge in edgesByToNode:
+                if not edge.getId() == edgeId:
+                    newEdgesByToNode.append(edge)
+            self.mEdgesByToNode[cnId] = newEdgesByToNode
+
+        del self.mEdges[edgeId]
+        
+    def addScope(self, nodeModule):
+        self.mScopes.append(nodeModule)
+
+    def copyScope(self, otherGraph):
+        self.mScopes = otherGraph.mScopes
+
+    def getScopes(self):
+        return self.mScopes
+
+    def getNodeType(self, aTypeName):
+        for scope in self.mScopes:
+            if scope.hasNodeType(aTypeName):
+                return scope.getNodeType(aTypeName)
+        return None
+
+    def getDataType(self, aTypeName):
+        for scope in self.mScopes:
+            if scope.hasDataType(aTypeName):
+                return scope.getDataType(aTypeName)
+        return None
+    
     def getNodeIds(self):
         return self.mNodes.keys()
     
@@ -77,6 +172,9 @@ class NodeGraph:
         if not nodeId in self.mEdgesByToNode:
             return []
         return self.mEdgesByToNode[nodeId]
+
+    def getEdges(self):
+        return self.mEdges
     
     def getNeighborNodeIds(self, aNode):
         neighbors = []
@@ -130,3 +228,25 @@ class NodeGraph:
 
     def getModule(self):
         return self.mModule
+
+    def getGroups(self):
+        return self.mGroups
+
+    def addGroup(self, aGroupId):
+        self.mGroups[aGroupId] = Group()
+
+    def removeGroup(self, aGroupId):
+        if aGroupId in self.mGroups:
+            del self.mGroups[aGroupId]
+
+    def hasGroup(self, aGroupId):
+        return aGroupId in self.mGroups
+
+
+    def getGroup(self, aGroupId):
+        return self.mGroups if aGroupId in self.mGroups else None
+
+    def getMetadata(self):
+        return self.mMetadata
+    
+    

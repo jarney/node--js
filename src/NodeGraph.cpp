@@ -195,8 +195,6 @@ NodeGraph::removeEdge(
     mEdges.erase(id);
 
 }
-
-
 static const std::vector<const Edge *> empty_edges;
 
 const std::vector<const Edge *> &

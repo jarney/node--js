@@ -81,7 +81,7 @@ def test_Node_specific_io():
     assert(node.getInputs().getCount() == 2);
     assert(node.getOutputs().getCount() == 1);
 
-def test_Node_initialization_with_data():
+def test_Node_initialize_with_data():
     loader = ModuleLoaderNodeJSPath()
     module = loader.newModule("anonymous")
     graph = module.addGraph("graph");
