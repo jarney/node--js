@@ -1,10 +1,13 @@
 import pytest
+import sys
 
 from nodejs.xml import ModuleLoaderNodeJSPath
 from nodejs.xml import NODEJS_PATH_DELIMITER_CHARACTER
 from nodejs.xml import NODEJS_PATH_DELIMITER_STRING
 from nodejs.xml import NODEJS_PATH_ESCAPE_CHARACTER
 from nodejs.xml import NODEJS_PATH_ESCAPE_STRING
+
+from nodejs.SerializerError import SerializerErrorReporterStream
 
 def doTest(given_path, expected):
     moduleLoader = ModuleLoaderNodeJSPath()
@@ -69,7 +72,7 @@ def data_directory(request: pytest.FixtureRequest) -> Path:
 
 def test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file(data_directory):
     loader = ModuleLoaderNodeJSPath()
-    err = {} #SerializerErrorReporterStream()
+    err = SerializerErrorReporterStream(sys.stderr)
 
     path = data_directory
     loader.setNODEJS_PATH(path)

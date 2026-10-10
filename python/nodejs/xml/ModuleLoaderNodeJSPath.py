@@ -71,7 +71,7 @@ class ModuleLoaderNodeJSPath:
             loadedModule = NodeModule(self)
             try:
                 with open(filename, "r") as stream:
-                    ser.read(loadedModule, stream)
+                    ser.read(loadedModule, stream, err)
                     break
                 loadedModule = None
             except FileNotFoundError as x:

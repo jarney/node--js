@@ -128,7 +128,7 @@ class Serializer:
     def isTag(self, tag, matchTag):
         return tag == "{"+ self._NAMESPACE + "}" + matchTag
  
-    def read(self, node_module: NodeModule, stream):
+    def read(self, node_module: NodeModule, stream, err):
         tree = ET.parse(stream)
         root = tree.getroot()
 
@@ -149,7 +149,7 @@ class Serializer:
         pass
 
 
-    def write(self, node_module: NodeModule, stream):
+    def write(self, node_module: NodeModule, stream, err):
         root = ET.Element('node-module')
         root.set("xmlns", "http://jarney.github.io/nodejs-schema")
 

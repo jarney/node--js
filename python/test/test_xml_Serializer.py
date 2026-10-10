@@ -2,6 +2,7 @@ import pytest
 
 from nodejs.xml import *
 from nodejs.NodeModule import NodeModule
+from nodejs.SerializerError import SerializerErrorReporterStream
 import sys
 
 @pytest.fixture
@@ -18,6 +19,7 @@ def test_xml_Serializer(data_directory):
     print("Project is");
     print(__package__);
 
+    err = SerializerErrorReporterStream(sys.stderr)
     s = Serializer.instance();
 
     loader = ModuleLoaderNodeJSPath()
@@ -29,6 +31,6 @@ def test_xml_Serializer(data_directory):
     fname = getDataFile(data_directory, "Test-Serializer-Basic.xml")
     print(fname)
     with open(fname, "r") as stream:
-        s.read(nm, stream)
-    s.write(nm, sys.stdout)
+        s.read(nm, stream, err)
+    s.write(nm, sys.stdout, err)
 
