@@ -46,6 +46,9 @@ export class NodeModule {
   public removeDataType(aId: string) {
     delete this.mDataTypes[aId];
   }
+  public removeNodeType(aId: string) : void {
+    delete this.mNodeTypes[aId];
+  }
   public getDataTypes() : { [key: string]: DataType } {
     return this.mDataTypes;
   }

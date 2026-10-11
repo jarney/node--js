@@ -3,7 +3,7 @@ import { NodeModule } from "../NodeModule.ts";
 import type { ModuleLoader } from "../ModuleLoader.ts";
 import type { SerializerErrorReporter } from "../SerializerError.ts";
 
-export class ModuleLoaderNodeJSPAth implements ModuleLoader {
+export class ModuleLoaderNodeJSPath implements ModuleLoader {
   mPath: string[];
   mLoadedModules: { [ key: string ] : NodeModule};
   
