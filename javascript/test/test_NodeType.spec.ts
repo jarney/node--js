@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 
 import { NodeType } from '../src/NodeType.ts'
 
-describe('NodeType', () => {
-  it('test_NodeType_empty', () => {
+describe("NodeType", () => {
+  it("test_NodeType_empty", () => {
 
     var nodeType = new NodeType();
     

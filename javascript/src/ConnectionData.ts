@@ -6,13 +6,20 @@ export class ConnectionData {
        constructor() {
            this.mData = {};
        }
+       public copy(other: ConnectionData) {
+           this.mData = {}
+	   for (const key in other.mData) {
+	       this.mData[key] = other.mData[key]
+	   }
+       }
+
        public setValue(key: string, value: string) {
            this.mData[key] = value;
        }
        public appendValue(key: string, value: string) {
            this.mData[key] = this.mData[key] + value;
        }
-       public getValue(key: string, default_value: string): string {
+       public getValue(key: string, default_value: string = ""): string {
            if (key in this.mData) {
 	       return this.mData[key];
 	   }

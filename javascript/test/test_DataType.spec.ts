@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 
 import { DataType } from "../src/DataType.ts";
 
-describe('DataType', function(){
-    it('test_DataType_equality', function(){
+describe("DataType", function(){
+    it("test_DataType_equality", function(){
 	var dataType1 = new DataType("int", "Integer");
 	var dataType2 = new DataType("int", "Another integer");
 	

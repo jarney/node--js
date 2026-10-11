@@ -28,19 +28,19 @@ cat ${CMAKE_PROJECT_DIRECTORY}/python/test/*.py | \
     sort > ${CMAKE_PROJECT_DIRECTORY}/build/tests-py.txt
 
 # All JS test cases
-cat ${CMAKE_PROJECT_DIRECTORY}/javascript/tests/*.js | \
-    grep TEST_CASE | \
+cat ${CMAKE_PROJECT_DIRECTORY}/javascript/test/*.ts | \
     grep 'test_' | \
-    grep -v '_js_specific' | \
-    sed 's/.*TEST_CASE("//g' | \
-    sed 's/".*//g' | \
-    awk '{print($1 "");}' | \
+    grep -v '_js_specific'| \
+    grep -v '^//' | \
+    sed 's/.*it("//g' | \
+    sed 's/",.*//g' | \
     sort > ${CMAKE_PROJECT_DIRECTORY}/build/tests-js.txt
 
+
 # Differences to Python test-cases.
-diff ${CMAKE_PROJECT_DIRECTORY}/build/tests-cpp.txt \
-     ${CMAKE_PROJECT_DIRECTORY}/build/tests-py.txt
+#diff ${CMAKE_PROJECT_DIRECTORY}/build/tests-cpp.txt \
+#     ${CMAKE_PROJECT_DIRECTORY}/build/tests-py.txt
 
 # Differences to JS test-cases.
-#diff ${CMAKE_PROJECT_DIRECTORY}/build/tests-cpp.txt \
-#     ${CMAKE_PROJECT_DIRECTORY}/build/tests-js.txt
+diff ${CMAKE_PROJECT_DIRECTORY}/build/tests-cpp.txt \
+     ${CMAKE_PROJECT_DIRECTORY}/build/tests-js.txt
