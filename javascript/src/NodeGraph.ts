@@ -1,5 +1,10 @@
-import type {NodeId, GroupId, EdgeId} from "./Definitions.ts";
+import type {NodeId, GroupId, EdgeId, PortId, NodeTypeId, DataTypeId} from "./Definitions.ts";
 import {Node} from "./Node.ts";
+import {DataType} from "./DataType.ts";
+import {NodeType} from "./NodeType.ts";
+import {Group} from "./Group.ts";
+import {Edge} from "./Edge.ts";
+import {ConnectionData} from "./ConnectionData.ts";
 import {NodeModule} from "./NodeModule.ts";
 import {Metadata} from "./Metadata.ts";
 
@@ -11,7 +16,7 @@ export class NodeGraph {
   mEdgesByFromNode: { [key: NodeId] : Edge[] };
   mEdgesByToNode: { [key: EdgeId] : Edge[] };
   mScopes: NodeModule[];
-  mMetdata: Metadata;
+  mMetadata: Metadata;
   
   constructor(aModule: NodeModule) {
     this.mModule = aModule;
@@ -24,7 +29,7 @@ export class NodeGraph {
     this.mMetadata = new Metadata();
   }
 
-  public getModule() : NodeModules {
+  public getModule() : NodeModule {
     return this.mModule;
   }
 
@@ -56,46 +61,52 @@ export class NodeGraph {
     return (aNodeId in this.mNodes);
   }
   public removeNode(aNodeId: NodeId) : void {
-
     for (var nodeId in this.mEdgesByFromNode) {
-      var newEdgesByFromNode: Edge[] = [];
-      for (var edge in this.mEdgesByFromNode[nodeId]) {
-        if (edge.fromNode == aNodeId || edge.toNode == aNodeId) {
-          continue;
-        }
-        newEdgesByFromNode.append(edge);
+      if (nodeId in this.mEdgesByFromNode) {
+	var newEdgesByFromNode: Edge[] = [];
+	var edgesByFromNode: Edge[] = this.mEdgesByFromNode[nodeId]!;
+	for (var edgeIndex in edgesByFromNode) {
+	  var edge: Edge = edgesByFromNode[edgeIndex]!;
+          if (edge.fromNode == aNodeId || edge.toNode == aNodeId) {
+            continue;
+          }
+          newEdgesByFromNode.push(edge);
+	}
+	this.mEdgesByFromNode[nodeId] = newEdgesByFromNode
       }
-      this.mEdgesByFromNode[inodeId] = newEdgesByFromNode
     }
     if (aNodeId in this.mEdgesByFromNode) {
       delete this.mEdgesByFromNode[aNodeId];
     };
-
     for (var nodeId in this.mEdgesByToNode) {
-      var newEdgesByToNode: Edge[] = [];
-      for (var edge in this.mEdgesByToNode[nodeId]) {
-        if (edge.fromNode == aNodeId || edge.toNode == aNodeId) {
-          continue;
-        }
-        newEdgesByToNode.append(edge);
+      if (nodeId in this.mEdgesByToNode) {
+	var newEdgesByToNode: Edge[] = [];
+	var edgesByToNode: Edge[] = this.mEdgesByToNode[nodeId]!;
+	for (var edgeIndex in edgesByToNode) {
+	  var edge: Edge = edgesByToNode[edgeIndex]!;
+          if (edge.fromNode == aNodeId || edge.toNode == aNodeId) {
+            continue;
+          }
+          newEdgesByToNode.push(edge);
+	}
+	this.mEdgesByToNode[nodeId] = newEdgesByToNode
       }
-      this.mEdgesByToNode[inodeId] = newEdgesByToNode
     }
     if (aNodeId in this.mEdgesByToNode) {
       delete this.mEdgesByToNode[aNodeId];
     };
-    
     var edgesToRemove: EdgeId[] = [];
     for (var edgeId in this.mEdges) {
-      var edge: Edge = this.mEdges[edgeId];
+      var edge: Edge = this.mEdges[edgeId]!;
       if (edge.fromNode == aNodeId || edge.toNode == aNodeId) {
-        edgesToRemove.append(edgeId);
+        edgesToRemove.push(edgeId);
       }
-      for (edgeId in edgesToRemove) {
+      for (edgeIndex in edgesToRemove) {
+	var edgeId = edgesToRemove[edgeIndex]!;
         delete this.mEdges[edgeId];
       }
     }
-    delete this.mNodes[aNodeId]
+    delete this.mNodes[aNodeId];
   }
     
   public getNodes() : { [ key: string ] : Node } {
@@ -106,7 +117,7 @@ export class NodeGraph {
     aFromPort: PortId,
     aToNode: NodeId,
     aToPort: PortId
-  ) : Node | undefined {
+  ) : EdgeId | undefined {
     var connection: Edge = new Edge(
       aFromNode, aFromPort,
       aToNode, aToPort
@@ -117,13 +128,13 @@ export class NodeGraph {
     }
 
     if (aFromNode in this.mEdgesByFromNode) {
-      this.mEdgesByFromNode[aFromNode].push(connection);
+      this.mEdgesByFromNode[aFromNode]!.push(connection);
     }
     else {
       this.mEdgesByFromNode[aFromNode] = [ connection ];
     }
     if (aToNode in this.mEdgesByToNode) {
-      this.mEdgesByToNode[aToNode].push(connection);
+      this.mEdgesByToNode[aToNode]!.push(connection);
     }
     else {
       this.mEdgesByToNode[aToNode] = [ connection ];
@@ -132,35 +143,121 @@ export class NodeGraph {
     return id;
   }
   
+  public removeEdge(
+    aFromNode: NodeId,
+    aFromPort: PortId,
+    aToNode: NodeId,
+    aToPort: PortId
+  ) : void {
+    var tmpEdge = new Edge(
+      aFromNode, aFromPort,
+      aToNode, aToPort
+    );
+    var id: EdgeId = tmpEdge.getId();
+
+    if (aFromNode in this.mEdgesByFromNode) {
+      var edgesByFromNode: Edge[] = this.mEdgesByFromNode[aFromNode]!;
+      var newEdgesByFromNode: Edge[] = []
+      for (var edgeIndex in edgesByFromNode) {
+	var edge: Edge = edgesByFromNode[edgeIndex]!;
+	if (edge.getId() != id) {
+	  newEdgesByFromNode.push(edge);
+	}
+      }
+      this.mEdgesByFromNode[aFromNode] = newEdgesByFromNode;
+    }
+
+    if (aToNode in this.mEdgesByToNode) {
+      var edgesByToNode: Edge[] = this.mEdgesByToNode[aToNode]!;
+      var newEdgesByToNode: Edge[] = []
+      for (var edgeIndex in edgesByToNode) {
+	var edge: Edge = edgesByToNode[edgeIndex]!;
+	if (edge.getId() != id) {
+	  newEdgesByToNode.push(edge);
+	}
+      }
+      this.mEdgesByToNode[aToNode] = newEdgesByToNode;
+    }
+    delete this.mEdges[id];
+  }
+  private static emptyEdges: Edge[] = [];
+  
+  public getEdgesFrom(aNodeId: NodeId) : Edge[] {
+    if (aNodeId in this.mEdgesByFromNode) {
+      return this.mEdgesByFromNode[aNodeId]!;
+    }
+    else {
+      return NodeGraph.emptyEdges;
+    }
+  }
+  public getEdgesTo(aNodeId: NodeId) : Edge[] {
+    if (aNodeId in this.mEdgesByToNode) {
+      return this.mEdgesByToNode[aNodeId]!;
+    }
+    else {
+      return NodeGraph.emptyEdges;
+    }
+  }
+  public getEdges() : { [ key: EdgeId ] : Edge } {
+    return this.mEdges;
+  }
+  public getScopes() : NodeModule[] {
+    return this.mScopes;
+  }
+  public addScope(aNodeModule : NodeModule ) : void {
+    this.mScopes.push(aNodeModule);
+  }
+  public copyScope(aOther: NodeGraph) : void {
+    this.mScopes = [];
+    for (var scopeIndex in aOther.mScopes) {
+      this.mScopes.push(aOther.mScopes[scopeIndex]!);
+    }
+  }
+  public getNodeType(aNodeTypeId: NodeTypeId) : NodeType | undefined {
+    for (var scopeIndex in this.mScopes) {
+      var scope : NodeModule = this.mScopes[scopeIndex]!;
+      if (scope.hasNodeType(aNodeTypeId)) {
+	return scope.getNodeType(aNodeTypeId);
+      }
+    }
+    return undefined;
+  }
+  public getDataType(aDataTypeId: DataTypeId) : DataType | undefined {
+    for (var scopeIndex in this.mScopes) {
+      var scope : NodeModule = this.mScopes[scopeIndex]!;
+      if (scope.hasDataType(aDataTypeId)) {
+	return scope.getDataType(aDataTypeId);;
+      }
+    }
+    return undefined;    
+  }
+
+  public getNodeIds() : NodeId[] {
+    return Object.keys(this.mNodes);
+  }
+
+  public getNeighborNodeIds(aNodeId: NodeId) : NodeId[] {
+    var neighbors : NodeId[] = [];
+    var neighborMap : { [ key: NodeId ] : NodeId } = {};
+
+    // No edges means empty neighbor graph
+    if (!(aNodeId in this.mEdgesByFromNode)) {
+	return neighbors;
+    }
+    var edges: Edge[] = this.mEdgesByFromNode[aNodeId]!;
+    for (var edgeIndex in edges) {
+      var edge: Edge = edges[edgeIndex]!;
+      if (edge.toNode in neighborMap) continue;
+      neighbors.push(edge.toNode);
+      neighborMap[edge.toNode] = edge.toNode;
+    }
+
+    return neighbors;
+  }
+
+
 /*	    
-	    void removeEdge(
-		NodeId aFromNode,
-		PortId aFromPort,
-		NodeId aToNode,
-		PortId aToPort
-		);
-
-	    const std::vector<const Edge *> & getEdgesFrom(NodeId aNodeId) const;
-
-	    const std::vector<const Edge*> & getEdgesTo(NodeId aNodeId) const;
-
-	    const std::map<EdgeId, std::unique_ptr<Edge>> & getEdges() const;
-
-	    const std::vector<const NodeModule *> & getScopes() const;
-
-	    void addScope(const NodeModule * node_module);
-
-	    void copyScope(const NodeGraph *other);
-	    
-	    const NodeType * getNodeType(std::string aTypeName);
-	    const DataType * getDataType(std::string aTypeName);
-
-	    std::set<NodeId> getNodeIds(void) const;
-
-	    std::set<NodeId> getNeighborNodeIds(NodeId aNode) const;
-
 	    std::optional<std::vector<NodeId>> getNodeIdsInTopologicalOrder(void) const;
-	    
  */
   public getGroups() : { [ key: GroupId ] : Group } {
     return this.mGroups;
