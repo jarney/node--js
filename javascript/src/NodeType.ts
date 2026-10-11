@@ -1,3 +1,9 @@
+
+import { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions.ts"
+import { NamedPorts } from "./NamedPorts.ts";
+import { ConnectionData } from "./ConnectionData.ts";
+import { Metadata } from "./Metadata.ts";
+
 /**
  * This class represents a type of node in a node program.
  * Node types are characterized by a unique identifier.
@@ -14,39 +20,59 @@
  */
 
 export class NodeType {
-    mId: string;
+    mId: NodeTypeId;
     mVisibility: NodeType.Visibility;
     mType: Type;
-    mInputsByName: { [key: string] : string };
-    mOutputsByName: { [key: string] : string };
+    mInputs: NamedPorts;
+    mOutputs: NamedPorts;
+    mDefaultNodeData: ConnectionData;
+    mMetadata: Metadata;
 
     constructor() {
         this.mId = "";
         this.mVisibility = NodeType.Visibility.PRIVATE;
         this.mType = NodeType.Type.NATIVE;
-        this.mInputsByName = {};
-        this.mOutputsByName = {};
+        this.mInputs = new NamedPorts();
+        this.mOutputs = new NamedPorts();
+	this.mDefaultNodeData = new ConnectionData();
+	this.mMetadata = new Metadata();
     }
 
-    public getId(): string {
+    public getId(): NodeTypeId {
         return this.mId;
     }
 
-    public setId(aId: string) {
+    public setId(aId: NodeTypeId) {
         this.mId = aId;
     }
 
     public setVisibility(aVisibility: NodeType.Visibility) {
         this.mVisibility = aVisibility;
     }
-    public setType(aType: NodeType.Type) {
-        this.mType = aType;
-    }
     public getVisibility() : NodeType.Visibility {
         return this.mVisibility;
     }
+    public setType(aType: NodeType.Type) {
+        this.mType = aType;
+    }
     public getType() : NodeType.Type {
         return this.mType;
+    }
+    public getInputs() : NamedPorts {
+        return this.mInputs;
+    }
+    public getOutputs() : NamedPorts {
+        return this.mOutputs;
+    }
+    public getDefaultNodeData(): ConnectionData {
+        return this.mDefaultNodeData;
+    }
+    public setDefaultNodeData(aConnectionData: ConnectionData) {
+        this.mDefaultNodeData = new ConnectionData();
+	this.mDefaultNodeData.copy(aConnectionData);
+    }
+    public getMetadata() : Metadata {
+        return this.mMetadata;
     }
 }
 

@@ -1,3 +1,5 @@
+import {DataTypeId} from "./Definitions.ts"
+
 /**
  * A DataType in NodeJS represents the type of data
  * flowing along a connection between nodes.  The physical
@@ -5,15 +7,15 @@
  * name.  The implementation of the physical means of connection
  * is governed by the specific nodes and the implementing platform.
  */
-class DataType {
-    mId: string;
+export class DataType {
+    mId: DataTypeId;
     mName: string;
     /**
      * Cretes a new data type.
      * @param id Unique identifier
      * @param name Name which is human-readable.
      */
-    public constructor(aId: string, aName: string) {
+    public constructor(aId: DataTypeId, aName: string) {
         this.mId = aId;
 	this.mName = aName;
     }
@@ -27,7 +29,7 @@ class DataType {
     /**
      * Returns the unique identifier for this data type.
      */
-    public getId(): string {
+    public getId(): DataTypeId {
         return this.mId;
     }
 
@@ -49,4 +51,3 @@ class DataType {
     }
 }
 
-export { DataType };

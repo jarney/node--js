@@ -21,7 +21,7 @@ describe("NodePort", function(){
 	
 	expect.assert(nodePort.getDataType() == DATA_TYPE);
 	expect.assert(nodePort.getDescription() == DESCRIPTION);
-//	expect.assert(nodePort.getConnectionPolicy() == NodePort.ConnectionPolicy.One);
+	expect.assert(nodePort.getConnectionPolicy() == NodePort.ConnectionPolicy.One);
     });
 
     it("test_NodePort_explicit_one", function() {
@@ -50,6 +50,9 @@ describe("NodePort", function(){
 	expect.assert(metadata.hasMetadata("foo.bar.org"));
 	
 	cd.setValue("x", "some-value");
+	
+        // Javascript/TypeScript has no such thing as const-ness, so
+        // we don't worry about the rest of this test
 	// Check that we can make a const-version of this.
 	//const NodePort & constNodePort = nodePort;
 	//const Metadata & constMetadata = constNodePort.getMetadata();

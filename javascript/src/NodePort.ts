@@ -34,7 +34,7 @@ export class NodePort {
      *               connection is permitted or whether
      *               multiple connections can be supported.
      */
-    constructor(aDataType: string, aDescription: string, aConnectionPolicy: NodePort.ConnectionPolicy) {
+    constructor(aDataType: string, aDescription: string, aConnectionPolicy: NodePort.ConnectionPolicy = NodePort.ConnectionPolicy.One) {
         this.mDataType = aDataType;
         this.mDescription = aDescription;
         this.mConnectionPolicy = aConnectionPolicy;
@@ -76,28 +76,28 @@ export class NodePort {
 }
 
 export namespace NodePort {
-/**
- * Connection policy for a port.  This determines
- * how many connections are permitted.  A port
- * may support only a single connection and may
- * support multiple connections.  It is up to
- * the node to decide how many connections are
- * reasonable and appropriate.  Note that when
- * data is carried along a connection, if there
- * are multiple connections, the order of processing
- * or arrival may not be predictable.
- */
-export enum ConnectionPolicy {
     /**
-     * This value indicates that the port supports only
-     * a single connection.
+     * Connection policy for a port.  This determines
+     * how many connections are permitted.  A port
+     * may support only a single connection and may
+     * support multiple connections.  It is up to
+     * the node to decide how many connections are
+     * reasonable and appropriate.  Note that when
+     * data is carried along a connection, if there
+     * are multiple connections, the order of processing
+     * or arrival may not be predictable.
      */
-    One = 0,
-    /**
-     * This value indicates that the port supports
-     * multiple connections.
-     */
-    Multiple = 1
-};
+    export enum ConnectionPolicy {
+        /**
+         * This value indicates that the port supports only
+         * a single connection.
+         */
+        One = 0,
+        /**
+         * This value indicates that the port supports
+         * multiple connections.
+         */
+        Multiple = 1
+    };
 
 };
