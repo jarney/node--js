@@ -4,6 +4,8 @@ if [ $# -ne 1 ] ; then
     exit 1
 fi
 
+export LC_ALL=C.UTF-8
+
 CMAKE_PROJECT_DIRECTORY=$1
 #echo "Directory:"
 #echo ${CMAKE_PROJECT_DIRECTORY}
@@ -28,7 +30,7 @@ cat ${CMAKE_PROJECT_DIRECTORY}/python/test/*.py | \
     sort > ${CMAKE_PROJECT_DIRECTORY}/build/tests-py.txt
 
 # All JS test cases
-cat ${CMAKE_PROJECT_DIRECTORY}/javascript/test/*.ts | \
+cat ${CMAKE_PROJECT_DIRECTORY}/javascript/test/*.spec.ts | \
     grep 'test_' | \
     grep -v '_js_specific'| \
     grep -v '^//' | \
