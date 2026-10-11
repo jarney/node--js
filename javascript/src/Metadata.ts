@@ -27,8 +27,8 @@ export class Metadata {
     }
     public getNamespaces(): [string] {
         var ret = [];
-	for (var n in this.metadata) {
-	    ret.append(n);
+	for (var n in this.mMetadata) {
+	    ret.push(n);
 	}
 	return ret;
     }

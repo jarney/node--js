@@ -7,6 +7,9 @@
   "exclude": [],
 
   "compilerOptions": {
+      "module": "commonjs",
+      "sourceMap": true,
+      "target": "es2015",
     // Vitest runs in a different environment than the application code.
     // Adjust lib and types accordingly.
     "lib": [],
