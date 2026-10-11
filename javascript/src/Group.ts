@@ -1,4 +1,4 @@
-import {GroupId, NodeId} from "./Definitions.ts"
+import type {GroupId, NodeId} from "./Definitions.ts"
 
 /**
  * A DataType in NodeJS represents the type of data
@@ -8,25 +8,25 @@ import {GroupId, NodeId} from "./Definitions.ts"
  * is governed by the specific nodes and the implementing platform.
  */
 export class Group {
-    mNodes: { [key: NodeId ] : NodeId };
-
-    constructor() {
-        this.mNodes = {}
+  mNodes: { [key: NodeId ] : NodeId };
+  
+  constructor() {
+    this.mNodes = {}
+  }
+  public addNode(aNodeId: NodeId) {
+    this.mNodes[aNodeId] = aNodeId;
+  }
+  public removeNode(aNodeId: NodeId) {
+    delete this.mNodes[aNodeId];
+  }
+  public getNodes(): NodeId[] {
+    var nodes: NodeId[] = [];
+    for (const node in this.mNodes) {
+      nodes.push(node);
     }
-    public addNode(aNodeId: NodeId) {
-        this.mNodes[aNodeId] = aNodeId;
-    }
-    public removeNode(aNodeId: NodeId) {
-        delete this.mNodes[aNodeId];
-    }
-    public getNodes(): [ NodeId ] {
-        var nodes: [ NodeId ] = [];
-	for (const node in this.mNodes) {
-	    nodes.push(node);
-	}
-	return nodes;
-    }
-    public contains(aNodeId: NodeId): boolean {
-        return aNodeId in this.mNodes;
-    }
+    return nodes;
+  }
+  public contains(aNodeId: NodeId): boolean {
+    return aNodeId in this.mNodes;
+  }
 }

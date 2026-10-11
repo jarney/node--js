@@ -11,25 +11,25 @@ import { ConnectionData } from "./ConnectionData.ts";
  * nodes will agree on an encoding so that they can inter-operate.
  */
 export class Metadata {
-    mMetadata: {};
-
-    constructor() {
-        this.mMetadata = {};
+  mMetadata: { [ key: string] : ConnectionData };
+  
+  constructor() {
+    this.mMetadata = {};
+  }
+  public getMetadata(aMetadataNamespace: string ) : ConnectionData {
+    if (!(aMetadataNamespace in this.mMetadata)) {
+      this.mMetadata[aMetadataNamespace] = new ConnectionData();
     }
-    public getMetadata(aMetadataNamespace: string ) : ConnectionData {
-        if (!(aMetadataNamespace in this.mMetadata)) {
-            this.mMetadata[aMetadataNamespace] = new ConnectionData();
-	}
-        return this.mMetadata[aMetadataNamespace];	
+    return this.mMetadata[aMetadataNamespace]!;
+  }
+  public hasMetadata(aMetadataNamespace: string) : boolean {
+    return aMetadataNamespace in this.mMetadata;
+  }
+  public getNamespaces(): string[] {
+    var ret = [];
+    for (var n in this.mMetadata) {
+      ret.push(n);
     }
-    public hasMetadata(aMetadataNamespace: string) : boolean {
-        return aMetadataNamespace in this.mMetadata;
-    }
-    public getNamespaces(): [string] {
-        var ret = [];
-	for (var n in this.mMetadata) {
-	    ret.push(n);
-	}
-	return ret;
-    }
+    return ret;
+  }
 };

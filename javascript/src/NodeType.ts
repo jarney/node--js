@@ -1,5 +1,5 @@
 
-import { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions.ts"
+import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions.ts"
 import { NamedPorts } from "./NamedPorts.ts";
 import { ConnectionData } from "./ConnectionData.ts";
 import { Metadata } from "./Metadata.ts";
@@ -22,7 +22,7 @@ import { Metadata } from "./Metadata.ts";
 export class NodeType {
     mId: NodeTypeId;
     mVisibility: NodeType.Visibility;
-    mType: Type;
+    mType: NodeType.Type;
     mInputs: NamedPorts;
     mOutputs: NamedPorts;
     mDefaultNodeData: ConnectionData;

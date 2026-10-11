@@ -1,54 +1,89 @@
-import {DataType} from './DataType.ts'
-import {NodeType} from './NodeType.ts'
+import {DataType} from "./DataType.ts"
+import {NodeType} from "./NodeType.ts"
+import {Metadata} from "./Metadata.ts";
+import {NodeGraph} from "./NodeGraph.ts";
+import type {ModuleLoader} from "./ModuleLoader.ts";
 
-
-class NodeModule {
-      mPackage: string = "";
-      mDataTypes: { [key: string]: DataType } = {};
-      mNodeTypes: { [key: string]: NodeType } = {};
-
-      constructor() {
-          this.mPackage = "";
-	  this.mDataTypes = {};
-	  this.mNodeTypes = {};
-      }
-      public setPackage(aPackage: string) {
-          this.mPackage = aPackage;
-      }
-      public getPackage() : string {
-          return this.mPackage;
-      }
-      public addDataType(aDataType: DataType) {
-          if (aDataType.getId() in this.mDataTypes) return;
-          this.mDataTypes[aDataType.getId()] = aDataType;
-      }
-      public removeDataType(aId: string) {
-          delete this.mDataTypes[aId];
-      }
-/*
-    def getDataTypes(self):
-        return self.dataTypes
-
-    def hasDataType(self, id):
-        return (id in self.dataTypes)
-
-    def getDataType(self, id):
-        return self.dataTypes[id]
-
-    def addNodeType(self, nodeType: NodeType):
-        self.nodeTypes[nodeType.getId()] = nodeType
-
-    def getNodeTypes(self):
-        return self.nodeTypes;
-
-    def hasNodeType(self, id):
-        return (id in self.nodeTypes)
-
-    def getNodeType(self, id):
-        return self.nodeTypes[id]
-    
-*/
-
+export class NodeModule {
+  mPackage: string = "";
+  mDescription: string = ""
+  mModuleLoader: ModuleLoader;
+  mDataTypes: { [key: string]: DataType } = {};
+  mNodeTypes: { [key: string]: NodeType } = {};
+  mGraphs: { [ key: string ] : NodeGraph } = {};
+  mMetadata: Metadata;
+  
+  constructor(
+    aModuleLoader: ModuleLoader
+  ) {
+    this.mPackage = "";
+    this.mDescription = "";
+    this.mModuleLoader = aModuleLoader;
+    this.mDataTypes = {};
+    this.mNodeTypes = {};
+    this.mGraphs = {};
+    this.mMetadata = new Metadata();
+  }
+  public setPackage(aPackage: string) {
+    this.mPackage = aPackage;
+  }
+  public getPackage() : string {
+    return this.mPackage;
+  }
+  public setDescription(aDescription: string) {
+    this.mDescription = aDescription;
+  }
+  public getDescription() : string {
+    return this.mDescription;
+  }
+  public getModuleLoader() : ModuleLoader {
+    return this.mModuleLoader;
+  }
+  public addDataType(aDataType: DataType) {
+    if (aDataType.getId() in this.mDataTypes) return;
+    this.mDataTypes[aDataType.getId()] = aDataType;
+  }
+  public removeDataType(aId: string) {
+    delete this.mDataTypes[aId];
+  }
+  public getDataTypes() : { [key: string]: DataType } {
+    return this.mDataTypes;
+  }
+  public hasDataType(id: string) : boolean {
+    return (id in this.mDataTypes);
+  }
+  public getDataType(id: string) : DataType | undefined {
+    return this.mDataTypes[id];
+  }
+  public addNodeType(nodeType: NodeType) {
+    this.mNodeTypes[nodeType.getId()] = nodeType;
+  }
+  public getNodeTypes() : { [key: string]: NodeType } {
+    return this.mNodeTypes;
+  }
+  public hasNodeType(id: string) : boolean {
+    return (id in this.mNodeTypes);
+  }
+  public getNodeType(id: string) : NodeType | undefined {
+    return this.mNodeTypes[id];
+  }
+  public addGraph(id: string) : NodeGraph | undefined {
+    if (id in this.mGraphs) {
+      return undefined;
+    }
+    var g = new NodeGraph(this);
+    this.mGraphs[id] = g;
+    return g;
+  }
+  public getGraph(id: string) : NodeGraph | undefined {
+    return this.mGraphs[id];
+  }
+  public getGraphs() : { [ key: string ] : NodeGraph } {
+    return this.mGraphs;
+  }
+  public getMetadata() : Metadata {
+    return this.mMetadata;
+  }
 }
 
 

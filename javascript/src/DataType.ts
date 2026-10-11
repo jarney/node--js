@@ -1,4 +1,4 @@
-import {DataTypeId} from "./Definitions.ts"
+import type {DataTypeId} from "./Definitions.ts"
 
 /**
  * A DataType in NodeJS represents the type of data

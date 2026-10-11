@@ -3,8 +3,8 @@ import { NodePort } from "./NodePort.ts";
 
 export class NamedPorts {
     mPortsByName: { [ key: string]: NodePort };
-    mPorts: [ NodePort ];
-    mPortNames: [ string ];
+    mPorts: NodePort[];
+    mPortNames: string[];
        
     constructor() {
         this.mPortsByName = {};
@@ -20,18 +20,18 @@ export class NamedPorts {
 	this.mPortNames.push(name);
 	return true;
     }
-    public getByName(name: string) : NodePort {
+    public getByName(name: string) : NodePort | undefined {
         return this.mPortsByName[name];
     }
-    public getByIndex(index: number) : NodePort {
+    public getByIndex(index: number) : NodePort | undefined {
         return this.mPorts[index];
     }
     public hasPort(name: string) : boolean {
         return name in this.mPortsByName;
     }
-    public getName(index: number) : string {
+    public getName(index: number) : string  {
         if (index >= 0 && index < this.mPortNames.length) {
-            return this.mPortNames[index];
+            return this.mPortNames[index]!;
         }
 	return "";
     }
