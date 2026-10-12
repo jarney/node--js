@@ -17,6 +17,26 @@
 </template>
 
 <script setup lang="ts">
+import {ModuleLoaderNodeJSPath} from "../xml/ModuleLoaderNodeJSPath.ts";
+import type {SerializerErrorReporter} from "../SerializerError.ts";
+import {SerializerErrorReporterStream} from "../SerializerError.ts";
+
+//const response = await fetch("org.ensor.nodejs.openscad.xml");
+//console.log(response);
+//var xmlString: string = await response.text();
+//console.log("Fetched HTTP data");
+//console.log(xmlString);
+//const parser = new DOMParser();
+//const doc1 = parser.parseFromString(xmlString, "application/xml");
+//console.log(doc1.contentType); // "application/xml"
+//console.log(doc1);
+
+const err: SerializerErrorReporter = new SerializerErrorReporterStream();
+const loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+loader.addPath("");
+await loader.loadModule("org.ensor.nodejs.openscad", err);
+
+
 import { defineNode, NodeInterface } from "@baklavajs/core";
 import { BaklavaEditor, useBaklava, NumberInterface, SelectInterface } from "@baklavajs/renderer-vue";
 import "@baklavajs/themes/dist/syrup-dark.css";
