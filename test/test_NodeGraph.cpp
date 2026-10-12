@@ -166,6 +166,21 @@ TEST_CASE("test_NodeGraph_topological_sort_cycle_detection", "[NodeJS][core][Nod
     CHECK(!maybeNodesSorted.has_value());    
 }
 
+TEST_CASE("test_NodeGraph_topological_sort_self_cycle", "[NodeJS][core][NodeGraph][Algorithms]")
+{
+    ModuleLoaderNodeJSPath loader;
+    NodeModule & nodeModule = *loader.newModule("anonymous");
+    NodeGraph &graph = *nodeModule.addGraph("main");
+    NodeType plain;
+    
+    graph.newNode(plain, "C");
+    
+    graph.newEdge("C", "x", "C", "x");
+    
+    std::optional<std::vector<NodeId>> maybeNodesSorted = graph.getNodeIdsInTopologicalOrder();
+    CHECK(!maybeNodesSorted.has_value());    
+}
+
 TEST_CASE("test_NodeGraph_getModule", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;

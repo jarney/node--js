@@ -277,14 +277,14 @@ export class NodeGraph {
     var state: { [ key: NodeId ] : number } = {};
     var nodeIds: NodeId[] = this.getNodeIds();
     for (var nodeIndex in nodeIds) {
-      var nodeId: NodeId = nodeIds[nodeIndex];
+      var nodeId: NodeId = nodeIds[nodeIndex]!;
       state[nodeId] = NodeGraph.TOPOSORT_STATE_TODO;
     }
 
     var order: NodeId[] = [];
 
     for (var startIndex in nodeIds) {
-      var start: NodeId = nodeIds[startIndex]
+      var start: NodeId = nodeIds[startIndex]!;
       console.log("Start index is " + startIndex + " node " + start);
       if (state[start] != NodeGraph.TOPOSORT_STATE_TODO) {
 	continue;
@@ -294,7 +294,7 @@ export class NodeGraph {
 
       while (stack.length > 0) {
 	console.log("stack is ", stack);
-	var pair: StackEntry = stack.pop();
+	var pair: StackEntry = stack.pop()!;
 
 	var node: NodeId = pair.nodeId;
 	var processed: boolean = pair.processed;
@@ -320,7 +320,7 @@ export class NodeGraph {
 
 	var neighborNodeIds: NodeId[] = this.getNeighborNodeIds(node);
 	for ( var neighborNodeIndex in neighborNodeIds) {
-	  var neighborNodeId = neighborNodeIds[neighborNodeIndex];
+	  var neighborNodeId = neighborNodeIds[neighborNodeIndex]!;
 	  console.log("Considering neighbor ", neighborNodeId);
 	  console.log("Neighbor states: ", state);
 	  if (state[neighborNodeId] == NodeGraph.TOPOSORT_STATE_IN_PROGRESS) {
