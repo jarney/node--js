@@ -29,7 +29,8 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
     
     for (var pathIndex in this.mPath) {
       var pathEl: string = this.mPath[pathIndex]!;
-      const response = await fetch(aFullyQualifiedModuleName + ".xml");
+      var filename: string = aFullyQualifiedModuleName + ".xml";
+      const response = await fetch(filename);
       console.log(response);
       var xmlString: string;
       xmlString = await response.text();
@@ -39,7 +40,7 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
 
       var serializer: SerializerXML = new SerializerXML();
       newModule = this.newModule(aFullyQualifiedModuleName);
-      var success: boolean = serializer.read(xmlString, newModule, reporter);
+      var success: boolean = serializer.read(filename, xmlString, newModule, reporter);
       if (success) break;
 
       newModule = undefined;
