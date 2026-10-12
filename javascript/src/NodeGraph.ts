@@ -8,6 +8,16 @@ import {ConnectionData} from "./ConnectionData.ts";
 import {NodeModule} from "./NodeModule.ts";
 import {Metadata} from "./Metadata.ts";
 
+class StackEntry {
+  public nodeId: NodeId;
+  public processed: boolean;
+  
+  constructor(aNodeId: NodeId, aProcessed: boolean) {
+    this.nodeId = aNodeId;
+    this.processed = aProcessed;
+  }
+}
+  
 export class NodeGraph {
   mModule: NodeModule;
   mNodes: { [ key: NodeId ] : Node };
@@ -254,11 +264,84 @@ export class NodeGraph {
 
     return neighbors;
   }
+  
 
+  // Useful for states in the
+  // topological sort algorithm used
+  // to unwind the dependency order.
+  private static TOPOSORT_STATE_TODO: number = 0;
+  private static TOPOSORT_STATE_IN_PROGRESS: number = 1;
+  private static TOPOSORT_STATE_PROCESSED: number = 2;
 
-/*	    
-	    std::optional<std::vector<NodeId>> getNodeIdsInTopologicalOrder(void) const;
- */
+  public getNodeIdsInTopologicalOrder() : NodeId[] | undefined {
+    var state: { [ key: NodeId ] : number } = {};
+    var nodeIds: NodeId[] = this.getNodeIds();
+    for (var nodeIndex in nodeIds) {
+      var nodeId: NodeId = nodeIds[nodeIndex];
+      state[nodeId] = NodeGraph.TOPOSORT_STATE_TODO;
+    }
+
+    var order: NodeId[] = [];
+
+    for (var startIndex in nodeIds) {
+      var start: NodeId = nodeIds[startIndex]
+      console.log("Start index is " + startIndex + " node " + start);
+      if (state[start] != NodeGraph.TOPOSORT_STATE_TODO) {
+	continue;
+      }
+      var stack: StackEntry[] = [];
+      stack.push(new StackEntry(start, false));
+
+      while (stack.length > 0) {
+	console.log("stack is ", stack);
+	var pair: StackEntry = stack.pop();
+
+	var node: NodeId = pair.nodeId;
+	var processed: boolean = pair.processed;
+
+	if (processed) {
+	  console.log("added " + node + " to order");
+	  state[node] = NodeGraph.TOPOSORT_STATE_PROCESSED;
+	  order.push(node);
+	  continue;
+	}
+	if (state[node] == NodeGraph.TOPOSORT_STATE_PROCESSED) {
+	  continue;
+	}
+	if (state[node] == NodeGraph.TOPOSORT_STATE_IN_PROGRESS) {
+	  // Graph contains a cycle.
+	  console.log("Returning toposort as undefined(1)");
+	  return undefined;
+	}
+	
+	state[node] = NodeGraph.TOPOSORT_STATE_IN_PROGRESS;
+	stack.push(new StackEntry(node, true));
+	console.log("Stack after processing is", stack);
+
+	var neighborNodeIds: NodeId[] = this.getNeighborNodeIds(node);
+	for ( var neighborNodeIndex in neighborNodeIds) {
+	  var neighborNodeId = neighborNodeIds[neighborNodeIndex];
+	  console.log("Considering neighbor ", neighborNodeId);
+	  console.log("Neighbor states: ", state);
+	  if (state[neighborNodeId] == NodeGraph.TOPOSORT_STATE_IN_PROGRESS) {
+	    // Graph contains a cycle.
+	    console.log("Returning toposort as undefined(2)");
+	    return undefined;
+	  }
+	  if (state[neighborNodeId] == NodeGraph.TOPOSORT_STATE_TODO) {
+	    var newEntry: StackEntry = new StackEntry(neighborNodeId, false);
+	    console.log("Adding another entry to the stack: ", newEntry);
+	    stack.push(newEntry);
+	  }
+	}
+      }
+    }
+    order = order.reverse();
+    console.log("Returning toposort");
+    console.log(order);
+    return order;
+  }
+
   public getGroups() : { [ key: GroupId ] : Group } {
     return this.mGroups;
   }
