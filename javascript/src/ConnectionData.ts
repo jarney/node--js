@@ -17,7 +17,11 @@ export class ConnectionData {
   }
 
   public appendValue(key: string, value: string) {
-    this.mData[key] = this.mData[key] + value;
+    var oldData = "";
+    if (key in this.mData) {
+      oldData = this.mData[key]!;
+    }
+    this.mData[key] = oldData + value;
   }
 
   public getValue(key: string, default_value: string = ""): string {
