@@ -1,73 +1,82 @@
 
-function countNewlines(str: string) : number {
-  var newlines: number = 0;
-  for (var i = 0; i < str.length; i++) {
-    if (str[i] == '\n') {
-      newlines = newlines + 1;
-    }
-  }
-  return newlines;
-}
+export class DomUtils {
 
-// Line numbers are approximate
-// because we can't actually get an accurate
-// line number for element nodes if they
-// span more than one line.
-function countLinesUntil(parent: Node, target: Element, currentCount: number) : number {
-  for (var child of parent.childNodes) {
-    if (child.nodeType == ELEMENT_NODE) {
-      var childElement: Element = child as Element;
-      if (target == childElement) {
-	return -currentCount;
+  private static countNewlines(str: string) : number {
+    var newlines: number = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] == '\n') {
+	newlines = newlines + 1;
+      }
+    }
+    return newlines;
+  }
+  
+  // Line numbers are approximate
+  // because we can't actually get an accurate
+  // line number for element nodes if they
+  // span more than one line.
+  private static countLinesUntil(parent: Node, target: Element, currentCount: number) : number {
+    for (var child of parent.childNodes) {
+      if (child.nodeType == DomUtils.NodeType.ELEMENT_NODE) {
+	var childElement: Element = child as Element;
+	if (target == childElement) {
+	  return -currentCount;
+	}
+	else {
+	  var newCount = DomUtils.countLinesUntil(child, target, currentCount);
+	  if (newCount < 0) {
+	    return newCount;
+	  }
+	  currentCount = newCount;
+	}
+      }
+      else if (child.nodeType == DomUtils.NodeType.TEXT_NODE) {
+	var childText: Text = child as Text;
+	currentCount = currentCount + DomUtils.countNewlines(childText.data);
+      }
+      else if (child.nodeType == DomUtils.NodeType.COMMENT_NODE) {
+	var childComment: Comment = child as Comment;
+	currentCount = currentCount + DomUtils.countNewlines(childComment.data);
       }
       else {
-	var newCount = countLinesUntil(child, target, currentCount);
-	if (newCount < 0) {
-	  return newCount;
-	}
-	currentCount = newCount;
+	console.log("Unhandled node type " + child.nodeType);
+	console.log(child);
       }
     }
-    else if (child.nodeType == TEXT_NODE) {
-      var childText: Text = child as Text;
-      currentCount = currentCount + countNewlines(childText.data);
-    }
-    else if (child.nodeType == COMMENT_NODE) {
-      var childComment: Comment = child as Comment;
-      currentCount = currentCount + countNewlines(childComment.data);
-    }
-    else {
-      console.log("Unhandled node type " + child.nodeType);
-      console.log(child);
-    }
+    return currentCount;
   }
-  return currentCount;
+  public static getElementLineno(parent: any, target: Element) : number {
+    return -DomUtils.countLinesUntil(parent as Node, target, 1) + 1;
+  }
+
+  public static getChildrenByTagName(parent: ChildNode, tagName: string) : Element[] {
+    var children: Element[] = [];
+    for (var child of parent.childNodes) {
+      if (child.nodeType == DomUtils.NodeType.ELEMENT_NODE) {
+	var childElement: Element = child as Element;
+	if (childElement.tagName == tagName) {
+	  children.push(childElement);
+	}
+      }
+    }
+    return children;
+  }
 }
-function getElementLineno(parent: any, target: Element) : number {
-  return -countLinesUntil(parent as Node, target, 1) + 1;
+
+export namespace DomUtils {
+  /**
+   * This enum represents different types of DOM
+   * elements in an XML document.
+   */
+  export enum NodeType {
+    ELEMENT_NODE = 1,
+    ATTRIBUTE_NODE = 2,
+    TEXT_NODE = 3,
+    CDATA_SECTION_NODE = 4,
+    PROCESSING_INSTRUCTION_NODE = 7,
+    COMMENT_NODE = 8,
+    DOCUMENT_NODE = 9,
+    DOCUMENT_TYPE_NODE = 10,
+    DOCUMENT_FRAGMENT_NODE = 11
+  };
 }
-
-const ELEMENT_NODE: number = 1;
-const ATTRIBUTE_NODE: number = 2;
-const TEXT_NODE: number = 3;
-const CDATA_SECTION_NODE: number = 4;
-const PROCESSING_INSTRUCTION_NODE: number = 7;
-const COMMENT_NODE: number = 8;
-const DOCUMENT_NODE: number = 9;
-const DOCUMENT_TYPE_NODE: number = 10;
-const DOCUMENT_FRAGMENT_NODE: number = 11;
-
-export {
-  getElementLineno,
-  ELEMENT_NODE,
-  ATTRIBUTE_NODE,
-  TEXT_NODE,
-  CDATA_SECTION_NODE,
-  PROCESSING_INSTRUCTION_NODE,
-  COMMENT_NODE,
-  DOCUMENT_NODE,
-  DOCUMENT_TYPE_NODE,
-  DOCUMENT_FRAGMENT_NODE
-};
-
-

@@ -7,9 +7,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       coverage: {
-          enabled: true,
-          include: ['src/*.ts'],
-          provider: 'v8'
+        enabled: true,
+        include: ['src/**/*.ts'],
+        provider: 'v8',
+	reporter: ['html', 'text', 'json']
       },
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/**'],

@@ -6,7 +6,7 @@
     - mimic the OpenSCAD declaration language.  With a suitable
     - node processor, it is possible to convert programs
     - in OpenSCAD to NodeJS language and vice-versa.
-    -->
+  -->
   <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins"/>
 
   <metadata>

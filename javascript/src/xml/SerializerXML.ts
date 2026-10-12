@@ -1,55 +1,53 @@
+import type {SerializerErrorReporter} from "../SerializerError.ts";
+
 import {NodeModule} from "../NodeModule.ts";
 import {DataType} from "../DataType.ts";
 import {NodeType} from "../NodeType.ts";
 import {Node} from "../Node.ts";
-import type {SerializerErrorReporter} from "../SerializerError.ts";
-import {getElementLineno,
-  ELEMENT_NODE,
-  ATTRIBUTE_NODE,
-  TEXT_NODE,
-  CDATA_SECTION_NODE,
-  PROCESSING_INSTRUCTION_NODE,
-  COMMENT_NODE,
-  DOCUMENT_NODE,
-  DOCUMENT_TYPE_NODE,
-  DOCUMENT_FRAGMENT_NODE
-} from "./DomUtils.ts";
-
-// Data types need to be read before node types
-// even if they appear later in the file.
-
-function getChildren(parent: ChildNode, tagName: string) : Element[] {
-  var children: Element[] = [];
-  for (var child of parent.childNodes) {
-    if (child.nodeType == ELEMENT_NODE) {
-      var childElement: Element = child as Element;
-      if (childElement.tagName == tagName) {
-	children.push(childElement);
-      }
-    }
-  }
-  return children;
-}
-
-const SERIALIZER_ERROR_BAD_DATA_TYPE: number = 1000;
-const SERIALIZER_ERROR_BAD_NODE_TYPE: number = 2000;
+import {SerializerErrorCode, SerializerErrorReporterNil} from "../SerializerError.ts";
+import {DomUtils} from "./DomUtils.ts";
 
 export class SerializerXML {
   mRoot: any;
   mFilename: string;
+  mReporter: SerializerErrorReporter;
   
   constructor() {
     this.mRoot = undefined;
     this.mFilename = "unknown";
+    this.mReporter = new SerializerErrorReporterNil();
+  }
+
+  public parseError(error_code: number, element: Element, message: string): boolean {
+    var lineno: number = DomUtils.getElementLineno(this.mRoot, element);
+    this.mReporter.reportError(error_code, lineno, this.mFilename, message);
+    return false;
+  }
+  public parsePackage(packageElement: Element, nodeModule: NodeModule) : boolean {
+    var id: string | null = packageElement.getAttribute("id");
+    if (id == null) {
+      return this.parseError(SerializerErrorCode.PACKAGE_ID_MISSING, packageElement, "Package element is missing the 'id' element.");
+    }
+    if (id != this.mFilename) {
+      return this.parseError(SerializerErrorCode.PACKAGE_ID_INCONSISTENT, packageElement, "Package id should be the same as the file it was loaded from.");
+    }
+    nodeModule.setPackage(id!);
+
+    // The package description is optional.
+    var description: string | null = packageElement.getAttribute("description");
+    if (description != null) {
+      nodeModule.setDescription(description!);
+    }
+
+    return true;
   }
   
-  private parseDataType(dataTypeNode: Element, nodeModule: NodeModule, reporter: SerializerErrorReporter) {
+  
+  private parseDataType(dataTypeNode: Element, nodeModule: NodeModule) : boolean {
     var id: string | null = dataTypeNode.getAttribute("id");
     var name: string | null = dataTypeNode.getAttribute("name");
     if (id == null || name == null) {
-      var lineno: number = getElementLineno(this.mRoot, dataTypeNode);
-      reporter.reportError(SERIALIZER_ERROR_BAD_DATA_TYPE, lineno, this.mFilename, "Missing id or name for data type");
-      return false;
+      return this.parseError(SerializerErrorCode.BAD_DATA_TYPE, dataTypeNode, "Missing id or name for data type");
     }
     
     var dataType: DataType = new DataType(id!, name!);
@@ -64,30 +62,37 @@ export class SerializerXML {
     nodeModule: NodeModule,
     reporter: SerializerErrorReporter
   ) : boolean {
-    //console.log("Fetched HTTP data");
-    //console.log(xmlString);
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "application/xml");
+
     this.mRoot = doc;
     this.mFilename = aFilename;
+    this.mReporter = reporter;
 
-    //console.log(xmlString);
     const root = doc.documentElement;
 
-    for (var packageNode of getChildren(root, "package")) {
-      var lineno: number = getElementLineno(doc, packageNode);
-      console.log("Package at line " + lineno);
+    var packageCount = 0;
+    for (var packageElement of DomUtils.getChildrenByTagName(root, "package")) {
+      if (!this.parsePackage(packageElement, nodeModule)) return false;
+      if (packageCount > 1) {
+	return this.parseError(SerializerErrorCode.PACKAGE_DUPLICATE, packageElement,
+	  "Too many package declarations.  There should only be a single package declaration in a module.");
+      }
+      packageCount++;
     }
-    
-    for (var dataTypesNode of getChildren(root, "data-types")) {
-      for (var dataTypeNode of getChildren(dataTypesNode, "data-type")) {
-	if (!this.parseDataType(dataTypeNode, nodeModule, reporter)) {
-	  return false;
-	}
+    if (packageCount < 1) {
+      return this.parseError(SerializerErrorCode.PACKAGE_MISSING, root,
+	"Package declaration missing.  Module must contain a <package id='...'/> element.");
+    }
+
+    // Data types need to be read before node types
+    // even if they appear later in the file.
+    for (var dataTypesNode of DomUtils.getChildrenByTagName(root, "data-types")) {
+      for (var dataTypeNode of DomUtils.getChildrenByTagName(dataTypesNode, "data-type")) {
+	if (!this.parseDataType(dataTypeNode, nodeModule)) return false;
       }
     }
-    console.log(doc);
-    console.log(nodeModule);
     return true;
   }
 }
+

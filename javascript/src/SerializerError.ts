@@ -1,6 +1,28 @@
 
-type SerializerErrorCode = number;
-	
+export enum SerializerErrorCode {
+  // Package-level errors
+  PACKAGE_DUPLICATE = 1000,
+  PACKAGE_MISSING = 1001,
+  PACKAGE_ID_MISSING = 1002,
+  PACKAGE_ID_INCONSISTENT = 1003,
+  
+  // Data-type level errors
+  BAD_DATA_TYPE = 2000,
+
+  // Node type level errors
+  BAD_NODE_TYPE = 3000,
+
+  // Graph level errors
+  BAD_GRAPH = 4000,
+
+  // Node-level errors
+  BAD_NODE = 5000,
+
+  // Edge-level errors
+  BAD_EDGE = 6000
+  
+};
+
 export interface SerializerErrorReporter {
   reportError(
     error_code: SerializerErrorCode,
@@ -28,7 +50,7 @@ class SerializerError {
   }
 }
 
-class SerializerErrorReporterStream implements SerializerErrorReporter {
+export class SerializerErrorReporterStream implements SerializerErrorReporter {
   constructor() {
   }
   
@@ -43,12 +65,12 @@ class SerializerErrorReporterStream implements SerializerErrorReporter {
   }
 }
 
-class SerializerErrorReporterByCode implements SerializerErrorReporter {
+export class SerializerErrorReporterByCode implements SerializerErrorReporter {
   mErrorsByCode: { [key: string] : SerializerError[] };
   constructor() {
     this.mErrorsByCode = {};
   }
-  reportError(
+  public reportError(
     error_code: SerializerErrorCode,
     lineno: number,
     file_context: string,
@@ -62,6 +84,21 @@ class SerializerErrorReporterByCode implements SerializerErrorReporter {
       this.mErrorsByCode[error_code] = [ err ];
     }
   }
+  public hasErrorCode(code: SerializerErrorCode) : boolean {
+    return (code in this.mErrorsByCode);
+  }
+  public hasError() : boolean {
+    return Object.keys(this.mErrorsByCode).length > 0;
+  }
 }
 
-export { SerializerErrorReporterStream, SerializerErrorReporterByCode };
+export class SerializerErrorReporterNil implements SerializerErrorReporter {
+  reportError(
+    error_code: SerializerErrorCode,
+    lineno: number,
+    file_context: string,
+    error: string
+  ) : void {
+    // Nil reporter does nothing.
+  }
+}
