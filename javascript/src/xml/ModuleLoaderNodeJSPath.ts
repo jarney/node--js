@@ -23,7 +23,7 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
   public async loadModule(
     aFullyQualifiedModuleName: string,
     reporter: SerializerErrorReporter
-  ) : NodeModule | undefined {
+  ) : Promise<NodeModule | undefined> {
 
     var newModule: NodeModule | undefined;
     

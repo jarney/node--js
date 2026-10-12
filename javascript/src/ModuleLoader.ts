@@ -5,7 +5,7 @@ export interface ModuleLoader {
   loadModule(
     aFullyQualifiedModuleName: string,
     reporter: SerializerErrorReporter
-  ) : NodeModule | undefined;
+  ) : Promise<NodeModule | undefined>;
   
   newModule(aPackageName: string) : NodeModule;
 }
