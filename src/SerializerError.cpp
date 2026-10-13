@@ -48,9 +48,14 @@ SerializerErrorReporterByCode::reportError(
     mErrorsByCode[error_code].push_back(error_record);
 }
 bool
-SerializerErrorReporterByCode::hasErrorCode(SerializerErrorCode error_code)
+SerializerErrorReporterByCode::hasErrorCode(SerializerErrorCode error_code) const
 {
     return mErrorsByCode.find(error_code) != mErrorsByCode.end();
+}
+bool
+SerializerErrorReporterByCode::hasError() const
+{
+    return mErrorsByCode.size() != 0;
 }
 
 SerializerError::SerializerError(
