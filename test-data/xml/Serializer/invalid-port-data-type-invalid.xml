@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-port-data-type-invalid" version="1"/>
+  <data-types>
+    <data-type id="data-one" />
+    <data-type id="data-two" />
+  </data-types>
+  <node-types>
+    <node-type id="one" visibility="public" type="native">
+      <inputs>
+	<port id="a" data-type="faster" connection-policy="one"/>
+      </inputs>
+      <outputs>
+      </outputs>
+    </node-type>
+  </node-types>
+</node-module>

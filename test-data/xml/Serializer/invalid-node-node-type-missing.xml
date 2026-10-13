@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-node-node-type-missing" version="1"/>
+  <data-types>
+    <data-type id="data-one" />
+    <data-type id="data-two" />
+  </data-types>
+  <node-types>
+    <node-type id="one" visibility="public" type="native">
+      <inputs>
+	<port id="a" data-type="data-one"/>
+      </inputs>
+      <outputs>
+	<port id="b" data-type="data-two"/>
+      </outputs>
+    </node-type>
+    <node-type id="two" visibility="public" type="native">
+      <inputs>
+	<port id="c" data-type="data-two"/>
+      </inputs>
+      <outputs>
+	<port id="d" data-type="data-one"/>
+      </outputs>
+    </node-type>
+  </node-types>
+  <graphs>
+    <graph id="main">
+      <nodes>
+	<node id="first"/>
+      </nodes>
+      <edges>
+      </edges>
+    </graph>
+  </graphs>
+</node-module>

@@ -5,6 +5,7 @@ import {DataType} from "../DataType.ts";
 import {NodeType} from "../NodeType.ts";
 import {Metadata} from "../Metadata.ts";
 import {ConnectionData} from "../ConnectionData.ts";
+import type {NodeId} from "../Definitions.ts";
 import {Node} from "../Node.ts";
 import {Edge} from "../Edge.ts";
 import {NodePort} from "../NodePort.ts";
@@ -148,7 +149,7 @@ export class SerializerXML {
     }
     var id: string = id_or_n!;
     if (namedPorts.hasPort(id)) {
-      return this.parseError(SerializerErrorCode.PORT_ID_MISSING, portNode, desc + " '" + id + "'missing for " + desc + " is duplicated.");
+      return this.parseError(SerializerErrorCode.PORT_ID_DUPLICATE, portNode, desc + " '" + id + "'missing for " + desc + " is duplicated.");
     }
 
     var description: string | null = portNode.getAttribute("description");
@@ -168,6 +169,7 @@ export class SerializerXML {
     var connectionPolicy: NodePort.ConnectionPolicy = NodePort.ConnectionPolicy.One;
     var connectionPolicy_str: string | null = portNode.getAttribute("connection-policy");
     if (connectionPolicy_str == null) {
+      connectionPolicy = NodePort.ConnectionPolicy.One;
     }
     else if (connectionPolicy_str == "one") {
       connectionPolicy = NodePort.ConnectionPolicy.One;
@@ -440,6 +442,11 @@ export class SerializerXML {
 	if (!this.parseEdge(edgeNode, nodeGraph)) return false;
       }
     }
+    var sortedNodes: NodeId[] | undefined = nodeGraph.getNodeIdsInTopologicalOrder();
+    if (sortedNodes == undefined) {
+      return this.parseError(SerializerErrorCode.GRAPH_CYCLE, graphNode, "Graph '" + id + "' contains a cycle.  This is not permitted.");
+    }
+    
     return true;
   }
   
