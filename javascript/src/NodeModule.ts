@@ -78,6 +78,9 @@ export class NodeModule {
     this.mGraphs[id] = g;
     return g;
   }
+  public hasGraph(id: string) : boolean {
+    return (id in this.mGraphs);
+  }
   public getGraph(id: string) : NodeGraph | undefined {
     return this.mGraphs[id];
   }

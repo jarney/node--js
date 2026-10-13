@@ -28,12 +28,20 @@ describe("SerializerXML", function(){
   it("test_SerializerXML_openscad_package", function(){
     var packageName: string = "org.ensor.nodejs.openscad";
     testPackageFile(packageName, function(result: boolean, nodeModule: NodeModule, errorReporter: SerializerErrorReporterByCode) {
+      errorReporter.dump()
       expect.assert(result);
       expect.assert(!errorReporter.hasError());
       expect.assert(!errorReporter.hasErrorCode(SerializerErrorCode.PACKAGE_ID_MISSING));
       expect.assert(nodeModule.getPackage() == packageName);
     });
-    
+  });
+  it("test_SerializerXML_valid_graph", function(){
+    var packageName: string = "valid-graph";
+    testPackageFile(packageName, function(result: boolean, nodeModule: NodeModule, errorReporter: SerializerErrorReporterByCode) {
+      errorReporter.dump()
+      expect.assert(result);
+      expect.assert(!errorReporter.hasError());
+    });
   });
   it("test_SerializerXML_package_missing", function() {
     var packageName: string = "invalid-package-missing";

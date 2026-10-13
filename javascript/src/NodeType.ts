@@ -77,12 +77,12 @@ export class NodeType {
 }
 
 export namespace NodeType {
-/**
- * This enum represents the visibility of a node type.
- * This determines whether graphs outside this package are
- * permitted to access it.
- */
-export enum Visibility {
+  /**
+   * This enum represents the visibility of a node type.
+   * This determines whether graphs outside this package are
+   * permitted to access it.
+   */
+  export enum Visibility {
     /**
      * This indicates that a node type is public and may
      * be used in any graph context.
@@ -94,13 +94,13 @@ export enum Visibility {
      * where it was declared.
      */
     PRIVATE = 1
-};
-
-/**
- * This enum represents the declaration of how a node
- * is implemented.
- */
-export enum Type {
+  };
+  
+  /**
+   * This enum represents the declaration of how a node
+   * is implemented.
+   */
+  export enum Type {
     /**
      * This indicates that the node's implementation is
      * provided by the underlying runtime.
@@ -110,9 +110,13 @@ export enum Type {
      * This indicates that the node's implementation is
      * provided by a node graph consisting of other node types.
      */
-    GRAPH = 1
-};
+    GRAPH = 1,
+
+    /**
+     * This indicates that the node's implementation
+     * is an alias for another node type's implementation
+     * and is implemented in terms of that one.
+     */
+    ALIAS = 2
+  };
 }
-
-
-

@@ -48,6 +48,18 @@ export class DomUtils {
   public static getElementLineno(parent: any, target: Element) : number {
     return -DomUtils.countLinesUntil(parent as Node, target, 1) + 1;
   }
+  
+  public static hasChildrenByTagName(parent: ChildNode, tagName: string) : boolean {
+    for (var child of parent.childNodes) {
+      if (child.nodeType == DomUtils.NodeType.ELEMENT_NODE) {
+	var childElement: Element = child as Element;
+	if (childElement.tagName == tagName) {
+	  return true;
+	}
+      }
+    }
+    return false;
+  }
 
   public static getChildrenByTagName(parent: ChildNode, tagName: string) : Element[] {
     var children: Element[] = [];
