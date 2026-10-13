@@ -38,7 +38,7 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
 	continue;
       }
 
-      var serializer: SerializerXML = new SerializerXML();
+      var serializer: SerializerXML = SerializerXML.instance();
       newModule = this.newModule(aFullyQualifiedModuleName);
       var success: boolean = serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);
       if (success) break;

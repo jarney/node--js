@@ -13,7 +13,7 @@ function testPackageFile(
 ) {
   var xmlData: string = fs.readFileSync("../test-data/xml/Serializer/" + packageName + ".xml", {encoding: "utf8", flag: "r"});
   
-  var serializer: SerializerXML = new SerializerXML();
+  var serializer: SerializerXML = SerializerXML.instance();
   var errorReporter: SerializerErrorReporter = new SerializerErrorReporterByCode();
   
   var nodeModule: NodeModule = new NodeModule();
