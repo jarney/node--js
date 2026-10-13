@@ -47,8 +47,9 @@ namespace NodeJS {
 	     * node graph or validation errors of the content.
 	     */
 	    virtual bool read(
-		NodeJS::core::NodeModule & node_module,
+		std::string packageName,
 		std::istream & input_stream,
+		NodeJS::core::NodeModule & node_module,
 		SerializerErrorReporter & error_reporter
 		) const = 0;
 	};

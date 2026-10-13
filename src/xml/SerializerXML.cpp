@@ -24,6 +24,8 @@ using NodeJS::core::NodeGraph;
 using NodeJS::core::ConnectionData;
 using NodeJS::core::ModuleLoader;
 using NodeJS::core::Metadata;
+using NodeJS::core::SerializerErrorCode;
+using NodeJS::core::SerializerErrorReporterByCode;
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
 
@@ -146,21 +148,29 @@ writeDataTypes(
     root.addChild(dataTypesNode);
 }
 
-static void
+static bool
 readPackage(
     NodeModule & node_module,
     XmlNodeWrapper packageNode,
     NodeJS::core::SerializerErrorReporter & err
     )    
 {
-    if (packageNode.hasAttribute("id")) {
-	std::string id = packageNode.getAttribute("id");
-	node_module.setPackage(id);
+    std::string id;
+    if (!packageNode.hasAttribute("id")) {
+	err.reportError(SerializerErrorCode::PACKAGE_VERSION_MISSING, 22, "context", std::string("Package 'id' is missing"));
+	return false;
     }
+    id = packageNode.getAttribute("id");
+    node_module.setPackage(id);
+
     if (packageNode.hasAttribute("description")) {
 	std::string desc = packageNode.getAttribute("description");
 	node_module.setDescription(desc);
     }
+    else {
+	node_module.setDescription(id);
+    }
+    return true;
 }
 
 static void
@@ -401,7 +411,7 @@ readGraphNode(
     std::string nodeTypeName = nodeNode.getAttribute("type");
     const NodeType *nodeType = node_graph.getNodeType(nodeTypeName);
     if (nodeType == nullptr) {
-	err.reportError(-99, 22, "context", std::string("Node type ") + nodeTypeName + std::string(" does not exist"));
+	err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 22, "context", std::string("Node type ") + nodeTypeName + std::string(" does not exist"));
 	return;
     }
     
@@ -473,7 +483,7 @@ readGraphEdge(
 	    );
 
     if (!connection.has_value()) {
-	err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Duplicate graph edge");
+	err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Duplicate graph edge");
 	return;
     }
 }
@@ -577,7 +587,7 @@ readGraphs(
 	    continue;
 	}
 	if (!child.hasAttribute("id")) {
-	    err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Invalid file, graph without id");
+	    err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Invalid file, graph without id");
 	    continue;
 	}
 	readGraph(node_module, child, err);
@@ -771,8 +781,9 @@ SerializerXML::write(
 
 bool
 SerializerXML::read(
-    NodeModule & node_module,
+    std::string filename,
     std::istream & input_stream,
+    NodeModule & node_module,
     NodeJS::core::SerializerErrorReporter & err
     ) const
 {
@@ -782,7 +793,7 @@ SerializerXML::read(
     
     doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
     if (doc == nullptr) {
-        err.reportError(SerializerXML::ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
+        err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
 	return false;
     }
 
@@ -795,7 +806,7 @@ SerializerXML::read(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("package")) {
-	    readPackage(node_module, child, err);
+	    if (!readPackage(node_module, child, err)) return false;
 	}
     }
 

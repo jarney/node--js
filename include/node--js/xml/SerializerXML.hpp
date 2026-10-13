@@ -46,8 +46,9 @@ namespace NodeJS {
 	     * node program based on the file content.
 	     */
 	    bool read(
-		NodeJS::core::NodeModule & program,
+		std::string packageName,
 		std::istream & input_stream,
+		NodeJS::core::NodeModule & program,
 		NodeJS::core::SerializerErrorReporter & error_reporter
 		) const override;
 

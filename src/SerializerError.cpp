@@ -38,14 +38,19 @@ SerializerErrorReporterByCode::getErrors(SerializerErrorCode code)
 
 void
 SerializerErrorReporterByCode::reportError(
-	unsigned long error_code,
-	unsigned long lineno,
-	std::string file_context,
-	std::string error
+    SerializerErrorCode error_code,
+    unsigned long lineno,
+    std::string file_context,
+    std::string error
     )
 {
     SerializerError error_record(error_code, lineno, file_context, error);
     mErrorsByCode[error_code].push_back(error_record);
+}
+bool
+SerializerErrorReporterByCode::hasErrorCode(SerializerErrorCode error_code)
+{
+    return mErrorsByCode.find(error_code) != mErrorsByCode.end();
 }
 
 SerializerError::SerializerError(

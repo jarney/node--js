@@ -101,8 +101,9 @@ ModuleLoaderNodeJSPath::loadModule(
 	module = std::make_unique<NodeModule>(*this);
 	std::ifstream input_stream(full_filename);
 	bool success = ser.read(
-	    *module,
+	    aFullyQualifiedModuleName,
 	    input_stream,
+	    *module,
 	    reporter
 	    );
 	if (success) break;
