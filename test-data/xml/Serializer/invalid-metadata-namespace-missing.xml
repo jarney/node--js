@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-metadata-namespace-missing" version="1"/>
+  <metadata>
+    <data>
+    </data>
+  </metadata>
+</node-module>

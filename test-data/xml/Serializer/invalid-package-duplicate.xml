@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-package-duplicate" description="Something interesting" version="1"/>
+  <package id="invalid-package-duplicate" description="Something interesting" version="1"/>
+</node-module>

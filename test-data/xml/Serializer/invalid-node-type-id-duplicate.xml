@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-node-type-id-duplicate" version="1"/>
+  <data-types>
+    <data-type id="data-one" />
+    <data-type id="data-two" />
+  </data-types>
+  <node-types>
+    <node-type id="one" visibility="public" type="native"/>
+    <node-type id="one" visibility="public" type="native"/>
+  </node-types>
+</node-module>

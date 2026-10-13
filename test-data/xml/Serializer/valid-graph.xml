@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <node-module xmlns="http://jarney.github.io/nodejs/schema">
-  <package id="valid-graph" description="Uncategorized"/>
+  <package id="valid-graph" description="Uncategorized" version="1"/>
   <data-types>
     <data-type id="variable"/>
     <data-type id="wrong"/>
   </data-types>
   <node-types>
+    <node-type id="private" visibility="private" type="alias">
+    </node-type>
     <node-type id="add" visibility="public" type="native">
       <inputs>
 	<port id="a" description="Variable Assignments" data-type="variable" connection-policy="multi"/>

@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <node-module xmlns="http://jarney.github.io/nodejs/schema">
-  <package />
+  <package version="1" />
 </node-module>

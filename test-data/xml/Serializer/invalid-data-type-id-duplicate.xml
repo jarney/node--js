@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-data-type-id-duplicate" version="1"/>
+  <data-types>
+    <data-type id="some-data-type" />
+    <data-type id="another-data-type" />
+    <data-type id="some-data-type" />
+  </data-types>
+</node-module>

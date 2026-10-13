@@ -35,21 +35,21 @@ export class SerializerXML {
       for (var dataElement of DomUtils.getChildrenByTagName(metadataElement, "data")) {
 	var namespace_or_null: string | null = dataElement.getAttribute("namespace");
 	if (namespace_or_null == null) {
-	  return this.parseError(SerializerErrorCode.METADATA_MISSING_NAMESPACE, dataElement, "Metadata data element is missing 'namespace' attribute.");
+	  return this.parseError(SerializerErrorCode.METADATA_NAMESPACE_MISSING, dataElement, "Metadata data element is missing 'namespace' attribute.");
 	}
 	var namespace: string = namespace_or_null!;
 	if (metadata.hasMetadata(namespace)) {
-	  return this.parseError(SerializerErrorCode.METADATA_DUPLICATE_NAMESPACE, dataElement, "Metadata namespace '" + namespace + "' is duplicated.");
+	  return this.parseError(SerializerErrorCode.METADATA_NAMESPACE_DUPLICATE, dataElement, "Metadata namespace '" + namespace + "' is duplicated.");
 	}
 	var cd: ConnectionData = metadata.getMetadata(namespace);
 	for (var valueElement of DomUtils.getChildrenByTagName(dataElement, "value")) {
 	  var key_or_null: string | null = valueElement.getAttribute("key");
 	  if (key_or_null == null) {
-	    return this.parseError(SerializerErrorCode.METADATA_MISSING_KEY, valueElement, "Metadata key is missing.");
+	    return this.parseError(SerializerErrorCode.METADATA_KEY_MISSING, valueElement, "Metadata key is missing.");
 	  }
 	  var key: string = key_or_null!;
 	  if (cd.hasValue(key)) {
-	    return this.parseError(SerializerErrorCode.METADATA_MISSING_KEY, valueElement, "Metadata key '" + key + "' is duplicated.");
+	    return this.parseError(SerializerErrorCode.METADATA_KEY_DUPLICATE, valueElement, "Metadata key '" + key + "' is duplicated.");
 	  }
 	  cd.setValue(key, valueElement.textContent);
 	  console.log("Got metadata");
@@ -64,6 +64,14 @@ export class SerializerXML {
     var packageCount = 0;
 
     for (var packageElement of DomUtils.getChildrenByTagName(root, "package")) {
+      var version: string | null = packageElement.getAttribute("version");
+      if (version == null) {
+	return this.parseError(SerializerErrorCode.PACKAGE_VERSION_MISSING, packageElement, "Package version is missing");
+      }
+      else if (version != "1") {
+	return this.parseError(SerializerErrorCode.PACKAGE_VERSION_UNSUPPORTED, packageElement, "Package version " + version + " is not yet supported.");
+      }
+      
       var id: string | null = packageElement.getAttribute("id");
       if (id == null) {
 	return this.parseError(SerializerErrorCode.PACKAGE_ID_MISSING, packageElement, "Package element is missing the 'id' element.");
@@ -78,7 +86,7 @@ export class SerializerXML {
       if (description != null) {
 	nodeModule.setDescription(description!);
       }
-      if (packageCount > 1) {
+      if (packageCount > 0) {
 	return this.parseError(SerializerErrorCode.PACKAGE_DUPLICATE, packageElement,
 	  "Too many package declarations.  There should only be a single package declaration in a module.");
       }
@@ -97,15 +105,18 @@ export class SerializerXML {
   
   
   private parseDataType(dataTypeNode: Element, nodeModule: NodeModule) : boolean {
+    console.log("PARSE DATA TYPE");
     var id_or_n: string | null = dataTypeNode.getAttribute("id");
     if (id_or_n == null) {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_MISSING, dataTypeNode, "Missing id for data type");
     }
     var id: string = id_or_n!;
+    console.log("PARSE DATA TYPE " + id);
     var name: string | null = dataTypeNode.getAttribute("name");
     if (name == null) {
       name = id;
     }
+    console.log("Adding data type " + id);
     if (nodeModule.hasDataType(id)) {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_DUPLICATE, dataTypeNode, "Duplicate id '" + id + "' for data type.");
     }
@@ -212,7 +223,7 @@ export class SerializerXML {
       visibility = NodeType.Visibility.PRIVATE;
     }
     else {
-      return this.parseError(SerializerErrorCode.NODE_TYPE_VISIBILITY_MISSING, nodeTypeNode, "Visibility qualifier '" + visibility_attr + "' is unrecognized on node type '" + id + "'.");
+      return this.parseError(SerializerErrorCode.NODE_TYPE_VISIBILITY_INVALID, nodeTypeNode, "Visibility qualifier '" + visibility_attr + "' is unrecognized on node type '" + id + "'.");
     }
 
     var type: NodeType.Type = NodeType.Type.NATIVE;
@@ -241,7 +252,7 @@ export class SerializerXML {
     if (!this.parsePorts(nodeTypeNode, nodeModule, nodeType.getInputs(), "inputs", "Input Port")) return false;
     if (!this.parsePorts(nodeTypeNode, nodeModule, nodeType.getOutputs(), "outputs", "Output Port")) return false;
 
-    // Package-level metadata (optional)
+    // Node-type metadata (optional)
     if (!this.parseMetadata(nodeTypeNode, nodeType.getMetadata())) return false;
     
     nodeModule.addNodeType(nodeType);

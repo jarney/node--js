@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="invalid-node-type-id-missing" version="1"/>
+  <node-types>
+    <node-type unknown-property="foo"/>
+  </node-types>
+</node-module>
