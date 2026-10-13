@@ -74,7 +74,7 @@ def test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file(data_directory
     loader = ModuleLoaderNodeJSPath()
     err = SerializerErrorReporterStream(sys.stderr)
 
-    path = data_directory
+    path = data_directory + "/xml/Serializer/"
     loader.setNODEJS_PATH(path)
     print("Loading through module");
     nodeModule = loader.loadModule("org.ensor.nodejs.openscad", err)

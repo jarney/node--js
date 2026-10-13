@@ -3,7 +3,6 @@
 #include "node--js/Metadata.hpp"
 #include "node--js/Edge.hpp"
 #include "node--js/Node.hpp"
-#include "node--js/Group.hpp"
 
 #include <optional>
 #include <set>
@@ -161,25 +160,6 @@ namespace NodeJS {
 	    std::optional<std::vector<NodeId>> getNodeIdsInTopologicalOrder(void) const;
 
 	    /**
-	     * Node groups are simply named sets of nodes.
-	     * A node may belong to zero or more groups.
-	     * Groups may have zero or more nodes.
-	     * Node grouping is a useful meta-programming
-	     * construct as well as an organizational tool
-	     * for viewing and thinking about nodes and their
-	     * purposes.
-	     */
-	    const std::map<GroupId, std::unique_ptr<Group>> & getGroups() const;
-
-	    void addGroup(GroupId aGroupId);
-	    
-	    bool hasGroup(GroupId aGroupId);
-
-	    void removeGroup(GroupId aGroupId);
-
-	    Group *getGroup(GroupId aGroupId) const;
-	    
-	    /**
 	     * Metadata is data that can be associated
 	     * with a node module that can be used by other
 	     * extensions to the system.
@@ -194,7 +174,6 @@ namespace NodeJS {
 	    
 	    // The core of a graph is the nodes and edges.
 	    std::map<NodeId, std::unique_ptr<Node>> mNodes;
-	    std::map<GroupId, std::unique_ptr<Group>> mGroups;
 	    
 	    std::map<EdgeId, std::unique_ptr<Edge>> mEdges;
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByFromNode;

@@ -336,30 +336,6 @@ describe("NodeGraph", () => {
     expect.assert(graphCopy.getDataType("foo") != undefined);
   });
 
-  it("test_NodeGraph_groups", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
-    var nodeModule: NodeModule = loader.newModule("anonymous");
-    var graph: NodeGraph = nodeModule.addGraph("graph");
-
-    // Check that basic add and remove works.
-    
-    expect.assert(!graph.hasGroup("node-group"));
-    expect.assert(graph.getGroup("node-group") == undefined);
-    expect.assert(Object.keys(graph.getGroups()).length == 0);
-    
-    graph.addGroup("node-group");
-    
-    expect.assert(graph.hasGroup("node-group"));
-    expect.assert(graph.getGroup("node-group") != undefined);
-    expect.assert(Object.keys(graph.getGroups()).length == 1);
-
-    graph.removeGroup("node-group");
-
-    expect.assert(!graph.hasGroup("node-group"));
-    expect.assert(graph.getGroup("node-group") == undefined);
-    expect.assert(Object.keys(graph.getGroups()).length == 0);
-  });
-
   it("test_NodeGraph_specific_metadata", function() {
     var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
     var nodeModule: NodeModule = loader.newModule("anonymous");

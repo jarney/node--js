@@ -3,6 +3,7 @@
   <package id="valid-graph" description="Uncategorized"/>
   <data-types>
     <data-type id="variable"/>
+    <data-type id="wrong"/>
   </data-types>
   <node-types>
     <node-type id="add" visibility="public" type="native">
@@ -33,7 +34,7 @@
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
+	<port id="variable" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="assign" visibility="public" type="native">
@@ -41,25 +42,26 @@
 	<port id="value" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </inputs>
       <outputs>
+	<port id="assignment" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="function-call" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
+	<port id="out" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="function" visibility="public" type="native">
       <inputs>
       </inputs>
       <outputs>
-	<port id="value" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
+	<port id="out" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="function_output" visibility="public" type="native">
       <inputs>
-	<port id="value" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
+	<port id="out" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </inputs>
       <outputs>
       </outputs>

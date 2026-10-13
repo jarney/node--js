@@ -1,8 +1,7 @@
-import type {NodeId, GroupId, EdgeId, PortId, NodeTypeId, DataTypeId} from "./Definitions.ts";
+import type {NodeId, EdgeId, PortId, NodeTypeId, DataTypeId} from "./Definitions.ts";
 import {Node} from "./Node.ts";
 import {DataType} from "./DataType.ts";
 import {NodeType} from "./NodeType.ts";
-import {Group} from "./Group.ts";
 import {Edge} from "./Edge.ts";
 import {ConnectionData} from "./ConnectionData.ts";
 import {NodeModule} from "./NodeModule.ts";
@@ -21,7 +20,6 @@ class StackEntry {
 export class NodeGraph {
   mModule: NodeModule;
   mNodes: { [ key: NodeId ] : Node };
-  mGroups: { [ key: GroupId ] : Group };
   mEdges: { [ key: EdgeId ] : Edge };
   mEdgesByFromNode: { [key: NodeId] : Edge[] };
   mEdgesByToNode: { [key: EdgeId] : Edge[] };
@@ -31,7 +29,6 @@ export class NodeGraph {
   constructor(aModule: NodeModule) {
     this.mModule = aModule;
     this.mNodes = {};
-    this.mGroups = {};
     this.mEdges = {};
     this.mEdgesByFromNode = {};
     this.mEdgesByToNode = {};
@@ -122,6 +119,24 @@ export class NodeGraph {
   public getNodes() : { [ key: string ] : Node } {
     return this.mNodes;
   }
+
+  public hasEdge(
+    aFromNode: NodeId,
+    aFromPort: PortId,
+    aToNode: NodeId,
+    aToPort: PortId
+  ) {
+    var connection: Edge = new Edge(
+      aFromNode, aFromPort,
+      aToNode, aToPort
+    );
+    var id: EdgeId = connection.getId();
+    if (id in this.mEdges) {
+      return true;
+    }
+    return false;
+  }
+  
   public newEdge(
     aFromNode: NodeId,
     aFromPort: PortId,
@@ -331,23 +346,6 @@ export class NodeGraph {
     return order;
   }
 
-  public getGroups() : { [ key: GroupId ] : Group } {
-    return this.mGroups;
-  }
-  public addGroup(aGroupId: GroupId) : void {
-    this.mGroups[aGroupId] = new Group();
-  }
-  public removeGroup(aGroupId: GroupId) : void {
-    delete this.mGroups[aGroupId];
-  }
-
-  public hasGroup(aGroupId: GroupId) : boolean {
-    return (aGroupId in this.mGroups);
-  }
-  public getGroup(aGroupId: GroupId) : Group | undefined {
-    return this.mGroups[aGroupId];
-  }
-  
   public getMetadata() : Metadata {
     return this.mMetadata;
   }

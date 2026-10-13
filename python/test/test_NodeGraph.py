@@ -294,31 +294,6 @@ def test_NodeGraph_search_scopes():
     assert(graphCopy.getNodeType("type1-node") != None);
     assert(graphCopy.getDataType("foo") != None);
 
-    
-
-def test_NodeGraph_groups():
-    loader = ModuleLoaderNodeJSPath()
-    nodeModule = loader.newModule("anonymous");
-    graph = nodeModule.addGraph("graph");
-
-    # Check that basic add and remove works.
-    
-    assert(not graph.hasGroup("node-group"));
-    assert(graph.getGroup("node-group") == None);
-    assert(len(graph.getGroups()) == 0);
-    
-    graph.addGroup("node-group");
-    
-    assert(graph.hasGroup("node-group"));
-    assert(graph.getGroup("node-group") != None);
-    assert(len(graph.getGroups()) == 1);
-
-    graph.removeGroup("node-group");
-
-    assert(not graph.hasGroup("node-group"));
-    assert(graph.getGroup("node-group") == None);
-    assert(len(graph.getGroups()) == 0);
-
 def test_NodeGraph_specific_metadata():
     loader = ModuleLoaderNodeJSPath()
     module = loader.newModule("anonymous");

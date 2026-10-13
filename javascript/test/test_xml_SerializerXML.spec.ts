@@ -11,7 +11,7 @@ function testPackageFile(
   packageName: string,
   callback: (result: boolean, nodeModule: NodeModule, errorReporter: SerializerErrorReporterByCode) => void
 ) {
-  var xmlData: string = fs.readFileSync("public/" + packageName + ".xml", {encoding: "utf8", flag: "r"});
+  var xmlData: string = fs.readFileSync("../test-data/xml/Serializer/" + packageName + ".xml", {encoding: "utf8", flag: "r"});
   
   var serializer: SerializerXML = new SerializerXML();
   var errorReporter: SerializerErrorReporter = new SerializerErrorReporterByCode();

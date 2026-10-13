@@ -1,6 +1,5 @@
 from .Node import Node
 from .Edge import Edge
-from .Group import Group
 from .Metadata import Metadata
 
 # Useful for states in the
@@ -18,7 +17,6 @@ class NodeGraph:
         self.mEdges = {}
         self.mEdgesByFromNode = {}
         self.mEdgesByToNode = {}
-        self.mGroups = {}
         self.mMetadata = Metadata()
 
     def findNewNodeId(self, aNodeIdCandidate):
@@ -218,23 +216,6 @@ class NodeGraph:
 
     def getModule(self):
         return self.mModule
-
-    def getGroups(self):
-        return self.mGroups
-
-    def addGroup(self, aGroupId):
-        self.mGroups[aGroupId] = Group()
-
-    def removeGroup(self, aGroupId):
-        if aGroupId in self.mGroups:
-            del self.mGroups[aGroupId]
-
-    def hasGroup(self, aGroupId):
-        return aGroupId in self.mGroups
-
-
-    def getGroup(self, aGroupId):
-        return self.mGroups if aGroupId in self.mGroups else None
 
     def getMetadata(self):
         return self.mMetadata

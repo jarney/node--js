@@ -87,6 +87,7 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file", "[Nod
     SerializerErrorReporterStream err(std::cerr);
 
     std::string path = testDirectory();
+    path = path + "/xml/Serializer/";
     loader.setNODEJS_PATH(path);
     const NodeModule *module = loader.loadModule("org.ensor.nodejs.openscad", err);
     CHECK(module != nullptr);

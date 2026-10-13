@@ -351,31 +351,6 @@ TEST_CASE("test_NodeGraph_search_scopes", "[NodeJS][core][NodeGraph][Node]")
     
 }
 
-TEST_CASE("test_NodeGraph_groups", "[NodeJS][core][NodeGraph][Node]")
-{
-    ModuleLoaderNodeJSPath loader;
-    NodeModule & nodeModule = *loader.newModule("anonymous");
-    NodeGraph & graph = *nodeModule.addGraph("graph");
-
-    // Check that basic add and remove works.
-    
-    CHECK(!graph.hasGroup("node-group"));
-    CHECK(graph.getGroup("node-group") == nullptr);
-    CHECK(graph.getGroups().size() == 0);
-    
-    graph.addGroup("node-group");
-    
-    CHECK(graph.hasGroup("node-group"));
-    CHECK(graph.getGroup("node-group") != nullptr);
-    CHECK(graph.getGroups().size() == 1);
-
-    graph.removeGroup("node-group");
-
-    CHECK(!graph.hasGroup("node-group"));
-    CHECK(graph.getGroup("node-group") == nullptr);
-    CHECK(graph.getGroups().size() == 0);
-}
-
 TEST_CASE("test_NodeGraph_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;

@@ -6,6 +6,7 @@ import {NodeType} from "../NodeType.ts";
 import {Metadata} from "../Metadata.ts";
 import {ConnectionData} from "../ConnectionData.ts";
 import {Node} from "../Node.ts";
+import {Edge} from "../Edge.ts";
 import {NodePort} from "../NodePort.ts";
 import {NodeGraph} from "../NodeGraph.ts";
 import {NamedPorts} from "../NamedPorts.ts";
@@ -273,12 +274,21 @@ export class SerializerXML {
       return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_MISSING, nodeNode, "Node id '" + id + "' has missing type.");
     }
     else if (!nodeModule.hasNodeType(nodeType_str)) {
-      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_INVALID, nodeNode, "Nide id '" + id + "' has invalid type '" + nodeType_str + "'");
+      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_INVALID, nodeNode, "Node id '" + id + "' has invalid type '" + nodeType_str + "'");
     }
     
     var nodeType = nodeModule.getNodeType(nodeType_str!)!;
+
+    var nodeData: ConnectionData = new ConnectionData();
+    for (var valueNode of DomUtils.getChildrenByTagName(nodeNode, "value")) {
+      var key: string | null = valueNode.getAttribute("key");
+      if (key == null) {
+	return this.parseError(SerializerErrorCode.NODE_DATA_KEY_MISSING, valueNode, "Node id '" + id + "' <value> tag is missing 'key' attribute.");
+      }
+      nodeData.setValue(key!, valueNode.textContent);
+    }
     
-    var node: Node = nodeGraph.newNode(nodeType, id);
+    var node: Node = nodeGraph.newNode(nodeType, id, nodeData);
 
     if (DomUtils.hasChildrenByTagName(nodeNode, "inputs")) {
       node.setOverrideInputs(true);
@@ -297,6 +307,92 @@ export class SerializerXML {
   }
 
   public parseEdge(edgeNode: Element, nodeGraph: NodeGraph) : boolean {
+
+    var fromNode_or_n: string | null = edgeNode.getAttribute("from-node");
+    var fromPort_or_n: string | null = edgeNode.getAttribute("from-port");
+    var toNode_or_n: string | null = edgeNode.getAttribute("to-node");
+    var toPort_or_n: string | null = edgeNode.getAttribute("to-port");
+
+    if (fromNode_or_n == null) {
+      return this.parseError(SerializerErrorCode.EDGE_FROM_NODE_MISSING, edgeNode, "Graph edge is missing 'from-node' attribute");
+    }
+    if (fromPort_or_n == null) {
+      return this.parseError(SerializerErrorCode.EDGE_FROM_PORT_MISSING, edgeNode, "Graph edge is missing 'from-port' attribute");
+    }
+    if (toNode_or_n == null) {
+      return this.parseError(SerializerErrorCode.EDGE_TO_NODE_MISSING, edgeNode, "Graph edge is missing 'to-node' attribute");
+    }
+    if (toPort_or_n == null) {
+      return this.parseError(SerializerErrorCode.EDGE_TO_PORT_MISSING, edgeNode, "Graph edge is missing 'to-port' attribute");
+    }
+    
+    var fromNode: string = fromNode_or_n!;
+    var fromPort: string = fromPort_or_n!;
+    var toNode: string = toNode_or_n!;
+    var toPort: string = toPort_or_n!;
+
+    if (!nodeGraph.hasNode(fromNode)) {
+      return this.parseError(SerializerErrorCode.EDGE_FROM_NODE_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' is not defined in this graph.");      
+    }
+    var fromNodeObj: Node = nodeGraph.getNode(fromNode)!;
+    if (!fromNodeObj.getOutputs().hasPort(fromPort)) {
+      return this.parseError(SerializerErrorCode.EDGE_FROM_PORT_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' does not have output port '" + fromPort + "'.");
+    }
+    if (!nodeGraph.hasNode(toNode)) {
+      return this.parseError(SerializerErrorCode.EDGE_TO_NODE_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' is not defined in this graph.");      
+    }
+    var toNodeObj: Node = nodeGraph.getNode(toNode)!;
+    if (!toNodeObj.getInputs().hasPort(toPort)) {
+      return this.parseError(SerializerErrorCode.EDGE_TO_PORT_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' does not have input port '" + toPort + "'.");
+    }
+
+    // Make sure that the data-types in the from and to line up correctly.
+    var fromPortObj: NodePort = fromNodeObj.getOutputs().getByName(fromPort)!;
+    var toPortObj: NodePort = toNodeObj.getInputs().getByName(toPort)!;
+
+    if (fromPortObj.getDataType() != toPortObj.getDataType()) {
+      return this.parseError(SerializerErrorCode.EDGE_PORT_DATA_MISMATCH, edgeNode,
+	"Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
+	  " to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' input port '" + toPort + "' has data type '" + toPortObj.getDataType() + "'");
+    }
+
+    if (nodeGraph.hasEdge(fromNode, fromPort, toNode, toPort)) {
+      return this.parseError(SerializerErrorCode.EDGE_DUPLICATE, edgeNode, "Graph edge '" + fromNode + ":" + fromPort + " -> " + toNode + ":" + toPort + "' is duplicated.");
+    }
+
+    // Before adding a new edge, make sure we're not violating the connection policy for a port.
+    var edgesFrom: Edge[] = nodeGraph.getEdgesFrom(fromNode);
+    var countFromPort: number = 0;
+    for (var edge of edgesFrom) {
+      if (edge.fromPort == fromPort) {
+        countFromPort++;
+      }
+    }
+
+    if (fromPortObj.getConnectionPolicy() == NodePort.ConnectionPolicy.One) {
+      if (countFromPort != 0) {
+	return this.parseError(SerializerErrorCode.EDGE_VIOLATES_POLICY, edgeNode, "Node output port '" + fromNode + ":" + fromPort + " only allows a single connection because of the port's policy.");
+      }
+    }
+      
+    var countToPort: number = 0;
+    var edgesTo: Edge[] = nodeGraph.getEdgesTo(toNode);
+    for (var edge of edgesTo) {
+      if (edge.toPort == toPort) {
+        countToPort++;
+      }
+    }
+    
+    if (toPortObj.getConnectionPolicy() == NodePort.ConnectionPolicy.One) {
+      if (countToPort != 0) {
+	return this.parseError(SerializerErrorCode.EDGE_VIOLATES_POLICY, edgeNode, "Node input port '" + toNode + ":" + toPort + " only allows a single connection because of the port's policy.");
+      }
+    }
+    
+    nodeGraph.newEdge(
+      fromNode, fromPort,
+      toNode, toPort);
+    
     return true;
   }
 
@@ -310,6 +406,11 @@ export class SerializerXML {
     if (nodeModule.hasGraph(id)) {
       return this.parseError(SerializerErrorCode.GRAPH_ID_DUPLICATE, graphNode, "Duplicate graph id '" + id + "' for graph.");
     }
+
+    // TODO: Scope resolution needs to be symbolic
+    // at this point.  Actual scope resolution needs to happen
+    // in a context where we actually have access to a module
+    // loader mechanism and this is too low-level for that.
     for (var scopeNode of DomUtils.getChildrenByTagName(graphNode, "scope")) {
       for (var packageNode of DomUtils.getChildrenByTagName(scopeNode, "package")) {
 	// TODO: We need to figure out how to unwind the recursiveness here.
@@ -318,21 +419,6 @@ export class SerializerXML {
 
     var nodeGraph: NodeGraph = nodeModule.addGraph(id)!;
 
-    // TODO: Scope resolution needs to be symbolic
-    // at this point.  Actual scope resolution needs to happen
-    // in a context where we actually have access to a module
-    // loader mechanism and this is too low-level for that.
-
-    // TODO: Node groups.  Should we even do these?
-    // Maybe these should be simply handled at the metadata
-    // level since they're not really a part of the core
-    // processing model.  UNLESS....
-    // what if node groups could be used to add some extra 'spice'
-    // to the translation model, like if some group-level
-    // metadata could somehow augment the code-generation for
-    // some specific use-cases like profiling or debugging.
-    // Yeah, actually, that seems useful potentially.
-    
     for (var nodesNode of DomUtils.getChildrenByTagName(graphNode, "nodes")) {
       for (var nodeNode of DomUtils.getChildrenByTagName(nodesNode, "node")) {
 	if (!this.parseNode(nodeNode, nodeModule, nodeGraph)) return false;
@@ -381,11 +467,10 @@ export class SerializerXML {
     // reference data types.
     if (!this.parseNodeTypes(root, nodeModule)) return false;
 
-    if (!this.parseGraphs(root, nodeModule)) return false;
-    
-    // Finally, load the graphs (nodes and edges)
+    // Next, load the graphs (nodes and edges)
     // which refer to node types and ports.
-    
+    if (!this.parseGraphs(root, nodeModule)) return false;
+
     return true;
   }
 }

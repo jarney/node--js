@@ -343,42 +343,6 @@ NodeGraph::getNodeIdsInTopologicalOrder(void) const
     return std::optional(order);
 }
 
-
-const std::map<GroupId, std::unique_ptr<Group>> &
-NodeGraph::getGroups() const
-{
-    return mGroups;
-}
-
-void
-NodeGraph::addGroup(GroupId aGroupId)
-{
-    mGroups.insert(std::pair(aGroupId, std::make_unique<Group>()));
-}
-
-void
-NodeGraph::removeGroup(GroupId aGroupId)
-{
-    mGroups.erase(aGroupId);
-}
-
-bool
-NodeGraph::hasGroup(GroupId aGroupId)
-{
-    const auto it = mGroups.find(aGroupId);
-    return (it != mGroups.end());
-}
-
-Group *
-NodeGraph::getGroup(GroupId aGroupId) const
-{
-    const auto it = mGroups.find(aGroupId);
-    if (it == mGroups.end()) {
-	return  nullptr;
-    }
-    return it->second.get();
-}
-
 const Metadata &
 NodeGraph::getMetadata(void) const
 {
