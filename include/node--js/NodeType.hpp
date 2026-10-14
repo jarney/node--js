@@ -65,7 +65,14 @@ namespace NodeJS {
 		 * This indicates that the node's implementation is
 		 * provided by a node graph consisting of other node types.
 		 */
-		GRAPH
+		GRAPH,
+		
+		/**
+		 * This indicates that the node's implementation
+		 * is an alias for another node type's implementation
+		 * and is implemented in terms of that one.
+		 */
+		ALIAS
 	    } Type;
 	    
 	    NodeType() = default;

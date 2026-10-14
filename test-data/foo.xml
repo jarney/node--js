@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <node-module xmlns="http://jarney.github.io/nodejs/schema">
-  <package id="anonymous" description="Uncategorized"/>
+  <package id="foo" description="Uncategorized" version="1"/>
   <data-types/>
   <node-types/>
   <graphs>

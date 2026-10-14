@@ -157,6 +157,22 @@ NodeGraph::newEdge(
     mEdges.insert(std::pair(id, std::move(connection)));
     return id;
 }
+bool
+NodeGraph::hasEdge(
+    NodeId aFromNode,
+    PortId aFromPort,
+    NodeId aToNode,
+    PortId aToPort
+    ) const
+{
+    Edge edge(
+	aFromNode, aFromPort,
+	aToNode, aToPort
+	);
+    std::string id = edge.getId();
+    return (mEdges.find(id) != mEdges.end());
+}
+
 
 void
 NodeGraph::removeEdge(
@@ -246,6 +262,15 @@ NodeGraph::getNodeType(std::string aTypeName)
     return nullptr;
 }
 
+bool
+NodeGraph::hasNodeType(std::string aTypeName) const
+{
+    for (const auto & it : mScopes) {
+	if (it->hasNodeType(aTypeName))  return true;
+    }	
+    return false;
+}
+
 const DataType *
 NodeGraph::getDataType(std::string aTypeName)
 {
@@ -255,6 +280,15 @@ NodeGraph::getDataType(std::string aTypeName)
 	}
     }
     return nullptr;
+}
+
+bool
+NodeGraph::hasDataType(std::string aTypeName) const
+{
+    for (const auto & it : mScopes) {
+	if (it->hasDataType(aTypeName))  return true;
+    }	
+    return false;
 }
 
 std::set<NodeId>

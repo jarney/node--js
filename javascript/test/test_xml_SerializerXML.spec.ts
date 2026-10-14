@@ -37,6 +37,7 @@ describe("SerializerXML", function(){
   it("test_SerializerXML_valid_graph", function(){
     var packageName: string = "valid-graph";
     testPackageFile(packageName, function(result: boolean, nodeModule: NodeModule, errorReporter: SerializerErrorReporterByCode) {
+      errorReporter.dump();
       expect.assert(result);
       expect.assert(!errorReporter.hasError());
     });

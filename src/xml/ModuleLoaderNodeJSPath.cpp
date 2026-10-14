@@ -98,6 +98,9 @@ ModuleLoaderNodeJSPath::loadModule(
     for (const auto & pathElement : mPath) {
 	std::string filename = aFullyQualifiedModuleName + std::string(".xml");
 	std::filesystem::path full_filename = std::filesystem::path(pathElement) / filename;
+
+	// File does not exist, move on.
+	if (!std::filesystem::exists(full_filename)) continue;
 	module = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
 	std::ifstream input_stream(full_filename);
 	bool success = ser.read(

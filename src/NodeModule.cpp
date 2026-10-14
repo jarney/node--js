@@ -124,13 +124,19 @@ NodeModule::addGraph(std::string id)
 }
 
 NodeGraph *
-NodeModule::getGraph(std::string id)
+NodeModule::getGraph(std::string id) const
 {
     const auto & it = mGraphs.find(id);
     if (it == mGraphs.end()) {
 	return nullptr;
     }
     return it->second.get();
+}
+
+bool
+NodeModule::hasGraph(std::string id) const
+{
+    return mGraphs.find(id) != mGraphs.end();
 }
 
 const std::map<std::string, std::unique_ptr<NodeGraph>> &

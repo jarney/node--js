@@ -121,7 +121,7 @@ TEST_CASE("test_SerializerXML_data_type_id_duplicate", "[NodeJS][xml][Serializer
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::DATA_TYPE_ID_DUPLICATE));
     });
 }
-#if 0
+
 TEST_CASE("test_SerializerXML_node_type_id_missing", "[NodeJS][xml][Serializer]") {
     std::string packageName = "invalid-node-type-id-missing";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
@@ -252,6 +252,7 @@ TEST_CASE("test_SerializerXML_port_connection_policy_invalid", "[NodeJS][xml][Se
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::PORT_CONNECTION_POLICY_INVALID));
     });
 }
+
 TEST_CASE("test_SerializerXML_graph_id_missing", "[NodeJS][xml][Serializer]") {
     std::string packageName = "invalid-graph-id-missing";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
@@ -412,4 +413,4 @@ TEST_CASE("test_SerializerXML_edge_connection_policy_to", "[NodeJS][xml][Seriali
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::EDGE_VIOLATES_POLICY));
     });
 }
-#endif
+

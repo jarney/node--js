@@ -91,7 +91,9 @@ namespace NodeJS {
 
 	    NodeGraph *addGraph(std::string id);
 
-	    NodeGraph *getGraph(std::string id);
+	    NodeGraph *getGraph(std::string id) const;
+
+	    bool hasGraph(std::string id) const;
 
 	    const std::map<std::string, std::unique_ptr<NodeGraph>> & getGraphs() const;
 

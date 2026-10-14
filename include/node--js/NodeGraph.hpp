@@ -123,6 +123,13 @@ namespace NodeJS {
 		PortId aToPort
 		);
 
+	    bool hasEdge(
+		NodeId aFromNode,
+		PortId aFromPort,
+		NodeId aToNode,
+		PortId aToPort
+		) const;
+
 	    /**
 	     * Returns a list of the connections originating
 	     * from the given node id.  That is, all connections
@@ -145,7 +152,10 @@ namespace NodeJS {
 
 	    void copyScope(const NodeGraph *other);
 	    
+	    bool hasNodeType(std::string aTypeName) const;
 	    const NodeType * getNodeType(std::string aTypeName);
+	    
+	    bool hasDataType(std::string aTypeName) const;
 	    const DataType * getDataType(std::string aTypeName);
 
 	    std::set<NodeId> getNodeIds(void) const;

@@ -153,3 +153,13 @@ XmlNodeWrapper::getChildrenByTagName(std::string tagName) const
 	tagName
 	);
 }
+bool
+XmlNodeWrapper::hasChildrenByTagName(std::string tagName) const
+{
+    size_t count = 0;
+    for (XmlNodeWrapper c : getChildrenByTagName(tagName)) {
+	count++;
+	break;
+    }
+    return (count != 0);
+}

@@ -20,60 +20,69 @@ import { Metadata } from "./Metadata.ts";
  */
 
 export class NodeType {
-    mId: NodeTypeId;
-    mVisibility: NodeType.Visibility;
-    mType: NodeType.Type;
-    mInputs: NamedPorts;
-    mOutputs: NamedPorts;
-    mDefaultNodeData: ConnectionData;
-    mMetadata: Metadata;
-
-    constructor() {
-        this.mId = "";
-        this.mVisibility = NodeType.Visibility.PRIVATE;
-        this.mType = NodeType.Type.NATIVE;
-        this.mInputs = new NamedPorts();
-        this.mOutputs = new NamedPorts();
-	this.mDefaultNodeData = new ConnectionData();
-	this.mMetadata = new Metadata();
-    }
-
-    public getId(): NodeTypeId {
-        return this.mId;
-    }
-
-    public setId(aId: NodeTypeId) {
-        this.mId = aId;
-    }
-
-    public setVisibility(aVisibility: NodeType.Visibility) {
-        this.mVisibility = aVisibility;
-    }
-    public getVisibility() : NodeType.Visibility {
-        return this.mVisibility;
-    }
-    public setType(aType: NodeType.Type) {
-        this.mType = aType;
-    }
-    public getType() : NodeType.Type {
-        return this.mType;
-    }
-    public getInputs() : NamedPorts {
-        return this.mInputs;
-    }
-    public getOutputs() : NamedPorts {
-        return this.mOutputs;
-    }
-    public getDefaultNodeData(): ConnectionData {
-        return this.mDefaultNodeData;
-    }
-    public setDefaultNodeData(aConnectionData: ConnectionData) {
-        this.mDefaultNodeData = new ConnectionData();
-	this.mDefaultNodeData.copy(aConnectionData);
-    }
-    public getMetadata() : Metadata {
-        return this.mMetadata;
-    }
+  mId: NodeTypeId;
+  mVisibility: NodeType.Visibility;
+  mType: NodeType.Type;
+  mInputs: NamedPorts;
+  mOutputs: NamedPorts;
+  mDefaultNodeData: ConnectionData;
+  mMetadata: Metadata;
+  mAllowPortOverride: boolean;
+  
+  
+  constructor() {
+    this.mId = "";
+    this.mVisibility = NodeType.Visibility.PRIVATE;
+    this.mType = NodeType.Type.NATIVE;
+    this.mInputs = new NamedPorts();
+    this.mOutputs = new NamedPorts();
+    this.mDefaultNodeData = new ConnectionData();
+    this.mMetadata = new Metadata();
+    this.mAllowPortOverride = false;
+  }
+  
+  public getId(): NodeTypeId {
+    return this.mId;
+  }
+  
+  public setId(aId: NodeTypeId) {
+    this.mId = aId;
+  }
+  
+  public setVisibility(aVisibility: NodeType.Visibility) {
+    this.mVisibility = aVisibility;
+  }
+  public getVisibility() : NodeType.Visibility {
+    return this.mVisibility;
+  }
+  public setType(aType: NodeType.Type) {
+    this.mType = aType;
+  }
+  public getType() : NodeType.Type {
+    return this.mType;
+  }
+  public getInputs() : NamedPorts {
+    return this.mInputs;
+  }
+  public getOutputs() : NamedPorts {
+    return this.mOutputs;
+  }
+  public getAllowPortOverride() : boolean {
+    return this.mAllowPortOverride;
+  }
+  public setAllowPortOverride(aPortOverride: boolean) : void {
+    this.mAllowPortOverride = aPortOverride;
+  }
+  public getDefaultNodeData(): ConnectionData {
+    return this.mDefaultNodeData;
+  }
+  public setDefaultNodeData(aConnectionData: ConnectionData) {
+    this.mDefaultNodeData = new ConnectionData();
+    this.mDefaultNodeData.copy(aConnectionData);
+  }
+  public getMetadata() : Metadata {
+    return this.mMetadata;
+  }
 }
 
 export namespace NodeType {

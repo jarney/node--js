@@ -53,18 +53,32 @@ export class SerializerXMLReader {
 	  return this.parseError(SerializerErrorCode.METADATA_NAMESPACE_DUPLICATE, dataElement, "Metadata namespace '" + namespace + "' is duplicated.");
 	}
 	var cd: ConnectionData = metadata.getMetadata(namespace);
-	for (var valueElement of DomUtils.getChildrenByTagName(dataElement, "value")) {
-	  var key_or_null: string | null = valueElement.getAttribute("key");
-	  if (key_or_null == null) {
-	    return this.parseError(SerializerErrorCode.METADATA_KEY_MISSING, valueElement, "Metadata key is missing.");
-	  }
-	  var key: string = key_or_null!;
-	  if (cd.hasValue(key)) {
-	    return this.parseError(SerializerErrorCode.METADATA_KEY_DUPLICATE, valueElement, "Metadata key '" + key + "' is duplicated.");
-	  }
-	  cd.setValue(key, valueElement.textContent);
-	}
+	if (!this.parseConnectionData(
+	  dataElement, cd,
+	  SerializerErrorCode.METADATA_KEY_MISSING,
+	  SerializerErrorCode.METADATA_KEY_DUPLICATE
+	)) return false;
       }
+    }
+    return true;
+  }
+
+  public parseConnectionData(
+    parent: Element,
+    cd: ConnectionData,
+    missingCode: SerializerErrorCode,
+    duplicateCode: SerializerErrorCode
+  ) : boolean {
+    for (var valueElement of DomUtils.getChildrenByTagName(parent, "value")) {
+      var key_or_null: string | null = valueElement.getAttribute("key");
+      if (key_or_null == null) {
+	return this.parseError(missingCode, valueElement, "Data value key is missing.");
+      }
+      var key: string = key_or_null!;
+      if (cd.hasValue(key)) {
+	return this.parseError(duplicateCode, valueElement, "Data value key '" + key + "' is duplicated.");
+      }
+      cd.setValue(key, valueElement.textContent);
     }
     return true;
   }
@@ -185,7 +199,13 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.PORT_CONNECTION_POLICY_INVALID, portNode, desc + " '" + id + "' has invalid connection policy '" + connectionPolicy_str + "'");
     }
     
-    namedPorts.addPort(id, new NodePort(dataType, description!, connectionPolicy));
+    var port: NodePort = new NodePort(dataType, description!, connectionPolicy);
+    
+    // Node-type metadata (optional)
+    if (!this.parseMetadata(portNode, port.getMetadata())) return false;
+
+    namedPorts.addPort(id, port);
+
 
     return true;
   }
@@ -254,9 +274,22 @@ export class SerializerXMLReader {
     nodeType.setVisibility(visibility);
     nodeType.setType(type);
 
+    var override_attribute: string | null = nodeTypeNode.getAttribute("allow-port-override");
+    if (override_attribute != null) {
+      var allowOverride: boolean = nodeTypeNode.getAttribute("allow-port-override") == "true";
+      nodeType.setAllowPortOverride(allowOverride);
+    }
+    
     if (!this.parsePorts(nodeTypeNode, nodeType.getInputs(), "inputs", "Input Port")) return false;
     if (!this.parsePorts(nodeTypeNode, nodeType.getOutputs(), "outputs", "Output Port")) return false;
 
+    // Default node data.
+    if (!this.parseConnectionData(
+      nodeTypeNode, nodeType.getDefaultNodeData(),
+      SerializerErrorCode.NODE_TYPE_DATA_KEY_MISSING,
+      SerializerErrorCode.NODE_TYPE_DATA_KEY_DUPLICATE,
+    )) return false;
+    
     // Node-type metadata (optional)
     if (!this.parseMetadata(nodeTypeNode, nodeType.getMetadata())) return false;
     
@@ -280,38 +313,42 @@ export class SerializerXMLReader {
     if (id_or_n == null) {
       return this.parseError(SerializerErrorCode.NODE_NODE_ID_MISSING, nodeNode, "Node id missing");
     }
-    var id: string = id_or_n!;
-    if (nodeGraph.hasNode(id)) {
-      return this.parseError(SerializerErrorCode.NODE_NODE_ID_DUPLICATE, nodeNode, "Node id '" + id + "' is duplicated");
+    var nodeId: string = id_or_n!;
+    if (nodeGraph.hasNode(nodeId)) {
+      return this.parseError(SerializerErrorCode.NODE_NODE_ID_DUPLICATE, nodeNode, "Node id '" + nodeId + "' is duplicated");
     }
 
     var nodeType_str: string | null = nodeNode.getAttribute("type");
     if (nodeType_str == null) {
-      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_MISSING, nodeNode, "Node id '" + id + "' has missing type.");
+      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_MISSING, nodeNode, "Node id'" + nodeId + "' has missing type.");
     }
     else if (!this.mNodeModule.hasNodeType(nodeType_str)) {
-      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_INVALID, nodeNode, "Node id '" + id + "' has invalid type '" + nodeType_str + "'");
+      return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_INVALID, nodeNode, "Node id '" + nodeId + "' has invalid type '" + nodeType_str + "'");
     }
     
     var nodeType = this.mNodeModule.getNodeType(nodeType_str!)!;
 
     var nodeData: ConnectionData = new ConnectionData();
-    for (var valueNode of DomUtils.getChildrenByTagName(nodeNode, "value")) {
-      var key: string | null = valueNode.getAttribute("key");
-      if (key == null) {
-	return this.parseError(SerializerErrorCode.NODE_DATA_KEY_MISSING, valueNode, "Node id '" + id + "' <value> tag is missing 'key' attribute.");
-      }
-      nodeData.setValue(key!, valueNode.textContent);
-    }
+    if (!this.parseConnectionData(
+      nodeNode, nodeData,
+      SerializerErrorCode.NODE_DATA_KEY_MISSING,
+      SerializerErrorCode.NODE_DATA_KEY_DUPLICATE,
+    )) return false;
     
-    var node: Node = nodeGraph.newNode(nodeType, id, nodeData);
+    var node: Node = nodeGraph.newNode(nodeType, nodeId, nodeData);
 
     if (DomUtils.hasChildrenByTagName(nodeNode, "inputs")) {
+      if (!nodeType.getAllowPortOverride()) {
+	return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_DOES_NOT_ALLOW_OVERRIDE, nodeNode, "Node id '" + nodeId + "' does not allow port overrides");
+      }
       node.setOverrideInputs(true);
       if (!this.parsePorts(nodeNode, node.getOverrideInputs(), "inputs", "Input Port")) return false;
     }
 
     if (DomUtils.hasChildrenByTagName(nodeNode, "outputs")) {
+      if (!nodeType.getAllowPortOverride()) {
+	return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_DOES_NOT_ALLOW_OVERRIDE, nodeNode, "Node id '" + nodeId + "' does not allow port overrides");
+      }
       node.setOverrideOutputs(true);
       if (!this.parsePorts(nodeNode, node.getOverrideOutputs(), "outputs", "Output Port")) return false;
     }

@@ -29,50 +29,53 @@ namespace NodeJS {
 	      const XmlNodeWrapper & metadataContainer,
 	      NodeJS::core::Metadata & metadata
 	      ) const;
+	  bool parseConnectionData(
+	      XmlNodeWrapper parent,
+	      NodeJS::core::ConnectionData & cd,
+	      NodeJS::core::SerializerErrorCode missingCode,
+	      NodeJS::core::SerializerErrorCode duplicateCode
+	      ) const;
+	  
 	  bool parsePackage(void) const;
 	  
 	  bool parseDataType(XmlNodeWrapper node) const;
 	  bool parseDataTypes(void) const;
 	  
-	  bool readNamedPorts(
+	  bool parsePort(
+	      XmlNodeWrapper portNode,
 	      NodeJS::core::NamedPorts & namedPorts,
-	      XmlNodeWrapper inputsNode
+	      std::string desc,
+	      const NodeJS::core::NodeGraph *graph
+	      ) const;
+	  bool parsePorts(
+	      XmlNodeWrapper nodeTypeNode,
+	      NodeJS::core::NamedPorts & namedPorts,
+	      std::string tag,
+	      std::string desc,
+	      const NodeJS::core::NodeGraph *graph
 	      ) const;
 	  bool parseNodeType(
 	      XmlNodeWrapper nodeTypeNode
 	      ) const;
 	  bool parseNodeTypes(void) const;
 	  
-	  bool readGraphNodeData(
-	      NodeJS::core::ConnectionData & node_data,
-	      XmlNodeWrapper nodeNode
+	  bool parseNode(
+	      XmlNodeWrapper nodeNode,
+	      NodeJS::core::NodeGraph & nodeGraph
 	      ) const;
-	  bool readGraphNode(
-	      NodeJS::core::NodeGraph & node_graph,
-	      XmlNodeWrapper nodeNode
-	      ) const;
-	  bool readGraphNodes(
-	      NodeJS::core::NodeGraph & node_graph,
-	      XmlNodeWrapper nodesNode
-	      ) const;
-	  bool readGraphEdge(
-	      NodeJS::core::NodeGraph & node_graph,
-	      XmlNodeWrapper edgeNode
-	      ) const;
-	  bool readGraphEdges(
-	      NodeJS::core::NodeGraph & node_graph,
-	      XmlNodeWrapper nodesNode
+	  bool parseEdge(
+	      XmlNodeWrapper edgeNode,
+	      NodeJS::core::NodeGraph & node_graph
 	      ) const;
 	  bool readGraphScope(
-	      NodeJS::core::NodeGraph & node_graph,
-	      XmlNodeWrapper scopeNode
+	      XmlNodeWrapper scopeNode,
+	      NodeJS::core::NodeGraph & nodeGraph
 	      ) const;
-	  bool readGraph(
+	  bool parseGraph(
 	      XmlNodeWrapper graphNode
 	      ) const;
-	  bool readGraphs(
-	      XmlNodeWrapper nodeTypesNode
-	      ) const;
+	  bool parseGraphs(void) const;
+	  
 	  std::string mFilename;
 	  xmlDocPtr mDocument;
 	  NodeJS::core::NodeModule & mNodeModule;

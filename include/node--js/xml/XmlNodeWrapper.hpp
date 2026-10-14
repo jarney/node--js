@@ -102,6 +102,8 @@ namespace NodeJS {
 		std::string mTagName;
 	    };
 	    ChildrenByTagName getChildrenByTagName(std::string tagName) const;
+	    bool hasChildrenByTagName(std::string tagName) const;
+	    
 	private:
 	    xmlNodePtr _node;
 	    bool _is_owning;

@@ -391,7 +391,7 @@ SerializerXML::read(
     
     doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
     if (doc == nullptr) {
-        err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
+        err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse package xml file:" + filename);
 	return false;
     }
     

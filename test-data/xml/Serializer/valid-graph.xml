@@ -47,14 +47,14 @@
 	<port id="assignment" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="function-call" visibility="public" type="native">
+    <node-type id="function-call" visibility="public" type="native" allow-port-override="true">
       <inputs>
       </inputs>
       <outputs>
 	<port id="out" description="Variable Assignments" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="function" visibility="public" type="native">
+    <node-type id="function" visibility="public" type="native" allow-port-override="true">
       <inputs>
       </inputs>
       <outputs>
