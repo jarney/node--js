@@ -153,6 +153,7 @@ namespace NodeJS {
 	    const std::vector<SerializerError> & getErrors(SerializerErrorCode code);
 	    bool hasError() const;
 	    bool hasErrorCode(SerializerErrorCode error_code) const;
+	    void dump() const;
 	private:
 	    std::map<SerializerErrorCode, std::vector<SerializerError>> mErrorsByCode;
 	};

@@ -130,7 +130,13 @@ XmlNodeWrapper::ChildrenByTagName::ChildrenByTagName(
 XmlNodeWrapper::Iterator
 XmlNodeWrapper::ChildrenByTagName::begin()
 {
-  return Iterator(mNode, mTagName);
+    Iterator it(mNode, mTagName);
+    Iterator endIt(nullptr);
+    while (it != endIt) {
+	if ((*it).getName() == mTagName) break;
+	++it;
+    }
+    return it;
 }
 
 XmlNodeWrapper::Iterator
@@ -140,7 +146,10 @@ XmlNodeWrapper::ChildrenByTagName::end()
 }
 
 XmlNodeWrapper::ChildrenByTagName
-XmlNodeWrapper::getChildrenByTagName(std::string tagName)
+XmlNodeWrapper::getChildrenByTagName(std::string tagName) const
 {
-  return XmlNodeWrapper::ChildrenByTagName(_node, tagName);
+    return XmlNodeWrapper::ChildrenByTagName(
+	xmlFirstElementChild(_node),
+	tagName
+	);
 }

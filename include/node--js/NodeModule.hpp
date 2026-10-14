@@ -31,7 +31,7 @@ namespace NodeJS {
 	public:
 	    typedef std::string GraphId;
 	
-	    NodeModule(ModuleLoader & moduleLoader);
+	    NodeModule(ModuleLoader & moduleLoader, std::string aFullyQualifiedModuleName);
 	    ~NodeModule() = default;
 
 	    /**

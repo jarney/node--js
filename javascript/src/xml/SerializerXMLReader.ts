@@ -113,18 +113,18 @@ export class SerializerXMLReader {
   }
   
   
-  private parseDataType(dataTypeNode: Element) : boolean {
-    var id_or_n: string | null = dataTypeNode.getAttribute("id");
+  private parseDataType(dataTypeElement: Element) : boolean {
+    var id_or_n: string | null = dataTypeElement.getAttribute("id");
     if (id_or_n == null) {
-      return this.parseError(SerializerErrorCode.DATA_TYPE_ID_MISSING, dataTypeNode, "Missing id for data type");
+      return this.parseError(SerializerErrorCode.DATA_TYPE_ID_MISSING, dataTypeElement, "Missing id for data type");
     }
     var id: string = id_or_n!;
-    var name: string | null = dataTypeNode.getAttribute("name");
+    var name: string | null = dataTypeElement.getAttribute("name");
     if (name == null) {
       name = id;
     }
     if (this.mNodeModule.hasDataType(id)) {
-      return this.parseError(SerializerErrorCode.DATA_TYPE_ID_DUPLICATE, dataTypeNode, "Duplicate id '" + id + "' for data type.");
+      return this.parseError(SerializerErrorCode.DATA_TYPE_ID_DUPLICATE, dataTypeElement, "Duplicate id '" + id + "' for data type.");
     }
     
     var dataType: DataType = new DataType(id, name!);
@@ -134,9 +134,9 @@ export class SerializerXMLReader {
   }
 
   public parseDataTypes() : boolean {
-    for (var dataTypesNode of DomUtils.getChildrenByTagName(this.mRoot, "data-types")) {
-      for (var dataTypeNode of DomUtils.getChildrenByTagName(dataTypesNode, "data-type")) {
-	if (!this.parseDataType(dataTypeNode)) return false;
+    for (var dataTypesElement of DomUtils.getChildrenByTagName(this.mRoot, "data-types")) {
+      for (var dataTypeElement of DomUtils.getChildrenByTagName(dataTypesElement, "data-type")) {
+	if (!this.parseDataType(dataTypeElement)) return false;
       }
     }
     return true;

@@ -2,9 +2,9 @@
 
 using namespace NodeJS::core;
 
-NodeModule::NodeModule(ModuleLoader & aModuleLoader)
+NodeModule::NodeModule(ModuleLoader & aModuleLoader, std::string aFullyQualifiedModuleName)
     : mModuleLoader(aModuleLoader)
-    , mPackage("anonymous")
+    , mPackage(aFullyQualifiedModuleName)
     , mDescription("Uncategorized")
 {}
 

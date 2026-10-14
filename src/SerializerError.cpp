@@ -58,6 +58,19 @@ SerializerErrorReporterByCode::hasError() const
     return mErrorsByCode.size() != 0;
 }
 
+void
+SerializerErrorReporterByCode::dump() const
+{
+    for (const auto & it : mErrorsByCode) {
+	for (const auto & itErr : it.second) {
+	    fprintf(stderr, "Code: %d\n", itErr.error_code);
+	    fprintf(stderr, "Context: %s:%ld\n", itErr.file_context.c_str(), itErr.lineno);
+	    fprintf(stderr, "Message: %s\n", itErr.error.c_str());
+	}
+    }
+std::map<SerializerErrorCode, std::vector<SerializerError>> mErrorsByCode;
+}
+
 SerializerError::SerializerError(
 				 SerializerErrorCode aError_code,
 				 unsigned long aLineno,

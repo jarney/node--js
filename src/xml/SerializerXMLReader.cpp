@@ -15,12 +15,13 @@ SerializerXMLReader::SerializerXMLReader(
     , mDocument(aDocument)
     , mNodeModule(aNodeModule)
     , mReporter(aErrorReporter)
+    , mRoot(xmlDocGetRootElement(mDocument), false)
 {}
 
 bool
 SerializerXMLReader::parseError(
     SerializerErrorCode error_code,
-    XmlNodeWrapper & element,
+    const XmlNodeWrapper & element,
     std::string message
     ) const
 {
@@ -31,80 +32,120 @@ SerializerXMLReader::parseError(
 
 bool
 SerializerXMLReader::parseMetadata(
-    XmlNodeWrapper & metadataContainer,
+    const XmlNodeWrapper & metadataContainer,
     Metadata & metadata
     ) const
 {
-    for (XmlNodeWrapper dataElement : metadataContainer.getChildrenByTagName("data")) {
-	if (!dataElement.hasAttribute("namespace")) {
-	    return parseError(SerializerErrorCode::METADATA_NAMESPACE_MISSING, dataElement, "Metadata data element is missing 'namespace' attribute.");
-	}
-	std::string ns = dataElement.getAttribute("namespace");
-	if (metadata.hasMetadata(ns)) {
-	    return parseError(SerializerErrorCode::METADATA_NAMESPACE_DUPLICATE, dataElement, "Metadata namespace '" + ns + "' is duplicated.");
-	}
-	ConnectionData & cd = metadata.getMetadata(ns);
-	for (XmlNodeWrapper valueElement : metadataContainer.getChildrenByTagName("value")) {
-	    if (!valueElement.hasAttribute("key")) {
-		return parseError(SerializerErrorCode::METADATA_KEY_MISSING, valueElement, "Metadata key is missing.");
+    for (XmlNodeWrapper metadataElement : metadataContainer.getChildrenByTagName("metadata")) {
+	for (XmlNodeWrapper dataElement : metadataElement.getChildrenByTagName("data")) {
+	    if (!dataElement.hasAttribute("namespace")) {
+		return parseError(SerializerErrorCode::METADATA_NAMESPACE_MISSING, dataElement, "Metadata data element is missing 'namespace' attribute.");
 	    }
-	    std::string key = valueElement.getAttribute("key");
-	    if (cd.hasValue(key)) {
-		return parseError(SerializerErrorCode::METADATA_KEY_DUPLICATE, valueElement, "Metadata key '" + key + "' is duplicated.");
+	    std::string ns = dataElement.getAttribute("namespace");
+	    if (metadata.hasMetadata(ns)) {
+		return parseError(SerializerErrorCode::METADATA_NAMESPACE_DUPLICATE, dataElement, "Metadata namespace '" + ns + "' is duplicated.");
 	    }
-	    cd.setValue(key, valueElement.getContent());
+	    ConnectionData & cd = metadata.getMetadata(ns);
+	    for (XmlNodeWrapper valueElement : dataElement.getChildrenByTagName("value")) {
+		if (!valueElement.hasAttribute("key")) {
+		    return parseError(SerializerErrorCode::METADATA_KEY_MISSING, valueElement, "Metadata key is missing.");
+		}
+		std::string key = valueElement.getAttribute("key");
+		if (cd.hasValue(key)) {
+		    return parseError(SerializerErrorCode::METADATA_KEY_DUPLICATE, valueElement, "Metadata key '" + key + "' is duplicated.");
+		}
+		cd.setValue(key, valueElement.getContent());
+	    }
 	}
     }
     return true;
 }
 
 bool
-SerializerXMLReader::readDataType(
-    XmlNodeWrapper node
+SerializerXMLReader::parsePackage() const
+{
+    int packageCount = 0;
+    
+    for (XmlNodeWrapper packageElement : mRoot.getChildrenByTagName("package")) {
+	if (!packageElement.hasAttribute("version")) {
+	    return parseError(SerializerErrorCode::PACKAGE_VERSION_MISSING, packageElement, "Package version is missing");
+	}
+	std::string version = packageElement.getAttribute("version");
+	if (version != "1") {
+	    return parseError(SerializerErrorCode::PACKAGE_VERSION_UNSUPPORTED, packageElement, "Package version " + version + " is not yet supported.");
+	}
+
+	std::string id;
+	if (!packageElement.hasAttribute("id")) {
+	    mReporter.reportError(SerializerErrorCode::PACKAGE_ID_MISSING, 22, "context", std::string("Package 'id' is missing"));
+	    return false;
+	}
+	id = packageElement.getAttribute("id");
+	if (id != mFilename) {
+	    return parseError(SerializerErrorCode::PACKAGE_ID_INCONSISTENT, packageElement, "Package id should be the same as the file it was loaded from.");
+	}
+	
+	mNodeModule.setPackage(id);
+	
+	if (packageElement.hasAttribute("description")) {
+	    std::string desc = packageElement.getAttribute("description");
+	    mNodeModule.setDescription(desc);
+	}
+	else {
+	    mNodeModule.setDescription(id);
+	}
+	if (packageCount > 0) {
+	    return parseError(SerializerErrorCode::PACKAGE_DUPLICATE, packageElement,
+			      "Too many package declarations.  There should only be a single package declaration in a module.");
+	}
+	packageCount++;
+    }
+    if (packageCount < 1) {
+      return parseError(SerializerErrorCode::PACKAGE_MISSING, mRoot,
+			"Package declaration missing.  Module must contain a <package id='...'/> element.");
+    }
+
+    if (!parseMetadata(mRoot, mNodeModule.getMetadata())) return false;
+
+    return true;
+}
+
+bool
+SerializerXMLReader::parseDataType(
+    XmlNodeWrapper dataTypeElement
     ) const
 {
-    std::string id = node.getAttribute("id");
-    std::string name = node.getAttribute("name");
+    if (!dataTypeElement.hasAttribute("id")) {
+	return parseError(SerializerErrorCode::DATA_TYPE_ID_MISSING, dataTypeElement, "Missing id for data type");
+    }
+    std::string id = dataTypeElement.getAttribute("id");
+    std::string name;
+    if (dataTypeElement.hasAttribute("name")) {
+	name = dataTypeElement.getAttribute("name");
+    }
+    else {
+	name = id;
+    }
+    if (mNodeModule.hasDataType(id)) {
+	return parseError(SerializerErrorCode::DATA_TYPE_ID_DUPLICATE, dataTypeElement, "Duplicate id '" + id + "' for data type.");
+    }
+    
     std::unique_ptr<DataType> dataType = std::make_unique<DataType>(id, name);
     mNodeModule.addDataType(std::move(dataType));
+    
+    return true;
+
     
     return true;
 }
 
 bool
-SerializerXMLReader::readDataTypes(
-    XmlNodeWrapper dataTypesNode
-    ) const
+SerializerXMLReader::parseDataTypes() const
 {
-    for (XmlNodeWrapper::Iterator it = dataTypesNode.begin(); it != dataTypesNode.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	if (child.getName() != std::string("data-type")) {
-	    continue;
+    for (XmlNodeWrapper dataTypesElement : mRoot.getChildrenByTagName("data-types")) {
+	for (XmlNodeWrapper dataTypeElement : dataTypesElement.getChildrenByTagName("data-type")) {
+	    if (!parseDataType(dataTypeElement)) return false;
 	}
-	readDataType(child);
-    }
-    return true;
-}
-
-bool
-SerializerXMLReader::readPackage(
-    XmlNodeWrapper packageNode
-    ) const
-{
-    std::string id;
-    if (!packageNode.hasAttribute("id")) {
-	mReporter.reportError(SerializerErrorCode::PACKAGE_VERSION_MISSING, 22, "context", std::string("Package 'id' is missing"));
-	return false;
-    }
-    id = packageNode.getAttribute("id");
-    mNodeModule.setPackage(id);
-
-    if (packageNode.hasAttribute("description")) {
-	std::string desc = packageNode.getAttribute("description");
-	mNodeModule.setDescription(desc);
-    }
-    else {
-	mNodeModule.setDescription(id);
     }
     return true;
 }
@@ -131,14 +172,8 @@ SerializerXMLReader::readNamedPorts(
 	    }
 	}
 	std::unique_ptr<NodePort> port = std::make_unique<NodePort>(dataType, description, connectionPolicy);
-    
-	for (XmlNodeWrapper::Iterator itPortChildren = child.begin(); itPortChildren != child.end(); ++itPortChildren) {
-	    XmlNodeWrapper portChild = itPortChildren.get();
-	    std::string portChildName = portChild.getName();
-	    if (portChildName == "metadata") {
-		parseMetadata(portChild, port->getMetadata());
-	    }
-	}
+
+	parseMetadata(child, port->getMetadata());
 	
 	namedPorts.addPort(id, std::move(port));
     }
@@ -146,7 +181,7 @@ SerializerXMLReader::readNamedPorts(
 }
 
 bool
-SerializerXMLReader::readNodeType(
+SerializerXMLReader::parseNodeType(
     XmlNodeWrapper nodeTypeNode
     ) const
 {
@@ -190,35 +225,24 @@ SerializerXMLReader::readNodeType(
 	    readGraphNodeData(node_data, child);
 	    nodeType->setDefaultNodeData(node_data);
 	}
-	else if (childName == std::string("metadata")) {
-	    parseMetadata(child, nodeType.get()->getMetadata());
-	}
 	else {
 	    // Nothing to do, this is extraneous.
 	}
     
     }
+    parseMetadata(nodeTypeNode, nodeType.get()->getMetadata());
     
     mNodeModule.addNodeType(std::move(nodeType));
     return true;
 }
 
 bool
-SerializerXMLReader::readNodeTypes(
-    XmlNodeWrapper nodeTypesNode
-    ) const
+SerializerXMLReader::parseNodeTypes(void) const
 {
-    for (XmlNodeWrapper::Iterator it = nodeTypesNode.begin(); it != nodeTypesNode.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	std::string childName = child.getName();
-	if (childName != std::string("node-type")) {
-	    continue;
+    for (XmlNodeWrapper nodeTypesNode : mRoot.getChildrenByTagName("node-types")) {
+	for (XmlNodeWrapper nodeTypeNode : nodeTypesNode.getChildrenByTagName("node-type")) {
+	    if (!parseNodeType(nodeTypeNode)) return false;
 	}
-	if (!child.hasAttribute("id")) {
-	    fprintf(stderr, "Invalid file: no node type id\n");
-	    continue;
-	}
-	readNodeType(child);
     }
     return true;
 }
@@ -278,10 +302,8 @@ SerializerXMLReader::readGraphNode(
 		readNamedPorts(node.getOverrideOutputs(), child);
 	    }
 	}
-	if (childName == std::string("metadata")) {
-	    parseMetadata(child, node.getMetadata());
-	}
     }
+    parseMetadata(nodeNode, node.getMetadata());
     return true;
 }
 
@@ -385,10 +407,8 @@ SerializerXMLReader::readGraph(
 	if (childName == std::string("scope")) {
 	    readGraphScope(*graph, child);
 	}
-	else if (childName == std::string("metadata")) {
-	    parseMetadata(child, graph->getMetadata());
-	}
     }
+    parseMetadata(graphNode, graph->getMetadata());
     
     // All nodes must be read before any edges
     for (XmlNodeWrapper::Iterator it = graphNode.begin(); it != graphNode.end(); ++it) {
@@ -432,40 +452,18 @@ bool
 SerializerXMLReader::read(void) const
 {
     /*Get the root element node */
-    XmlNodeWrapper root(xmlDocGetRootElement(mDocument), false);
 
     // The package needs to be read first because that determines where
     // other data is registered.
-    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	std::string childName = child.getName();
-	if (childName == std::string("package")) {
-	    if (!readPackage(child)) return false;
-	}
-    }
+    if (!parsePackage()) return false;
 
     // Data types need to be read before node types
     // even if they appear later in the file.
-    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	std::string childName = child.getName();
-	if (childName == std::string("data-types")) {
-	    readDataTypes(child);
-	}
-	else if (childName == std::string("metadata")) {
-	    parseMetadata(child, mNodeModule.getMetadata());
-	}
-    }
+    if (!parseDataTypes()) return false;
     
     // Node types must be loaded before we load any nodes
-    for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
-	XmlNodeWrapper child = it.get();
-	std::string childName = child.getName();
-	if (childName == std::string("node-types")) {
-	    readNodeTypes(child);
-	}
-    }
-
+    if (!parseNodeTypes()) return false;
+#if 0    
     // Finally, we have enough qualified metadata
     // the node types and graphs from the file.
     for (XmlNodeWrapper::Iterator it = root.begin(); it != root.end(); ++it) {
@@ -475,7 +473,7 @@ SerializerXMLReader::read(void) const
 	    readGraphs(child);
 	}
     }
-    
+#endif    
     return true;
 }    
 

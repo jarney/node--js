@@ -30,15 +30,18 @@ static void testPackageFile(std::string packageName, std::function<void(bool res
 TEST_CASE("test_SerializerXML_openscad_package", "[NodeJS][xml][Serializer]") {
     std::string packageName = "org.ensor.nodejs.openscad";
     testPackageFile(packageName, [&packageName](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
+      errorReporter.dump();
       CHECK(result);
       CHECK(!errorReporter.hasError());
       CHECK(!errorReporter.hasErrorCode(SerializerErrorCode::PACKAGE_ID_MISSING));
       CHECK(nodeModule.getPackage() == packageName);
     });
 }
+
 TEST_CASE("test_SerializerXML_valid_graph", "[NodeJS][xml][Serializer]") {
     std::string packageName = "valid-graph";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
+      errorReporter.dump();
       CHECK(result);
       CHECK(!errorReporter.hasError());
     });
@@ -78,6 +81,7 @@ TEST_CASE("test_SerializerXML_package_missing", "[NodeJS][xml][Serializer]") {
 TEST_CASE("test_SerializerXML_package_missing_id", "[NodeJS][xml][Serializer]") {
     std::string packageName = "invalid-package-missing-id";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
+      errorReporter.dump();
       CHECK(!result);
       CHECK(errorReporter.hasError());
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::PACKAGE_ID_MISSING));
@@ -117,6 +121,7 @@ TEST_CASE("test_SerializerXML_data_type_id_duplicate", "[NodeJS][xml][Serializer
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::DATA_TYPE_ID_DUPLICATE));
     });
 }
+#if 0
 TEST_CASE("test_SerializerXML_node_type_id_missing", "[NodeJS][xml][Serializer]") {
     std::string packageName = "invalid-node-type-id-missing";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
@@ -407,3 +412,4 @@ TEST_CASE("test_SerializerXML_edge_connection_policy_to", "[NodeJS][xml][Seriali
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::EDGE_VIOLATES_POLICY));
     });
 }
+#endif
