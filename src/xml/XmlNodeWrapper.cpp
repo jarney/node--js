@@ -20,6 +20,12 @@ XmlNodeWrapper::end()
     return Iterator(nullptr);
 }
 
+long
+XmlNodeWrapper::getLineno() const
+{
+  return xmlGetLineNo(_node);
+}
+
 XmlNodeWrapper::XmlNodeWrapper(xmlNodePtr node, bool is_owning)
     : _node(node)
     , _is_owning(is_owning)
@@ -113,3 +119,28 @@ XmlNodeWrapper::setContent(std::string textContent)
     xmlAddChild(_node, textContentNode);
 }
 
+XmlNodeWrapper::ChildrenByTagName::ChildrenByTagName(
+						     xmlNodePtr aNode,
+						     std::string aTagName
+						    )
+  : mNode(aNode)
+  , mTagName(aTagName)
+{}
+
+XmlNodeWrapper::Iterator
+XmlNodeWrapper::ChildrenByTagName::begin()
+{
+  return Iterator(mNode, mTagName);
+}
+
+XmlNodeWrapper::Iterator
+XmlNodeWrapper::ChildrenByTagName::end()
+{
+    return Iterator(nullptr);
+}
+
+XmlNodeWrapper::ChildrenByTagName
+XmlNodeWrapper::getChildrenByTagName(std::string tagName)
+{
+  return XmlNodeWrapper::ChildrenByTagName(_node, tagName);
+}

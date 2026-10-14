@@ -18,16 +18,30 @@ namespace NodeJS {
 		using reference         = xmlNode&;  // or also value_type&
 		
 		// Iterator constructors here...
-		Iterator(pointer node) : m_node(node) {}
+	      Iterator(pointer node)
+		: m_node(node)
+		, mTagName()
+		, mByTag(false)
+	      {}
+	      Iterator(pointer node, std::string tagName)
+		: m_node(node)
+		, mTagName(tagName)
+		, mByTag(true)
+	      {}
 		
-		reference operator*() const { return *m_node; }
+	      XmlNodeWrapper operator*() const { return XmlNodeWrapper(m_node, false); }
 		pointer operator->() { return m_node; }
 		XmlNodeWrapper get();// { return m_node; }
 		
 		// Prefix increment
 		Iterator& operator++() {
+		  while (m_node) {
 		    m_node = xmlNextElementSibling(m_node);
-		    return *this;
+		    if (!mByTag) break;
+		    std::string name((const char *)m_node->name);
+		    if (name == mTagName) break;
+		  }
+		  return *this;
 		}
 		
 		// Postfix increment
@@ -41,7 +55,9 @@ namespace NodeJS {
 		friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_node != b.m_node; };     
 		
 	    private:
-		pointer m_node;
+	      pointer m_node;
+	      std::string mTagName;
+	      bool mByTag;
 	    };
 	    
 	    XmlNodeWrapper(xmlNodePtr node, bool is_owning);
@@ -66,9 +82,25 @@ namespace NodeJS {
 	    std::string getContent() const;
 
 	    void setContent(std::string textContent);
-	    
+            long getLineno() const;
+  
 	    Iterator begin();
 	    Iterator end();
+
+	  class ChildrenByTagName {
+	  public:
+	    ChildrenByTagName(
+			      xmlNodePtr aNode,
+			      std::string aTagName
+			     );
+	    ~ChildrenByTagName() = default;
+	    Iterator begin();
+	    Iterator end();
+	  private:
+	    xmlNodePtr mNode;
+	    std::string mTagName;
+	  };
+	  ChildrenByTagName getChildrenByTagName(std::string tagName);
 	private:
 	    xmlNodePtr _node;
 	    bool _is_owning;

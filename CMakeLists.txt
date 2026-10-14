@@ -67,6 +67,7 @@ set(CPP_SOURCE_FILES
   src/SerializerError.cpp
   src/Validator.cpp
   src/xml/SerializerXML.cpp
+  src/xml/SerializerXMLReader.cpp
   src/xml/ModuleLoaderNodeJSPath.cpp
   src/xml/XmlNodeWrapper.cpp
   src/engines/openscad/Builtins.cpp
