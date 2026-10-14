@@ -20,11 +20,11 @@ static void testPackageFile(std::string packageName, std::function<void(bool res
     SerializerErrorReporterByCode errorReporter;
   
     ModuleLoaderNodeJSPath loader;
-    NodeModule & nodeModule = *loader.newModule("");
+    auto nodeModule = loader.newModule("");
   
-    bool result = serializer.read(packageName, xmlData, nodeModule, errorReporter);
+    bool result = serializer.read(packageName, xmlData, *nodeModule, errorReporter);
   
-    callback(result, nodeModule, errorReporter);
+    callback(result, *nodeModule, errorReporter);
 }
 
 TEST_CASE("test_SerializerXML_openscad_package", "[NodeJS][xml][Serializer]") {

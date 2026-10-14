@@ -82,16 +82,16 @@ ModuleLoaderNodeJSPath::getNODEJS_PATH()
     return mPath;
 }
 
-NodeModule *
+std::unique_ptr<NodeModule>
 ModuleLoaderNodeJSPath::loadModule(
     std::string aFullyQualifiedModuleName,
     SerializerErrorReporter & reporter
     )
 {
-    const auto & it = mLoadedModules.find(aFullyQualifiedModuleName);
-    if (it != mLoadedModules.end()) {
-	return it->second.get();
-    }
+//    const auto & it = mLoadedModules.find(aFullyQualifiedModuleName);
+//    if (it != mLoadedModules.end()) {
+//	return it->second.get();
+//    }
     
     const SerializerXML & ser = SerializerXML::instance();
     std::unique_ptr<NodeModule> module;
@@ -114,23 +114,25 @@ ModuleLoaderNodeJSPath::loadModule(
     }
     // Even if we fail, we want to put the (null) module
     // onto the list so we don't try (and fail) to load it again.
-    NodeModule *ret_module = module.get();
-    mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
-    return ret_module;
+//    NodeModule *ret_module = module.get();
+//    mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+//    return ret_module;
+    return module;
 }
 
-NodeModule *
+std::unique_ptr<NodeModule>
 ModuleLoaderNodeJSPath::newModule(
     std::string aFullyQualifiedModuleName
     )
 {
-    const auto it = mLoadedModules.find(aFullyQualifiedModuleName);
-    if (it == mLoadedModules.end()) {
+//    const auto it = mLoadedModules.find(aFullyQualifiedModuleName);
+//    if (it == mLoadedModules.end()) {
 	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
-	NodeModule *ret_module = module.get();
-	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
-	return ret_module;
-    }
-    return it->second.get();
+//	NodeModule *ret_module = module.get();
+//	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+//	return ret_module;
+//    }
+//    return it->second.get();
+	return module;
 }
 

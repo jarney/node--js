@@ -7,11 +7,7 @@ using namespace NodeJS::core;
 
 NodeGraph::NodeGraph(NodeModule & aModule)
     : mModule(aModule)
-{
-    // Is this always what we want?
-    // Is the current module always in scope?
-    mScopes.push_back(&mModule);
-}
+{}
 
 NodeGraph::~NodeGraph()
 {}
@@ -233,62 +229,6 @@ const std::map<EdgeId, std::unique_ptr<Edge>> &
 NodeGraph::getEdges() const
 {
     return mEdges;
-}
-
-void
-NodeGraph::addScope(const NodeModule *node_module)
-{
-    mScopes.push_back(node_module);
-}
-
-void
-NodeGraph::copyScope(const NodeGraph *other)
-{
-    mScopes = other->mScopes;
-}
-
-const std::vector<const NodeModule *> &
-NodeGraph::getScopes() const
-{ return mScopes; }
-
-const NodeType *
-NodeGraph::getNodeType(std::string aTypeName)
-{
-    for (const auto & it : mScopes) {
-	if (it->hasNodeType(aTypeName)) {
-	    return it->getNodeType(aTypeName);
-	}
-    }
-    return nullptr;
-}
-
-bool
-NodeGraph::hasNodeType(std::string aTypeName) const
-{
-    for (const auto & it : mScopes) {
-	if (it->hasNodeType(aTypeName))  return true;
-    }	
-    return false;
-}
-
-const DataType *
-NodeGraph::getDataType(std::string aTypeName)
-{
-    for (const auto & it : mScopes) {
-	if (it->hasDataType(aTypeName)) {
-	    return it->getDataType(aTypeName);
-	}
-    }
-    return nullptr;
-}
-
-bool
-NodeGraph::hasDataType(std::string aTypeName) const
-{
-    for (const auto & it : mScopes) {
-	if (it->hasDataType(aTypeName))  return true;
-    }	
-    return false;
 }
 
 std::set<NodeId>

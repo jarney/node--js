@@ -1,4 +1,5 @@
 #include "node--js/NodeModule.hpp"
+#include "node--js/QualifiedIdentifier.hpp"
 
 using namespace NodeJS::core;
 
@@ -62,23 +63,58 @@ NodeModule::getDataTypes() const
 bool
 NodeModule::hasDataType(const std::string & name) const
 {
-    return mDataTypes.count(name) != 0;
+    QualifiedIdentifier qualifiedName(name);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
+	// Search the scopes.
+	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	if (searchedModule == nullptr) return false;
+	return searchedModule->hasDataType(qualifiedName.getName());
+    }
+    else {
+	return mDataTypes.count(qualifiedName.getName()) != 0;
+    }
 }
 
 bool
 NodeModule::hasNodeType(const std::string & name) const
 {
-    return mNodeTypes.count(name) != 0;
+    QualifiedIdentifier qualifiedName(name);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
+	// Search the scopes.
+	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	if (searchedModule == nullptr) {
+	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
+	    return false;
+	}
+	fprintf(stderr, "Found module, just can't find type\n");
+	return searchedModule->hasNodeType(qualifiedName.getName());
+    }
+    else {
+	return mNodeTypes.count(qualifiedName.getName()) != 0;
+    }
 }
 
 const DataType *
 NodeModule::getDataType(const std::string & name) const
 {
-    const auto & it = mDataTypes.find(name);
-    if (it == mDataTypes.end()) {
-	return nullptr;
+    QualifiedIdentifier qualifiedName(name);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
+	// Search the scopes.
+	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	if (searchedModule == nullptr) {
+	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
+	    return nullptr;
+	}
+	fprintf(stderr, "Found module, just can't find type\n");
+	return searchedModule->getDataType(qualifiedName.getName());
     }
-    return it->second.get();
+    else {
+	const auto & it = mDataTypes.find(qualifiedName.getName());
+	if (it == mDataTypes.end()) {
+	    return nullptr;
+	}
+	return it->second.get();
+    }
 }
 
 /////////////////////////////////////
@@ -97,11 +133,24 @@ NodeModule::removeNodeType(std::string name)
 const NodeType *
 NodeModule::getNodeType(const std::string & name) const
 {
-    const auto & it = mNodeTypes.find(name);
-    if (it == mNodeTypes.end()) {
-	return nullptr;
+    QualifiedIdentifier qualifiedName(name);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
+	// Search the scopes.
+	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	if (searchedModule == nullptr) {
+	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
+	    return nullptr;
+	}
+	fprintf(stderr, "Found module, just can't find type\n");
+	return searchedModule->getNodeType(qualifiedName.getName());
     }
-    return it->second.get();
+    else {
+	const auto & it = mNodeTypes.find(qualifiedName.getName());
+	if (it == mNodeTypes.end()) {
+	    return nullptr;
+	}
+	return it->second.get();
+    }
 }
 
 const
@@ -156,3 +205,36 @@ NodeModule::getMetadata(void)
 {
     return mMetadata;
 }
+void
+NodeModule::loadModule(std::unique_ptr<NodeModule> aModule)
+{
+    std::string packageNamespace = aModule->getPackage();
+    mImportedModules.insert(std::make_pair(packageNamespace, std::move(aModule)));
+}
+
+std::vector<std::string>
+NodeModule::getLoadedNamespaces(void) const
+{
+    std::vector<std::string> loadedNamespaces;
+
+    for (const auto & it : mImportedModules) {
+	loadedNamespaces.push_back(it.first);
+    }
+    
+    return loadedNamespaces;
+}
+
+bool
+NodeModule::hasModule(std::string aPackageNamespace)
+{
+    return mImportedModules.find(aPackageNamespace) != mImportedModules.end();
+}
+
+NodeModule *
+NodeModule::getLoadedModule(std::string moduleName) const
+{
+    const auto it = mImportedModules.find(moduleName);
+    if (it == mImportedModules.end()) return nullptr;
+    return it->second.get();
+}
+

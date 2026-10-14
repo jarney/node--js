@@ -21,6 +21,6 @@ TEST_CASE("test_Validator_basic", "[NodeJS][core][Validator]")
 {
     Reporter err;
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    validate(module, err);
+    auto nodeModule = loader.newModule("anonymous");
+    validate(*nodeModule, err);
 }

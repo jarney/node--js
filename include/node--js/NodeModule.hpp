@@ -87,6 +87,8 @@ namespace NodeJS {
 
 	    const std::map<std::string, std::unique_ptr<NodeType>> & getNodeTypes() const;
 
+	    // Unqualified names are assumed to be in our namespace.
+	    // Qualified names are searched in their appropriate scope.
 	    bool hasNodeType(const std::string & name) const;
 
 	    NodeGraph *addGraph(std::string id);
@@ -104,6 +106,11 @@ namespace NodeJS {
 	     */
 	    const Metadata & getMetadata(void) const;
 	    Metadata & getMetadata(void);
+
+	    void loadModule(std::unique_ptr<NodeModule> aModule);
+	    std::vector<std::string> getLoadedNamespaces(void) const;
+	    bool hasModule(std::string aPackageNamespace);
+	    NodeModule *getLoadedModule(std::string moduleName) const;
 	    
 	private:
 	    ModuleLoader & mModuleLoader;
@@ -112,6 +119,8 @@ namespace NodeJS {
 	    std::map<std::string, std::unique_ptr<DataType>> mDataTypes;
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	    std::map<std::string, std::unique_ptr<NodeGraph>> mGraphs;
+
+	    std::map<std::string, std::unique_ptr<NodeModule>> mImportedModules;
 	    
 	    Metadata mMetadata;
 	};

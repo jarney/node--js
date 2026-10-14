@@ -89,23 +89,24 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file", "[Nod
     std::string path = testDirectory();
     path = path + "/xml/Serializer/";
     loader.setNODEJS_PATH(path);
-    const NodeModule *module = loader.loadModule("org.ensor.nodejs.openscad", err);
+    auto module = loader.loadModule("org.ensor.nodejs.openscad", err);
     CHECK(module != nullptr);
 
     // Load it again.
-    const NodeModule *module2 = loader.loadModule("org.ensor.nodejs.openscad", err);
+    auto module2 = loader.loadModule("org.ensor.nodejs.openscad", err);
     CHECK(module2 != nullptr);
 
     // Check that we actually got the same cached module.
-    CHECK(module == module2);
+    // this is no longer true.
+//    CHECK(module == module2);
 
     // Check that we get a null pointer
     // if the module doesn't exist.
-    const NodeModule *module_nonexistent = loader.loadModule("some-nonexistent-module", err);
+    auto module_nonexistent = loader.loadModule("some-nonexistent-module", err);
     CHECK(module_nonexistent == nullptr);
     
     loader.setNODEJS_PATH("");
-    const NodeModule *module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err);
+    auto module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err);
     CHECK(module_no_path == nullptr);
 }
 
@@ -128,11 +129,12 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_new_module_is_same", "[NodeJS][xml][M
 {
     ModuleLoaderNodeJSPath loader;
 
-    NodeModule *newModule = loader.newModule("unique-module-name");
+    auto newModule = loader.newModule("unique-module-name");
 
-    NodeModule *nextModule = loader.newModule("unique-module-name");
+    auto nextModule = loader.newModule("unique-module-name");
 
     // Module names are unique.  If we ask for a new one, we
     // should expect to get the same one.
-    CHECK(newModule == nextModule);
+    // This is no longer the responsibility of the module loader.
+//    CHECK(newModule == nextModule);
 }

@@ -13,8 +13,8 @@ static const char *DATA_TYPE = "variable";
 TEST_CASE("test_Node_create_node", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");;
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule->addGraph("graph");;
 
     NodeType nodeType;
 
@@ -27,8 +27,8 @@ TEST_CASE("test_Node_create_node", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("test_Node_type_io", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule->addGraph("graph");
 
     NodeType nodeType;
     nodeType.getInputs().addPort("a", std::make_unique<NodePort>(DATA_TYPE, "adesc", NodePort::ConnectionPolicy::Multiple));
@@ -54,8 +54,8 @@ TEST_CASE("test_Node_type_io", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("test_Node_specific_io", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule->addGraph("graph");
 
     NodeType nodeType;
 
@@ -90,8 +90,8 @@ TEST_CASE("test_Node_specific_io", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("test_Node_initialize_with_data", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule->addGraph("graph");
 
     NodeType nodeType;
     ConnectionData initialData;
@@ -120,8 +120,8 @@ TEST_CASE("test_Node_initialize_with_data", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("test_Node_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph *graph = module.addGraph("graph");
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph *graph = nodeModule->addGraph("graph");
 
     NodeType nodeType;
 

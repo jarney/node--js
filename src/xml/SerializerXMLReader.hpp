@@ -67,10 +67,7 @@ namespace NodeJS {
 	      XmlNodeWrapper edgeNode,
 	      NodeJS::core::NodeGraph & node_graph
 	      ) const;
-	  bool readGraphScope(
-	      XmlNodeWrapper scopeNode,
-	      NodeJS::core::NodeGraph & nodeGraph
-	      ) const;
+	  bool parseScope() const;
 	  bool parseGraph(
 	      XmlNodeWrapper graphNode
 	      ) const;

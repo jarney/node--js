@@ -15,21 +15,6 @@
 
 using namespace NodeJS::xml;
 using namespace NodeJS::core;
-#if 0
-using NodeJS::core::Node;
-using NodeJS::core::EdgeId;
-using NodeJS::core::NodePort;
-using NodeJS::core::NodeType;
-using NodeJS::core::NamedPorts;
-using NodeJS::core::NodeModule;
-using NodeJS::core::DataType;
-using NodeJS::core::NodeGraph;
-using NodeJS::core::ConnectionData;
-using NodeJS::core::ModuleLoader;
-using NodeJS::core::Metadata;
-using NodeJS::core::SerializerErrorCode;
-using NodeJS::core::SerializerErrorReporterByCode;
-#endif
 
 static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
 
@@ -270,26 +255,23 @@ writeGraphEdges(
 }
 
 static void
-writeGraphScopeNodes(
-    const NodeGraph & graph,
-    XmlNodeWrapper scopesNode,
+writeScopes(
+    const NodeModule & nodeModule,
+    XmlNodeWrapper parentNode,
     NodeJS::core::SerializerErrorReporter & err
     )
 {
+    XmlNodeWrapper scopeNode("scope");
     // Skip the first scope because that's
     // always the 'current' scope, so we don't want
     // to include it artificially
-    int i = 0;
-    for (const auto & module : graph.getScopes()) {
-	if (i != 0) {
-	    XmlNodeWrapper packageNode("package");
-	    packageNode.setAttribute("id", module->getPackage());
-	    scopesNode.addChild(packageNode);
-	}
-	i++;
+    for (const auto & packageNamespace : nodeModule.getLoadedNamespaces()) {
+	XmlNodeWrapper packageNode("package");
+	packageNode.setAttribute("id", packageNamespace);
+	scopeNode.addChild(packageNode);
     }
+    parentNode.addChild(scopeNode);
 }
-    
 
 static void
 writeGraph(
@@ -304,10 +286,6 @@ writeGraph(
 
     writeMetadata(graph.getMetadata(), graphNode, err);
     
-    XmlNodeWrapper scopeNode("scope");
-    writeGraphScopeNodes(graph, scopeNode, err);
-    graphNode.addChild(scopeNode);
-
     XmlNodeWrapper nodesNode("nodes");
     writeGraphNodes(graph, nodesNode, err);
     graphNode.addChild(nodesNode);
@@ -347,6 +325,7 @@ SerializerXML::write(
     rootNode.setAttribute("xmlns", NODEJS_XML_NAMESPACE);
 
     writePackage(node_module, rootNode, err);
+    writeScopes(node_module, rootNode, err);
     writeMetadata(node_module.getMetadata(), rootNode, err);
     writeDataTypes(node_module, rootNode, err);
     writeNodeTypes(node_module, rootNode, err);

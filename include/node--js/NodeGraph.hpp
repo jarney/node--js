@@ -10,14 +10,6 @@
 namespace NodeJS {
     namespace core {
 
-	class Scope {
-	    // List of other
-	    // foreign namespaces that
-	    // can be resolved from here.
-	    // The scope is searched in order
-	    // when resolving node types.
-	};
-
 	class NodeModule;
 
 	/**
@@ -146,18 +138,6 @@ namespace NodeJS {
 
 	    const std::map<EdgeId, std::unique_ptr<Edge>> & getEdges() const;
 
-	    const std::vector<const NodeModule *> & getScopes() const;
-
-	    void addScope(const NodeModule * node_module);
-
-	    void copyScope(const NodeGraph *other);
-	    
-	    bool hasNodeType(std::string aTypeName) const;
-	    const NodeType * getNodeType(std::string aTypeName);
-	    
-	    bool hasDataType(std::string aTypeName) const;
-	    const DataType * getDataType(std::string aTypeName);
-
 	    std::set<NodeId> getNodeIds(void) const;
 
 	    std::set<NodeId> getNeighborNodeIds(NodeId aNode) const;
@@ -189,8 +169,6 @@ namespace NodeJS {
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByFromNode;
 	    std::map<NodeId, std::vector<const Edge*>> mEdgesByToNode;
 
-	    std::vector<const NodeModule*> mScopes;
-	    
 	    Metadata mMetadata;
 	};
     }

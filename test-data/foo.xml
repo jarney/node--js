@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <node-module xmlns="http://jarney.github.io/nodejs/schema">
   <package id="foo" description="Uncategorized" version="1"/>
+  <scope>
+    <package id="org.ensor.nodejs.openscad"/>
+  </scope>
   <data-types/>
   <node-types/>
   <graphs>
     <graph id="custom_function">
-      <scope>
-        <package id="org.ensor.nodejs.openscad"/>
-      </scope>
       <nodes>
-        <node id="add" type="add">
+        <node id="add" type="org.ensor.nodejs.openscad.add">
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
               <value key="pos-x">-800.000000</value>
@@ -17,7 +17,7 @@
             </data>
           </metadata>
         </node>
-        <node id="const_int" type="const_int">
+        <node id="const_int" type="org.ensor.nodejs.openscad.const_int">
           <value key="value">1</value>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -26,8 +26,8 @@
             </data>
           </metadata>
         </node>
-        <node id="function_output" type="function_output"/>
-        <node id="variable" type="variable">
+        <node id="function_output" type="org.ensor.nodejs.openscad.function_output"/>
+        <node id="variable" type="org.ensor.nodejs.openscad.variable">
           <value key="variable_name">x</value>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -44,11 +44,8 @@
       </edges>
     </graph>
     <graph id="main">
-      <scope>
-        <package id="org.ensor.nodejs.openscad"/>
-      </scope>
       <nodes>
-        <node id="assign" type="assign">
+        <node id="assign" type="org.ensor.nodejs.openscad.assign">
           <value key="variable_name">q</value>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -57,7 +54,7 @@
             </data>
           </metadata>
         </node>
-        <node id="const_int" type="const_int">
+        <node id="const_int" type="org.ensor.nodejs.openscad.const_int">
           <value key="value">99</value>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -66,7 +63,7 @@
             </data>
           </metadata>
         </node>
-        <node id="const_int-0" type="const_int">
+        <node id="const_int-0" type="org.ensor.nodejs.openscad.const_int">
           <value key="value">4</value>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -75,10 +72,10 @@
             </data>
           </metadata>
         </node>
-        <node id="custom_function" type="function-call">
+        <node id="custom_function" type="org.ensor.nodejs.openscad.function-call">
           <value key="function-name">custom_function</value>
           <inputs>
-            <port id="x" description="x" data-type="variable" connection-policy="one"/>
+            <port id="x" description="x" data-type="org.ensor.nodejs.openscad.variable" connection-policy="one"/>
           </inputs>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -87,10 +84,10 @@
             </data>
           </metadata>
         </node>
-        <node id="function" type="function">
+        <node id="function" type="org.ensor.nodejs.openscad.function">
           <value key="graph">custom_function</value>
           <inputs>
-            <port id="x" description="x" data-type="variable" connection-policy="one"/>
+            <port id="x" description="x" data-type="org.ensor.nodejs.openscad.variable" connection-policy="one"/>
           </inputs>
           <metadata>
             <data namespace="http://jarney.github.io/nodejs/editor">
@@ -99,7 +96,7 @@
             </data>
           </metadata>
         </node>
-        <node id="output" type="output"/>
+        <node id="output" type="org.ensor.nodejs.openscad.output"/>
       </nodes>
       <edges>
         <edge from-node="assign" from-port="assignment" to-node="output" to-port="assignments"/>

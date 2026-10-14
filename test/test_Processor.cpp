@@ -55,8 +55,8 @@ NodeProcessor_unary::process(
 TEST_CASE("test_Processor_minimal", "[NodeJS][core][Processor]")
 {
     ModuleLoaderNodeJSPath loader;
-    NodeModule & module = *loader.newModule("anonymous");
-    NodeGraph & graph = *module.addGraph("graph");;
+    auto nodeModule = loader.newModule("anonymous");
+    NodeGraph & graph = *nodeModule->addGraph("graph");
     ConnectionData nodeData;
     NodeType nodeType;
 

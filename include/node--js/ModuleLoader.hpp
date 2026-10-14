@@ -32,7 +32,7 @@ namespace NodeJS {
 	     * This function may block and may cache the results in memory
 	     * to avoid loading the same module over again.
 	     */
-	    virtual NodeModule *loadModule(
+	    virtual std::unique_ptr<NodeModule> loadModule(
 		std::string aFullyQualifiedModuleName,
 		SerializerErrorReporter & reporter
 		) = 0;
@@ -43,7 +43,7 @@ namespace NodeJS {
 	     * manipulated.  Generally speaking, tools
 	     * only ever modify a single module at one time (in theory?)
 	     */
-	    virtual NodeModule *newModule(
+	    virtual std::unique_ptr<NodeModule> newModule(
 		std::string packageName
 		) = 0;
 	};

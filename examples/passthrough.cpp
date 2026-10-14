@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     ModuleLoaderNodeJSPath loader;
     SerializerErrorReporterStream err(std::cerr);
     
-    NodeModule *mod = loader.loadModule(std::string(argv[1]), err);
+    std::unique_ptr<NodeModule> mod = loader.loadModule(std::string(argv[1]), err);
     if (!mod) {
 	fprintf(stderr, "No such module found.  Please check NODEJS_PATH\n");
 	return 1;

@@ -94,7 +94,7 @@ SerializerXMLReader::parsePackage() const
 
 	std::string id;
 	if (!packageElement.hasAttribute("id")) {
-	    mReporter.reportError(SerializerErrorCode::PACKAGE_ID_MISSING, 22, "context", std::string("Package 'id' is missing"));
+	    return parseError(SerializerErrorCode::PACKAGE_ID_MISSING, packageElement, std::string("Package 'id' is missing"));
 	    return false;
 	}
 	id = packageElement.getAttribute("id");
@@ -195,14 +195,10 @@ bool SerializerXMLReader::parsePort(
 	return parseError(SerializerErrorCode::PORT_DATA_TYPE_MISSING, portNode, desc + " '" + id + "' is missing data type.");
     }
     std::string dataType = portNode.getAttribute("data-type");
-    bool hasDataType = mNodeModule.hasDataType(dataType);
-    if (graph) {
-	hasDataType = graph->hasDataType(dataType);
+    if (!mNodeModule.hasDataType(dataType)) {
+       return parseError(SerializerErrorCode::PORT_DATA_TYPE_INVALID, portNode, desc + " '" + id + "' refers to invalid data type '" + dataType + "'");
     }
-    if (!hasDataType) {
-	return parseError(SerializerErrorCode::PORT_DATA_TYPE_INVALID, portNode, desc + " '" + id + "' refers to invalid data type '" + dataType + "'");
-    }
-    
+
     NodePort::ConnectionPolicy connectionPolicy = NodePort::ConnectionPolicy::One;
     if (portNode.hasAttribute("connection-policy")) {
 	std::string connectionPolicy_str = portNode.getAttribute("connection-policy");
@@ -350,7 +346,7 @@ SerializerXMLReader::parseNode(
 	return parseError(SerializerErrorCode::NODE_NODE_TYPE_MISSING, nodeNode, "Node id'" + nodeId + "' has missing type.");
     }
     std::string nodeType_str = nodeNode.getAttribute("type");
-    const NodeType *nodeType = nodeGraph.getNodeType(nodeType_str);
+    const NodeType *nodeType = mNodeModule.getNodeType(nodeType_str);
     if (nodeType == nullptr) {
 	return parseError(SerializerErrorCode::NODE_NODE_TYPE_INVALID, nodeNode, "Node id '" + nodeId + "' has invalid type '" + nodeType_str + "'");
     }
@@ -434,6 +430,12 @@ SerializerXMLReader::parseEdge(
     const NodePort & fromPortObj = *fromNodeObj.getOutputs().getByName(fromPort);
     const NodePort & toPortObj = *toNodeObj.getInputs().getByName(toPort);
 
+    // XXXXX We need to solve how we resolve
+    // identifiers across scopes when we're referencing
+    // something outside ourselves versus within ourselves.
+    // Are these identifiers comparable?  If so, what does
+    // that even mean when they cross a namespace boundary.
+    
     if (fromPortObj.getDataType() != toPortObj.getDataType()) {
 	return parseError(SerializerErrorCode::EDGE_PORT_DATA_MISMATCH, edgeNode,
 			  "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
@@ -458,7 +460,7 @@ SerializerXMLReader::parseEdge(
 	    return parseError(SerializerErrorCode::EDGE_VIOLATES_POLICY, edgeNode, "Node output port '" + fromNode + ":" + fromPort + " only allows a single connection because of the port's policy.");
 	}
     }
-      
+
     size_t countToPort = 0;
     const std::vector<const Edge *> & edgesTo = nodeGraph.getEdgesTo(toNode);
     for (const auto edge : edgesTo) {
@@ -482,27 +484,6 @@ SerializerXMLReader::parseEdge(
 }
 
 bool
-SerializerXMLReader::readGraphScope(
-    XmlNodeWrapper packageNode,
-    NodeGraph & nodeGraph
-    ) const
-{
-    ModuleLoader & loader = mNodeModule.getModuleLoader();
-    std::string id = packageNode.getAttribute("id");
-    const NodeModule *scope_package = loader.loadModule(id, mReporter);
-    if (scope_package) {
-	fprintf(stderr, "Loaded package %s\n", id.c_str());
-	nodeGraph.addScope(scope_package);
-    }
-    else {
-	fprintf(stderr, "Failed to load scope %s\n", packageNode.getAttribute("id").c_str());
-	return false;
-    }
-
-    return true;
-}
-
-bool
 SerializerXMLReader::parseGraph(
     XmlNodeWrapper graphNode
     ) const
@@ -519,13 +500,6 @@ SerializerXMLReader::parseGraph(
 
     NodeGraph & nodeGraph = *mNodeModule.addGraph(id);
 
-    for (XmlNodeWrapper scopeNode : graphNode.getChildrenByTagName("scope")) {
-	for (XmlNodeWrapper packageNode : scopeNode.getChildrenByTagName("package")) {
-	    readGraphScope(packageNode, nodeGraph);
-      }
-    }
-
-    
     parseMetadata(graphNode, nodeGraph.getMetadata());
     
     for (XmlNodeWrapper nodesNode : graphNode.getChildrenByTagName("nodes")) {
@@ -559,12 +533,41 @@ SerializerXMLReader::parseGraphs(void) const
 }
 
 bool
+SerializerXMLReader::parseScope() const
+{
+    for (XmlNodeWrapper scopeNode : mRoot.getChildrenByTagName("scope")) {
+	for (XmlNodeWrapper packageNode : scopeNode.getChildrenByTagName("package")) {
+	    std::string id = packageNode.getAttribute("id");
+	    if (mNodeModule.hasModule(id)) {
+		// We've already loaded this one, we can ignore it (silently?)
+		return true;
+	    }
+	    ModuleLoader & loader = mNodeModule.getModuleLoader();
+	    std::unique_ptr<NodeModule> loadedModule = loader.loadModule(id, mReporter);
+	    if (loadedModule) {
+		fprintf(stderr, "Loaded package %s\n", id.c_str());
+		//nodeGraph.addScope(scope_package);
+		mNodeModule.loadModule(std::move(loadedModule));
+	    }
+	    else {
+		fprintf(stderr, "Failed to load scope %s\n", packageNode.getAttribute("id").c_str());
+		return false;
+	    }
+	}
+    }
+    return true;
+}
+
+bool
 SerializerXMLReader::read(void) const
 {
     // The package needs to be read first because that determines where
     // other data is registered.
     if (!parsePackage()) return false;
 
+    // Scopes are loaded at the package level.
+    if (!parseScope()) return false;
+    
     // Data types need to be read before node types
     // even if they appear later in the file.
     if (!parseDataTypes()) return false;

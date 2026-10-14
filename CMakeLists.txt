@@ -54,6 +54,7 @@ endif()
 set(CPP_SOURCE_FILES
   src/main.cpp
   src/DataType.cpp
+  src/QualifiedIdentifier.cpp
   src/Edge.cpp
   src/Metadata.cpp
   src/NodeType.cpp

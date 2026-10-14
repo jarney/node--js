@@ -3,6 +3,7 @@ find_package(Catch2 3 QUIET)
 
 set(TEST_SOURCES
     main.cpp
+    test_QualifiedIdentifier.cpp
     test_NamedPorts.cpp
     test_Node.cpp
     test_NodePort.cpp
