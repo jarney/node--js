@@ -16,14 +16,23 @@ import {SerializerErrorCode, SerializerErrorReporterNil} from "../SerializerErro
 import {DomUtils} from "./DomUtils.ts";
 
 export class SerializerXMLReader {
-  mRoot: any;
+  mDocument: Document;
+  mRoot: Element;
   mFilename: string;
   mReporter: SerializerErrorReporter;
+  mNodeModule: NodeModule;
   
-  constructor() {
-    this.mRoot = undefined;
-    this.mFilename = "unknown";
-    this.mReporter = new SerializerErrorReporterNil();
+  constructor(
+    aFilename: string,
+    aDocument: Document,
+    aNodeModule: NodeModule,
+    aReporter: SerializerErrorReporter
+  ) {
+    this.mFilename = aFilename;
+    this.mDocument = aDocument;
+    this.mNodeModule = aNodeModule;
+    this.mReporter = aReporter;
+    this.mRoot = aDocument.documentElement;
   }
 
   public parseError(error_code: number, element: Element, message: string): boolean {
@@ -32,8 +41,8 @@ export class SerializerXMLReader {
     return false;
   }
 
-  public parseMetadata(root: Element, metadata: Metadata) : boolean {
-    for (var metadataElement of DomUtils.getChildrenByTagName(root, "metadata")) {
+  public parseMetadata(metadataContainer: Element, metadata: Metadata) : boolean {
+    for (var metadataElement of DomUtils.getChildrenByTagName(metadataContainer, "metadata")) {
       for (var dataElement of DomUtils.getChildrenByTagName(metadataElement, "data")) {
 	var namespace_or_null: string | null = dataElement.getAttribute("namespace");
 	if (namespace_or_null == null) {
@@ -60,10 +69,10 @@ export class SerializerXMLReader {
     return true;
   }
   
-  public parsePackage(root: Element, nodeModule: NodeModule) : boolean {
+  public parsePackage() : boolean {
     var packageCount = 0;
 
-    for (var packageElement of DomUtils.getChildrenByTagName(root, "package")) {
+    for (var packageElement of DomUtils.getChildrenByTagName(this.mRoot, "package")) {
       var version: string | null = packageElement.getAttribute("version");
       if (version == null) {
 	return this.parseError(SerializerErrorCode.PACKAGE_VERSION_MISSING, packageElement, "Package version is missing");
@@ -79,12 +88,12 @@ export class SerializerXMLReader {
       if (id != this.mFilename) {
 	return this.parseError(SerializerErrorCode.PACKAGE_ID_INCONSISTENT, packageElement, "Package id should be the same as the file it was loaded from.");
       }
-      nodeModule.setPackage(id!);
+      this.mNodeModule.setPackage(id!);
       
       // The package description is optional.
       var description: string | null = packageElement.getAttribute("description");
       if (description != null) {
-	nodeModule.setDescription(description!);
+	this.mNodeModule.setDescription(description!);
       }
       if (packageCount > 0) {
 	return this.parseError(SerializerErrorCode.PACKAGE_DUPLICATE, packageElement,
@@ -93,18 +102,18 @@ export class SerializerXMLReader {
       packageCount++;
     }
     if (packageCount < 1) {
-      return this.parseError(SerializerErrorCode.PACKAGE_MISSING, root,
+      return this.parseError(SerializerErrorCode.PACKAGE_MISSING, this.mRoot,
 	"Package declaration missing.  Module must contain a <package id='...'/> element.");
     }
 
     // Package-level metadata (optional)
-    if (!this.parseMetadata(root, nodeModule.getMetadata())) return false;
+    if (!this.parseMetadata(this.mRoot, this.mNodeModule.getMetadata())) return false;
     
     return true;
   }
   
   
-  private parseDataType(dataTypeNode: Element, nodeModule: NodeModule) : boolean {
+  private parseDataType(dataTypeNode: Element) : boolean {
     var id_or_n: string | null = dataTypeNode.getAttribute("id");
     if (id_or_n == null) {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_MISSING, dataTypeNode, "Missing id for data type");
@@ -114,20 +123,20 @@ export class SerializerXMLReader {
     if (name == null) {
       name = id;
     }
-    if (nodeModule.hasDataType(id)) {
+    if (this.mNodeModule.hasDataType(id)) {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_DUPLICATE, dataTypeNode, "Duplicate id '" + id + "' for data type.");
     }
     
     var dataType: DataType = new DataType(id, name!);
-    nodeModule.addDataType(dataType);
+    this.mNodeModule.addDataType(dataType);
     
     return true;
   }
 
-  public parseDataTypes(root: Element, nodeModule: NodeModule) : boolean {
-    for (var dataTypesNode of DomUtils.getChildrenByTagName(root, "data-types")) {
+  public parseDataTypes() : boolean {
+    for (var dataTypesNode of DomUtils.getChildrenByTagName(this.mRoot, "data-types")) {
       for (var dataTypeNode of DomUtils.getChildrenByTagName(dataTypesNode, "data-type")) {
-	if (!this.parseDataType(dataTypeNode, nodeModule)) return false;
+	if (!this.parseDataType(dataTypeNode)) return false;
       }
     }
     return true;
@@ -135,7 +144,6 @@ export class SerializerXMLReader {
 
   public parsePort(
     portNode: Element,
-    nodeModule: NodeModule,
     namedPorts: NamedPorts,
     desc: string
   ) {
@@ -158,7 +166,7 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.PORT_DATA_TYPE_MISSING, portNode, desc + " '" + id + "' is missing data type.");
     }
     var dataType: string = dataType_or_n!;
-    if (!nodeModule.hasDataType(dataType)) {
+    if (!this.mNodeModule.hasDataType(dataType)) {
       return this.parseError(SerializerErrorCode.PORT_DATA_TYPE_INVALID, portNode, desc + " '" + id + "' refers to invalid data type '" + dataType + "'");
     }
     
@@ -184,26 +192,25 @@ export class SerializerXMLReader {
   
   public parsePorts(
     nodeTypeNode: Element,
-    nodeModule: NodeModule,
     namedPorts: NamedPorts,
     tag: string,
     desc: string) : boolean {
     for (var portsNode of DomUtils.getChildrenByTagName(nodeTypeNode, tag)) {
       for (var portNode of DomUtils.getChildrenByTagName(portsNode, "port")) {
-	if (!this.parsePort(portNode, nodeModule, namedPorts, desc)) return false;
+	if (!this.parsePort(portNode, namedPorts, desc)) return false;
       }
     }    
     return true;
   }
   
-  public parseNodeType(nodeTypeNode: Element, nodeModule: NodeModule) : boolean {
+  public parseNodeType(nodeTypeNode: Element) : boolean {
     var id_or_n: string | null = nodeTypeNode.getAttribute("id");
     if (id_or_n == null) {
       return this.parseError(SerializerErrorCode.NODE_TYPE_ID_MISSING, nodeTypeNode, "Node Type id missing.");
     }
     var id: string = id_or_n!;
     
-    if (nodeModule.hasNodeType(id)) {
+    if (this.mNodeModule.hasNodeType(id)) {
       return this.parseError(SerializerErrorCode.NODE_TYPE_ID_DUPLICATE, nodeTypeNode, "Duplicate id '" + id + "' for node type.");
     }
 
@@ -247,27 +254,27 @@ export class SerializerXMLReader {
     nodeType.setVisibility(visibility);
     nodeType.setType(type);
 
-    if (!this.parsePorts(nodeTypeNode, nodeModule, nodeType.getInputs(), "inputs", "Input Port")) return false;
-    if (!this.parsePorts(nodeTypeNode, nodeModule, nodeType.getOutputs(), "outputs", "Output Port")) return false;
+    if (!this.parsePorts(nodeTypeNode, nodeType.getInputs(), "inputs", "Input Port")) return false;
+    if (!this.parsePorts(nodeTypeNode, nodeType.getOutputs(), "outputs", "Output Port")) return false;
 
     // Node-type metadata (optional)
     if (!this.parseMetadata(nodeTypeNode, nodeType.getMetadata())) return false;
     
-    nodeModule.addNodeType(nodeType);
+    this.mNodeModule.addNodeType(nodeType);
     
     return true;
   }
   
-  public parseNodeTypes(root: Element, nodeModule: NodeModule) : boolean {
-    for (var nodeTypesNode of DomUtils.getChildrenByTagName(root, "node-types")) {
+  public parseNodeTypes() : boolean {
+    for (var nodeTypesNode of DomUtils.getChildrenByTagName(this.mRoot, "node-types")) {
       for (var nodeTypeNode of DomUtils.getChildrenByTagName(nodeTypesNode, "node-type")) {
-	if (!this.parseNodeType(nodeTypeNode, nodeModule)) return false;
+	if (!this.parseNodeType(nodeTypeNode)) return false;
       }
     }
     return true;
   }
 
-  public parseNode(nodeNode: Element, nodeModule: NodeModule, nodeGraph: NodeGraph) : boolean {
+  public parseNode(nodeNode: Element, nodeGraph: NodeGraph) : boolean {
 
     var id_or_n: string | null = nodeNode.getAttribute("id");
     if (id_or_n == null) {
@@ -282,11 +289,11 @@ export class SerializerXMLReader {
     if (nodeType_str == null) {
       return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_MISSING, nodeNode, "Node id '" + id + "' has missing type.");
     }
-    else if (!nodeModule.hasNodeType(nodeType_str)) {
+    else if (!this.mNodeModule.hasNodeType(nodeType_str)) {
       return this.parseError(SerializerErrorCode.NODE_NODE_TYPE_INVALID, nodeNode, "Node id '" + id + "' has invalid type '" + nodeType_str + "'");
     }
     
-    var nodeType = nodeModule.getNodeType(nodeType_str!)!;
+    var nodeType = this.mNodeModule.getNodeType(nodeType_str!)!;
 
     var nodeData: ConnectionData = new ConnectionData();
     for (var valueNode of DomUtils.getChildrenByTagName(nodeNode, "value")) {
@@ -301,12 +308,12 @@ export class SerializerXMLReader {
 
     if (DomUtils.hasChildrenByTagName(nodeNode, "inputs")) {
       node.setOverrideInputs(true);
-      if (!this.parsePorts(nodeNode, nodeModule, node.getOverrideInputs(), "inputs", "Input Port")) return false;
+      if (!this.parsePorts(nodeNode, node.getOverrideInputs(), "inputs", "Input Port")) return false;
     }
 
     if (DomUtils.hasChildrenByTagName(nodeNode, "outputs")) {
       node.setOverrideOutputs(true);
-      if (!this.parsePorts(nodeNode, nodeModule, node.getOverrideOutputs(), "outputs", "Output Port")) return false;
+      if (!this.parsePorts(nodeNode, node.getOverrideOutputs(), "outputs", "Output Port")) return false;
     }
 
     // Optional node-level metadata.
@@ -405,14 +412,14 @@ export class SerializerXMLReader {
     return true;
   }
 
-  public parseGraph(graphNode: Element, nodeModule: NodeModule) : boolean {
+  public parseGraph(graphNode: Element) : boolean {
     var id_or_n: string | null = graphNode.getAttribute("id");
     if (id_or_n == null) {
       return this.parseError(SerializerErrorCode.GRAPH_ID_MISSING, graphNode, "Graph id missing.");
     }
     var id: string = id_or_n!;
     
-    if (nodeModule.hasGraph(id)) {
+    if (this.mNodeModule.hasGraph(id)) {
       return this.parseError(SerializerErrorCode.GRAPH_ID_DUPLICATE, graphNode, "Duplicate graph id '" + id + "' for graph.");
     }
 
@@ -426,11 +433,11 @@ export class SerializerXMLReader {
       }
     }
 
-    var nodeGraph: NodeGraph = nodeModule.addGraph(id)!;
+    var nodeGraph: NodeGraph = this.mNodeModule.addGraph(id)!;
 
     for (var nodesNode of DomUtils.getChildrenByTagName(graphNode, "nodes")) {
       for (var nodeNode of DomUtils.getChildrenByTagName(nodesNode, "node")) {
-	if (!this.parseNode(nodeNode, nodeModule, nodeGraph)) return false;
+	if (!this.parseNode(nodeNode, nodeGraph)) return false;
       }
     }
     for (var edgesNode of DomUtils.getChildrenByTagName(graphNode, "edges")) {
@@ -447,47 +454,30 @@ export class SerializerXMLReader {
   }
   
   
-  public parseGraphs(root: Element, nodeModule: NodeModule) : boolean {
-    for (var graphsNode of DomUtils.getChildrenByTagName(root, "graphs")) {
+  public parseGraphs() : boolean {
+    for (var graphsNode of DomUtils.getChildrenByTagName(this.mRoot, "graphs")) {
       for (var graphNode of DomUtils.getChildrenByTagName(graphsNode, "graph")) {
-	if (!this.parseGraph(graphNode, nodeModule)) return false;
+	if (!this.parseGraph(graphNode)) return false;
       }
     }
     return true;
   }
   
-  public read(
-    aFilename: string,
-    xmlString: string,
-    nodeModule: NodeModule,
-    reporter: SerializerErrorReporter
-  ) : boolean {
-    //    const state = new SerializerXMLState();
-    //    return state.read(aFilename, xmlString, nodeModule, reporter);
-    //  }
+  public read() : boolean {
     
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlString, "application/xml");
-
-    this.mRoot = doc;
-    this.mFilename = aFilename;
-    this.mReporter = reporter;
-
-    const root = doc.documentElement;
-
-    if (!this.parsePackage(root, nodeModule)) return false;
+    if (!this.parsePackage()) return false;
 
     // Data types need to be read before node types
     // even if they appear later in the file.
-    if (!this.parseDataTypes(root, nodeModule)) return false;
+    if (!this.parseDataTypes()) return false;
 
     // Next load the node types since the ports on node types
     // reference data types.
-    if (!this.parseNodeTypes(root, nodeModule)) return false;
+    if (!this.parseNodeTypes()) return false;
 
     // Next, load the graphs (nodes and edges)
     // which refer to node types and ports.
-    if (!this.parseGraphs(root, nodeModule)) return false;
+    if (!this.parseGraphs()) return false;
 
     return true;
   }

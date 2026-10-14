@@ -3,6 +3,8 @@
 #include "node--js/ModuleLoader.hpp"
 #include "node--js/Metadata.hpp"
 
+#include "SerializerXMLReader.hpp"
+
 #include <istream>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -779,26 +781,23 @@ SerializerXML::write(
     return true;
 }
 
+SerializerXMLReader::SerializerXMLReader(
+    std::string aFilename,
+    xmlDocPtr aDocument,
+    NodeJS::core::NodeModule & aNodeModule,
+    NodeJS::core::SerializerErrorReporter & aErrorReporter
+    )
+    : mFilename(aFilename)
+    , mDocument(aDocument)
+    , mNodeModule(aNodeModule)
+    , mErrorReporter(aErrorReporter)
+{}
+
 bool
-SerializerXML::read(
-    std::string filename,
-    std::istream & input_stream,
-    NodeModule & node_module,
-    NodeJS::core::SerializerErrorReporter & err
-    ) const
+SerializerXMLReader::read(void) const
 {
-    xmlDocPtr doc; /* the resulting document tree */
-
-    std::string json_string(std::istreambuf_iterator<char>(input_stream), {});
-    
-    doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
-    if (doc == nullptr) {
-        err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
-	return false;
-    }
-
     /*Get the root element node */
-    XmlNodeWrapper root(xmlDocGetRootElement(doc), false);
+    XmlNodeWrapper root(xmlDocGetRootElement(mDocument), false);
 
     // The package needs to be read first because that determines where
     // other data is registered.
@@ -806,7 +805,7 @@ SerializerXML::read(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("package")) {
-	    if (!readPackage(node_module, child, err)) return false;
+	    if (!readPackage(mNodeModule, child, mErrorReporter)) return false;
 	}
     }
 
@@ -816,10 +815,10 @@ SerializerXML::read(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("data-types")) {
-	    readDataTypes(node_module, child, err);
+	    readDataTypes(mNodeModule, child, mErrorReporter);
 	}
 	else if (childName == std::string("metadata")) {
-	    readMetadata(node_module.getMetadata(), child, err);
+	    readMetadata(mNodeModule.getMetadata(), child, mErrorReporter);
 	}
     }
     
@@ -828,7 +827,7 @@ SerializerXML::read(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("node-types")) {
-	    readNodeTypes(node_module, child, err);
+	    readNodeTypes(mNodeModule, child, mErrorReporter);
 	}
     }
 
@@ -838,10 +837,36 @@ SerializerXML::read(
 	XmlNodeWrapper child = it.get();
 	std::string childName = child.getName();
 	if (childName == std::string("graphs")) {
-	    readGraphs(node_module, child, err);
+	    readGraphs(mNodeModule, child, mErrorReporter);
 	}
     }
     
-    xmlFreeDoc(doc);
     return true;
+}    
+
+bool
+SerializerXML::read(
+    std::string filename,
+    std::istream & input_stream,
+    NodeModule & node_module,
+    NodeJS::core::SerializerErrorReporter & err
+    ) const
+{
+
+    xmlDocPtr doc; /* the resulting document tree */
+
+    std::string json_string(std::istreambuf_iterator<char>(input_stream), {});
+    
+    doc = xmlReadMemory(json_string.c_str(), json_string.size(), nullptr, "utf-8", XML_PARSE_BIG_LINES);
+    if (doc == nullptr) {
+        err.reportError(SerializerErrorCode::LEGACY_ERROR_XML_PARSE, 0, "Input Stream", "Failed to parse xml document");
+	return false;
+    }
+    
+    SerializerXMLReader reader(filename, doc, node_module, err);
+    bool result = reader.read();
+    
+    xmlFreeDoc(doc);
+
+    return result;
 }

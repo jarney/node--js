@@ -19,8 +19,12 @@ export class SerializerXML implements Serializer {
     nodeModule: NodeModule,
     reporter: SerializerErrorReporter
   ) : boolean {
-    const serializer: SerializerXMLReader = new SerializerXMLReader();
-    return serializer.read(aFilename, xmlString, nodeModule, reporter);
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlString, "application/xml");
+
+    const serializer: SerializerXMLReader = new SerializerXMLReader(aFilename, doc, nodeModule, reporter);
+    return serializer.read();
   }
   public write(
     nodeModule: NodeModule,
