@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	return 1;
     }
     
-    ser.write(*mod, std::cout, err);
+    ser.write(std::string(argv[1]), *mod, std::cout, err);
     
     return 0;
 }

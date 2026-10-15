@@ -4,6 +4,7 @@
 #include "node--js/Metadata.hpp"
 
 #include "SerializerXMLReader.hpp"
+#include "SerializerXMLWriter.hpp"
 
 #include <istream>
 #include <libxml/parser.h>
@@ -16,311 +17,16 @@
 using namespace NodeJS::xml;
 using namespace NodeJS::core;
 
-static const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
-
-static void
-writeGraphNodeData(
-    const ConnectionData & data,
-    XmlNodeWrapper nodeNode,
-    NodeJS::core::SerializerErrorReporter & err    
-    );
-
-static void
-writeMetadata(
-    const Metadata & metadata,
-    XmlNodeWrapper & parentNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
+const SerializerXML &
+SerializerXML::instance()
 {
-    XmlNodeWrapper metadataNode("metadata");
-    size_t count = 0;
-    for (const auto & ns : metadata.getNamespaces()) {
-	XmlNodeWrapper data("data");
-	data.setAttribute("namespace", ns);
-	writeGraphNodeData(metadata.getMetadata(ns),
-			   data,
-			   err);
-	metadataNode.addChild(data);
-	count++;
-    }
-    if (count > 0) {
-	parentNode.addChild(metadataNode);
-    }
+    static SerializerXML instance;
+    return instance;
 }
-
-static void
-writeDataType(
-    const std::string & id,
-    const DataType & data_type, XmlNodeWrapper dataTypesNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper node("data-type");
-    node.setAttribute("id", data_type.getLocalId());
-    node.setAttribute("name", data_type.getName());
-    dataTypesNode.addChild(node);
-}
-
-static void
-writeDataTypes(
-    const NodeModule & node_module,
-    XmlNodeWrapper root,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper dataTypesNode("data-types");
-    for (const auto & it : node_module.getDataTypes()) {
-	writeDataType(it.first, *it.second.get(), dataTypesNode, err);
-    }
-    
-    root.addChild(dataTypesNode);
-}
-
-static void
-writePackage(
-    const NodeModule & node_module,
-    XmlNodeWrapper root,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper package("package");
-    package.setAttribute("id", node_module.getPackage());
-    package.setAttribute("version", "1");
-    package.setAttribute("description", node_module.getDescription());
-    root.addChild(package);
-}
-
-static void
-writeNamedPorts(
-    const NamedPorts & namedPorts,
-    XmlNodeWrapper portsNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    for (size_t i = 0; i < namedPorts.getCount(); i++) {
-	std::string id = namedPorts.getName(i);
-	const NodePort *port = namedPorts.getByIndex(i);
-	XmlNodeWrapper portNode("port");
-	portNode.setAttribute("id", id);
-	portNode.setAttribute("description", port->getDescription());
-        // TODO: un-qualify this if it's a part of our own package,
-	// but we can't do that until we factor all these statics out into
-	// a stateful writer object so we can access the module directly
-	// and check that.
-	portNode.setAttribute("data-type", port->getDataType());  
-	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
-
-	writeMetadata(port->getMetadata(), portNode, err);
-	
-	portsNode.addChild(portNode);
-    }
-
-}
-
-static void
-writeNodeType(
-    const std::string & id,
-    const NodeType & node_type,
-    XmlNodeWrapper nodeTypesNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper nodeType("node-type");
-    nodeType.setAttribute("id", id);
-    if (node_type.getVisibility() == NodeType::Visibility::PUBLIC) {
-	nodeType.setAttribute("visibility", "public");
-    }
-    else {
-	nodeType.setAttribute("visibility", "private");
-    }
-    if (node_type.getType() == NodeType::Type::GRAPH) {
-	nodeType.setAttribute("type", "graph");
-    }
-    else {
-	nodeType.setAttribute("type", "native");
-    }
-
-    writeMetadata(node_type.getMetadata(), nodeType, err);
-
-    XmlNodeWrapper inputsNode("inputs");
-    writeNamedPorts(node_type.getInputs(), inputsNode, err);
-    nodeType.addChild(inputsNode);
-    
-    XmlNodeWrapper outputsNode("outputs");
-    writeNamedPorts(node_type.getOutputs(), outputsNode, err);
-    nodeType.addChild(outputsNode);
-
-    const ConnectionData & defaultNodeData = node_type.getDefaultNodeData();
-    if (defaultNodeData.size() != 0) {
-	XmlNodeWrapper defaultNodeDataNode("default-node-data");
-	writeGraphNodeData(defaultNodeData, defaultNodeDataNode, err);
-	nodeType.addChild(defaultNodeDataNode);
-    }
-    
-    nodeTypesNode.addChild(nodeType);
-}
-
-static void
-writeNodeTypes(
-    const NodeModule & node_module,
-    XmlNodeWrapper root,
-    NodeJS::core::SerializerErrorReporter & err
-    )    
-{
-    XmlNodeWrapper nodeTypesNode("node-types");
-    for (const auto & it : node_module.getNodeTypes()) {
-	writeNodeType(it.first, *it.second, nodeTypesNode, err);
-    }
-    root.addChild(nodeTypesNode);
-}
-
-static void
-writeGraphNodeData(
-    const ConnectionData & data,
-    XmlNodeWrapper nodeNode,
-    NodeJS::core::SerializerErrorReporter & err    
-    )
-{
-    for (const auto & it : data.getData()) {
-	XmlNodeWrapper valueNode("value");
-
-	valueNode.setAttribute("key", it.first);
-	valueNode.setContent(it.second);
-	
-	nodeNode.addChild(valueNode);
-    }
-}
-
-static void
-writeGraphNode(
-    const Node & node,
-    XmlNodeWrapper nodeNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    const NodeType & type = node.getType();
-    // TODO: If the node type is local, we should omit the
-    // package name.
-    nodeNode.setAttribute("type", type.getFullyQualifiedId());
-    writeGraphNodeData(node.getData(), nodeNode, err);
-    
-    if (type.getAllowPortOverride()) {
-	if (node.hasOverrideInputs()) {
-	    XmlNodeWrapper inputsNode("inputs");
-	    writeNamedPorts(node.getOverrideInputs(), inputsNode, err);
-	    nodeNode.addChild(inputsNode);
-	}
-	
-	if (node.hasOverrideOutputs()) {
-	    XmlNodeWrapper outputsNode("outputs");
-	    writeNamedPorts(node.getOverrideOutputs(), outputsNode, err);
-	    nodeNode.addChild(outputsNode);
-	}
-    }
-    
-    writeMetadata(node.getMetadata(), nodeNode, err);
-}
-
-
-static void
-writeGraphNodes(
-    const NodeGraph & graph,
-    XmlNodeWrapper nodesNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    for (const auto & it : graph.getNodes()) {
-	XmlNodeWrapper nodeNode("node");
-	const Node &node = *it.second.get();
-
-	nodeNode.setAttribute("id", it.first);
-	writeGraphNode(node, nodeNode, err);
-	
-	nodesNode.addChild(nodeNode);
-    }
-    
-    
-}
-    
-static void
-writeGraphEdges(
-    const NodeGraph & graph,
-    XmlNodeWrapper edgesNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    for (const auto & it : graph.getEdges()) {
-	XmlNodeWrapper edgeNode("edge");
-
-	edgeNode.setAttribute("from-node", it.second->fromNode);
-	edgeNode.setAttribute("from-port", it.second->fromPort);
-	edgeNode.setAttribute("to-node", it.second->toNode);
-	edgeNode.setAttribute("to-port", it.second->toPort);
-	
-	edgesNode.addChild(edgeNode);
-    }
-}
-
-static void
-writeScopes(
-    const NodeModule & nodeModule,
-    XmlNodeWrapper parentNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper scopeNode("scope");
-    // Skip the first scope because that's
-    // always the 'current' scope, so we don't want
-    // to include it artificially
-    for (const auto & packageNamespace : nodeModule.getLoadedNamespaces()) {
-	XmlNodeWrapper packageNode("package");
-	packageNode.setAttribute("id", packageNamespace);
-	scopeNode.addChild(packageNode);
-    }
-    parentNode.addChild(scopeNode);
-}
-
-static void
-writeGraph(
-    std::string id,
-    const NodeGraph & graph,
-    XmlNodeWrapper graphsNode,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper graphNode("graph");
-    graphNode.setAttribute("id", id);
-
-    writeMetadata(graph.getMetadata(), graphNode, err);
-    
-    XmlNodeWrapper nodesNode("nodes");
-    writeGraphNodes(graph, nodesNode, err);
-    graphNode.addChild(nodesNode);
-
-    XmlNodeWrapper edgesNode("edges");
-    writeGraphEdges(graph, edgesNode, err);
-    graphNode.addChild(edgesNode);
-
-    graphsNode.addChild(graphNode);
-}
-
-static void
-writeGraphs(
-    const NodeModule & node_module,
-    XmlNodeWrapper root,
-    NodeJS::core::SerializerErrorReporter & err
-    )
-{
-    XmlNodeWrapper graphsNode("graphs");
-    for (const auto & it : node_module.getGraphs()) {
-	writeGraph(it.first, *it.second, graphsNode, err);
-    }
-    root.addChild(graphsNode);
-}
-
 
 bool
 SerializerXML::write(
+    std::string aFilename,
     const NodeModule & node_module,
     std::ostream & output_stream,
     NodeJS::core::SerializerErrorReporter & err
@@ -328,17 +34,14 @@ SerializerXML::write(
 {
     xmlDocPtr doc;
     doc = xmlNewDoc(BAD_CAST "1.0");
-    XmlNodeWrapper rootNode("node-module");
-    rootNode.setAttribute("xmlns", NODEJS_XML_NAMESPACE);
+    SerializerXMLWriter writer(
+	aFilename,
+	doc,
+	node_module,
+	err
+	);
 
-    writePackage(node_module, rootNode, err);
-    writeScopes(node_module, rootNode, err);
-    writeMetadata(node_module.getMetadata(), rootNode, err);
-    writeDataTypes(node_module, rootNode, err);
-    writeNodeTypes(node_module, rootNode, err);
-    writeGraphs(node_module, rootNode, err);
-    
-    xmlDocSetRootElement(doc, rootNode.releasePointer());
+    writer.write();
 
     xmlChar *output_mem = nullptr;
     int output_size = 0;
@@ -353,13 +56,6 @@ SerializerXML::write(
     xmlFreeDoc(doc);
     
     return true;
-}
-
-const SerializerXML &
-SerializerXML::instance()
-{
-    static SerializerXML instance;
-    return instance;
 }
 
 bool

@@ -32,6 +32,7 @@ namespace NodeJS {
 	     * during error writing may not be reported.
 	     */
 	    virtual bool write(
+		std::string packageName,
 		const NodeJS::core::NodeModule &node_module,
 		std::ostream & output_stream,
 		SerializerErrorReporter & error_reporter

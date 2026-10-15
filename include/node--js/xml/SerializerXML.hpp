@@ -37,6 +37,7 @@ namespace NodeJS {
 	     * method of JSON output.
 	     */
 	    bool write(
+		std::string aFilename,
 		const NodeJS::core::NodeModule &program,
 		std::ostream & output_stream,
 		NodeJS::core::SerializerErrorReporter & error_reporter
@@ -53,6 +54,7 @@ namespace NodeJS {
 		) const override;
 
 	    static const unsigned long ERROR_XML_PARSE = 1;
+	    static constexpr const char *NODEJS_XML_NAMESPACE = "http://jarney.github.io/nodejs/schema";
 	    
 	};
     }
