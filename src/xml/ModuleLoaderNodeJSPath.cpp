@@ -85,6 +85,7 @@ ModuleLoaderNodeJSPath::getNODEJS_PATH()
 std::unique_ptr<NodeModule>
 ModuleLoaderNodeJSPath::loadModule(
     std::string aFullyQualifiedModuleName,
+    ModuleLoader & moduleLoader,
     SerializerErrorReporter & reporter
     )
 {
@@ -101,7 +102,7 @@ ModuleLoaderNodeJSPath::loadModule(
 
 	// File does not exist, move on.
 	if (!std::filesystem::exists(full_filename)) continue;
-	module = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
+	module = std::make_unique<NodeModule>(moduleLoader, aFullyQualifiedModuleName);
 	std::ifstream input_stream(full_filename);
 	bool success = ser.read(
 	    aFullyQualifiedModuleName,
@@ -118,21 +119,5 @@ ModuleLoaderNodeJSPath::loadModule(
 //    mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
 //    return ret_module;
     return module;
-}
-
-std::unique_ptr<NodeModule>
-ModuleLoaderNodeJSPath::newModule(
-    std::string aFullyQualifiedModuleName
-    )
-{
-//    const auto it = mLoadedModules.find(aFullyQualifiedModuleName);
-//    if (it == mLoadedModules.end()) {
-	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
-//	NodeModule *ret_module = module.get();
-//	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
-//	return ret_module;
-//    }
-//    return it->second.get();
-	return module;
 }
 

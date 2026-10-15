@@ -8,6 +8,28 @@
 namespace NodeJS {
     namespace core {
 	class SerializerErrorReporter;
+
+	class ModuleLoaderPlugin {
+	public:
+	    virtual ~ModuleLoaderPlugin() = default;
+	    
+	    virtual std::unique_ptr<NodeModule> loadModule(
+		std::string aFullyQualifiedModuleName,
+		ModuleLoader & aModuleLoader,
+		SerializerErrorReporter & reporter
+		) = 0;
+	};
+
+	class ModuleLoaderPluginNil: public ModuleLoaderPlugin {
+	public:
+	    ModuleLoaderPluginNil() = default;
+	    ~ModuleLoaderPluginNil() = default;
+	    std::unique_ptr<NodeModule> loadModule(
+		std::string aFullyQualifiedModuleName,
+		ModuleLoader & aModuleLoader,
+		SerializerErrorReporter & reporter
+		);
+	};
 	
         /**
          * This is the base class for serializing node programs
@@ -18,8 +40,15 @@ namespace NodeJS {
          */
 	class ModuleLoader {
 	public:
-	    virtual ~ModuleLoader() = default;
+	    ModuleLoader(std::unique_ptr<ModuleLoaderPlugin> plugin);
 
+	    /**
+	     * Mainly used for testing...
+	     */
+	    ModuleLoader();
+
+	    void setPlugin(std::unique_ptr<ModuleLoaderPlugin> plugin);
+	    
 	    /**
 	     * This class is responsible for loading a module
 	     * from its fully-qualified name.  The underlying
@@ -32,10 +61,10 @@ namespace NodeJS {
 	     * This function may block and may cache the results in memory
 	     * to avoid loading the same module over again.
 	     */
-	    virtual std::unique_ptr<NodeModule> loadModule(
+	    NodeModule *loadModule(
 		std::string aFullyQualifiedModuleName,
 		SerializerErrorReporter & reporter
-		) = 0;
+		);
 
 	    /**
 	     * This creates a new (mutable)
@@ -43,9 +72,23 @@ namespace NodeJS {
 	     * manipulated.  Generally speaking, tools
 	     * only ever modify a single module at one time (in theory?)
 	     */
-	    virtual std::unique_ptr<NodeModule> newModule(
+	    NodeModule *newModule(
 		std::string packageName
-		) = 0;
+		);
+
+#if NEED_MODULE_REFLECTION
+	    void loadModule(std::unique_ptr<NodeModule> aModule);
+	    
+	    std::vector<std::string> getLoadedNamespaces(void) const;
+	    
+	    bool hasModule(std::string aPackageNamespace);
+	    
+	    NodeModule *getLoadedModule(std::string moduleName) const;
+#endif	    
+	    
+	private:
+	    std::unique_ptr<ModuleLoaderPlugin> mPlugin;
+	    std::map<std::string, std::unique_ptr<NodeModule>> mLoadedModules;
 	};
 
     } // End core

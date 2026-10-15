@@ -2,10 +2,9 @@
 
 #include "node--js/Validator.hpp"
 #include "node--js/NodeModule.hpp"
-#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
+#include "node--js/ModuleLoader.hpp"
 
 using namespace NodeJS::core;
-using namespace NodeJS::xml;
 
 class Reporter : public ValidationError {
     virtual void reportError(ErrorType type, std::string message);
@@ -20,7 +19,7 @@ Reporter::reportError(ErrorType type, std::string message)
 TEST_CASE("test_Validator_basic", "[NodeJS][core][Validator]")
 {
     Reporter err;
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     validate(*nodeModule, err);
 }

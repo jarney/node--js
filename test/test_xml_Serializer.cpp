@@ -19,7 +19,7 @@ static void testPackageFile(std::string packageName, std::function<void(bool res
 
     SerializerErrorReporterByCode errorReporter;
   
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("");
   
     bool result = serializer.read(packageName, xmlData, *nodeModule, errorReporter);

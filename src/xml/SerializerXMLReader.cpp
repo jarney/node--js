@@ -544,14 +544,14 @@ SerializerXMLReader::parseScope() const
     for (XmlNodeWrapper scopeNode : mRoot.getChildrenByTagName("scope")) {
 	for (XmlNodeWrapper packageNode : scopeNode.getChildrenByTagName("package")) {
 	    std::string id = packageNode.getAttribute("id");
-	    if (mNodeModule.hasModule(id)) {
+	    if (mNodeModule.hasImportModule(id)) {
 		// We've already loaded this one, we can ignore it (silently?)
 		return true;
 	    }
 	    ModuleLoader & loader = mNodeModule.getModuleLoader();
-	    std::unique_ptr<NodeModule> loadedModule = loader.loadModule(id, mReporter);
+	    NodeModule *loadedModule = loader.loadModule(id, mReporter);
 	    if (loadedModule) {
-		mNodeModule.loadModule(std::move(loadedModule));
+		mNodeModule.addImportModule(loadedModule);
 	    }
 	    else {
 		return parseError(SerializerErrorCode::PACKAGE_SCOPE_FAILED_TO_LOAD, scopeNode, "Could not load package scope '" + id + "'.");

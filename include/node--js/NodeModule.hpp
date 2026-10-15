@@ -107,10 +107,10 @@ namespace NodeJS {
 	    const Metadata & getMetadata(void) const;
 	    Metadata & getMetadata(void);
 
-	    void loadModule(std::unique_ptr<NodeModule> aModule);
-	    std::vector<std::string> getLoadedNamespaces(void) const;
-	    bool hasModule(std::string aPackageNamespace);
-	    NodeModule *getLoadedModule(std::string moduleName) const;
+	    void addImportModule(const NodeModule *nodeModule);
+	    bool hasImportModule(std::string packageName) const;
+	    const NodeModule * getImportModule(std::string packageName) const;
+	    std::vector<std::string> getImportModuleList(void) const;
 	    
 	private:
 	    ModuleLoader & mModuleLoader;
@@ -120,7 +120,7 @@ namespace NodeJS {
 	    std::map<std::string, std::unique_ptr<NodeType>> mNodeTypes;
 	    std::map<std::string, std::unique_ptr<NodeGraph>> mGraphs;
 
-	    std::map<std::string, std::unique_ptr<NodeModule>> mImportedModules;
+	    std::map<std::string, const NodeModule *> mImportedModules;
 	    
 	    Metadata mMetadata;
 	};

@@ -5,6 +5,7 @@
 namespace NodeJS {
     namespace core {
 	class NodeModule;
+	class ModuleLoader;
     }
     namespace xml {
 
@@ -23,7 +24,7 @@ namespace NodeJS {
 	 * that knows how to load (and cache) modules
 	 * from the filesystem based on a "CLASSPATH" type thing.
 	 */
-	class ModuleLoaderNodeJSPath : public NodeJS::core::ModuleLoader {
+	class ModuleLoaderNodeJSPath : public NodeJS::core::ModuleLoaderPlugin {
 	public:
 	    ModuleLoaderNodeJSPath();
 	    
@@ -46,14 +47,11 @@ namespace NodeJS {
 	     */
 	    virtual std::unique_ptr<NodeJS::core::NodeModule> loadModule(
 		std::string aFullyQualifiedModuleName,
+		NodeJS::core::ModuleLoader & aModuleLoader,
 		NodeJS::core::SerializerErrorReporter & reporter
 		) override;
 	    
-	    virtual std::unique_ptr<NodeJS::core::NodeModule> newModule(
-		std::string packageName
-		) override;
 	private:
-//	    std::map<std::string, std::unique_ptr<NodeJS::core::NodeModule>> mLoadedModules;
 	    std::vector<std::string> mPath;
 	};
     }

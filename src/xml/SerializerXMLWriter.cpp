@@ -260,7 +260,7 @@ SerializerXMLWriter::writeScopes(void)
     // Skip the first scope because that's
     // always the 'current' scope, so we don't want
     // to include it artificially
-    for (const auto & packageNamespace : mNodeModule.getLoadedNamespaces()) {
+    for (const auto & packageNamespace : mNodeModule.getImportModuleList()) {
 	XmlNodeWrapper packageNode("package");
 	packageNode.setAttribute("id", packageNamespace);
 	scopeNode.addChild(packageNode);

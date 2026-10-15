@@ -8,6 +8,8 @@ namespace NodeJS {
     namespace core {
 
 	typedef enum {
+	    NO_LOADER_DEFINED = 1, // No loader plugin defined.
+	    
 	    // Package-level errors
 	    PACKAGE_VERSION_MISSING = 1000, //
 	    PACKAGE_VERSION_UNSUPPORTED = 1001, //
@@ -121,7 +123,7 @@ namespace NodeJS {
 	    std::string error;
 	    
 	};
-
+	
 	/**
 	 * This provides an error reporter that simply
 	 * formats the error to an output stream

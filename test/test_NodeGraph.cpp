@@ -2,14 +2,13 @@
 
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
-#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
+#include "node--js/ModuleLoader.hpp"
 
 using namespace NodeJS::core;
-using namespace NodeJS::xml;
 
 TEST_CASE("test_NodeGraph_create_node", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     ConnectionData nodeData;
@@ -33,7 +32,7 @@ TEST_CASE("test_NodeGraph_create_node", "[NodeJS][core][NodeGraph][Node]")
 TEST_CASE("test_NodeGraph_registered_node_type", "[NodeJS][core][NodeGraph][Node]")
 {
 
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     ConnectionData nodeData;
@@ -54,7 +53,7 @@ TEST_CASE("test_NodeGraph_registered_node_type", "[NodeJS][core][NodeGraph][Node
 TEST_CASE("test_NodeGraph_copied_data", "[NodeJS][core][NodeGraph][Node]")
 {
 
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     ConnectionData nodeData;
@@ -80,7 +79,7 @@ TEST_CASE("test_NodeGraph_copied_data", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_NodeGraph_node_existence", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     ConnectionData nodeData;
@@ -103,7 +102,7 @@ TEST_CASE("test_NodeGraph_node_existence", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_NodeGraph_create_edge", "[NodeJS][core][NodeGraph][Edge]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
@@ -112,7 +111,7 @@ TEST_CASE("test_NodeGraph_create_edge", "[NodeJS][core][NodeGraph][Edge]")
 
 TEST_CASE("test_NodeGraph_edge_duplicate", "[NodeJS][core][NodeGraph][Edge]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
     std::optional<EdgeId> edgeId = graph->newEdge("a", "first", "b", "second");
@@ -122,7 +121,7 @@ TEST_CASE("test_NodeGraph_edge_duplicate", "[NodeJS][core][NodeGraph][Edge]")
 }
 TEST_CASE("test_NodeGraph_topological_sort", "[NodeJS][core][NodeGraph][Algorithms]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph &graph = *nodeModule->addGraph("main");
     NodeType plain;
@@ -149,7 +148,7 @@ TEST_CASE("test_NodeGraph_topological_sort", "[NodeJS][core][NodeGraph][Algorith
 
 TEST_CASE("test_NodeGraph_topological_sort_cycle_detection", "[NodeJS][core][NodeGraph][Algorithms]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph &graph = *nodeModule->addGraph("main");
     NodeType plain;
@@ -168,7 +167,7 @@ TEST_CASE("test_NodeGraph_topological_sort_cycle_detection", "[NodeJS][core][Nod
 
 TEST_CASE("test_NodeGraph_topological_sort_self_cycle", "[NodeJS][core][NodeGraph][Algorithms]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph &graph = *nodeModule->addGraph("main");
     NodeType plain;
@@ -183,17 +182,17 @@ TEST_CASE("test_NodeGraph_topological_sort_self_cycle", "[NodeJS][core][NodeGrap
 
 TEST_CASE("test_NodeGraph_getModule", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
 
-    CHECK(nodeModule.get() == &graph.getModule());
+    CHECK(nodeModule == &graph.getModule());
 
 }
 
 TEST_CASE("test_NodeGraph_erase_node", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
     NodeType nodeType;
@@ -209,7 +208,7 @@ TEST_CASE("test_NodeGraph_erase_node", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_NodeGraph_erase_node_with_edges", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
     NodeType nodeType;
@@ -243,7 +242,7 @@ TEST_CASE("test_NodeGraph_erase_node_with_edges", "[NodeJS][core][NodeGraph][Nod
 
 TEST_CASE("test_NodeGraph_erase_node_with_extra_edges", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
     NodeType nodeType;
@@ -285,7 +284,7 @@ TEST_CASE("test_NodeGraph_erase_node_with_extra_edges", "[NodeJS][core][NodeGrap
 
 TEST_CASE("test_NodeGraph_erase_single_edge", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
     NodeType nodeType;
@@ -313,7 +312,7 @@ TEST_CASE("test_NodeGraph_erase_single_edge", "[NodeJS][core][NodeGraph][Node]")
 #if 0
 TEST_CASE("test_NodeGraph_search_scopes", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
 
@@ -353,7 +352,7 @@ TEST_CASE("test_NodeGraph_search_scopes", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_NodeGraph_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");
 

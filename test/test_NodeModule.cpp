@@ -2,14 +2,13 @@
 
 #include "node--js/NodeType.hpp"
 #include "node--js/NodeModule.hpp"
-#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
+#include "node--js/ModuleLoader.hpp"
 
 using namespace NodeJS::core;
-using namespace NodeJS::xml;
 
 TEST_CASE("test_NodeModule_package_id", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
 
     nodeModule->setPackage("simple.package.name");
@@ -21,7 +20,7 @@ TEST_CASE("test_NodeModule_package_id", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
@@ -50,7 +49,7 @@ TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("test_NodeModule_iterator", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
@@ -69,7 +68,7 @@ TEST_CASE("test_NodeModule_iterator", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("test_NodeModule_check_basic_data_type_stuff", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
 
     auto dataType = std::make_unique<DataType>("variable", "pancake", "Variable Type");
@@ -87,7 +86,7 @@ TEST_CASE("test_NodeModule_check_basic_data_type_stuff", "[NodeJS][core][NodeMod
 
 TEST_CASE("test_NodeModule_data_type_iterator", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     
     auto dataType = std::make_unique<DataType>("variable", "pancake", "Variable Type");
@@ -105,7 +104,7 @@ TEST_CASE("test_NodeModule_data_type_iterator", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("test_NodeModule_getModuleLoader", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
 
     CHECK(&loader == &nodeModule->getModuleLoader());
@@ -113,7 +112,7 @@ TEST_CASE("test_NodeModule_getModuleLoader", "[NodeJS][core][NodeModule]")
 
 TEST_CASE("test_NodeModule_add_graph_uniqueness_conditions", "[NodeJS][core][NodeModule]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
 
     NodeGraph *graph1 = nodeModule->addGraph("graph");

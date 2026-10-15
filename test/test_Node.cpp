@@ -3,16 +3,15 @@
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
 #include "node--js/Node.hpp"
-#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
+#include "node--js/ModuleLoader.hpp"
 
 using namespace NodeJS::core;
-using namespace NodeJS::xml;
 
 static const char *DATA_TYPE = "variable";
 
 TEST_CASE("test_Node_create_node", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");;
 
@@ -26,7 +25,7 @@ TEST_CASE("test_Node_create_node", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_Node_type_io", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");
 
@@ -53,7 +52,7 @@ TEST_CASE("test_Node_type_io", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_Node_specific_io", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");
 
@@ -89,7 +88,7 @@ TEST_CASE("test_Node_specific_io", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_Node_initialize_with_data", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");
 
@@ -119,7 +118,7 @@ TEST_CASE("test_Node_initialize_with_data", "[NodeJS][core][NodeGraph][Node]")
 
 TEST_CASE("test_Node_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph *graph = nodeModule->addGraph("graph");
 

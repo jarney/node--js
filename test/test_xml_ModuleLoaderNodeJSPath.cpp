@@ -11,9 +11,10 @@ using namespace NodeJS::test;
 
 void doTest(std::string given_path, const std::vector<std::string> & expected)
 {
-    ModuleLoaderNodeJSPath moduleLoader;
-    moduleLoader.setNODEJS_PATH(given_path);
-    const auto & path = moduleLoader.getNODEJS_PATH();
+    auto loaderPlugin = std::make_unique<ModuleLoaderNodeJSPath>();
+    loaderPlugin->setNODEJS_PATH(given_path);
+    const auto & path = loaderPlugin->getNODEJS_PATH();
+    ModuleLoader moduleLoader(std::move(loaderPlugin));
     CHECK(path == expected);
 }
 
@@ -83,12 +84,16 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_path_splitting_empty", "[NodeJS][xml]
 
 TEST_CASE("test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file", "[NodeJS][xml][ModuleLoader]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
+    auto loaderPlugin = std::make_unique<ModuleLoaderNodeJSPath>();
+    ModuleLoaderNodeJSPath *pluginPtr = loaderPlugin.get();
+    loader.setPlugin(std::move(loaderPlugin));
+    
     SerializerErrorReporterStream err(std::cerr);
 
     std::string path = testDirectory();
     path = path + "/xml/Serializer/";
-    loader.setNODEJS_PATH(path);
+    pluginPtr->setNODEJS_PATH(path);
     auto module = loader.loadModule("org.ensor.nodejs.openscad", err);
     CHECK(module != nullptr);
 
@@ -97,17 +102,17 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_setting_path_and_loading_file", "[Nod
     CHECK(module2 != nullptr);
 
     // Check that we actually got the same cached module.
-    // this is no longer true.
-//    CHECK(module == module2);
+    CHECK(module == module2);
 
     // Check that we get a null pointer
     // if the module doesn't exist.
     auto module_nonexistent = loader.loadModule("some-nonexistent-module", err);
     CHECK(module_nonexistent == nullptr);
     
-    loader.setNODEJS_PATH("");
+    pluginPtr->setNODEJS_PATH("");
     auto module_no_path = loader.loadModule("package-with-no-path-or-chance-to-load", err);
     CHECK(module_no_path == nullptr);
+
 }
 
 TEST_CASE("test_xml_ModuleLoaderNodeJSPath test environment variable", "[NodeJS][xml][ModuleLoader]")
@@ -127,7 +132,7 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath test environment variable", "[NodeJS]
 
 TEST_CASE("test_xml_ModuleLoaderNodeJSPath_new_module_is_same", "[NodeJS][xml][ModuleLoader]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
 
     auto newModule = loader.newModule("unique-module-name");
 
@@ -136,5 +141,5 @@ TEST_CASE("test_xml_ModuleLoaderNodeJSPath_new_module_is_same", "[NodeJS][xml][M
     // Module names are unique.  If we ask for a new one, we
     // should expect to get the same one.
     // This is no longer the responsibility of the module loader.
-//    CHECK(newModule == nextModule);
+    CHECK(newModule == nextModule);
 }

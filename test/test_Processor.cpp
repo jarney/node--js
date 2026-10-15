@@ -5,10 +5,9 @@
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeType.hpp"
 #include "node--js/Processor.hpp"
-#include "node--js/xml/ModuleLoaderNodeJSPath.hpp"
+#include "node--js/ModuleLoader.hpp"
 
 using namespace NodeJS::core;
-using namespace NodeJS::xml;
 
 class NodeProcessor_binary : public NodeProcessor {
 public:
@@ -54,7 +53,7 @@ NodeProcessor_unary::process(
 
 TEST_CASE("test_Processor_minimal", "[NodeJS][core][Processor]")
 {
-    ModuleLoaderNodeJSPath loader;
+    ModuleLoader loader;
     auto nodeModule = loader.newModule("anonymous");
     NodeGraph & graph = *nodeModule->addGraph("graph");
     ConnectionData nodeData;

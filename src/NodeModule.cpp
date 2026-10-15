@@ -70,7 +70,7 @@ NodeModule::hasDataType(const std::string & name) const
     QualifiedIdentifier qualifiedName(name);
     if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
 	// Search the scopes.
-	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	const NodeModule *searchedModule = getImportModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) return false;
 	return searchedModule->hasDataType(qualifiedName.getName());
     }
@@ -85,7 +85,7 @@ NodeModule::hasNodeType(const std::string & name) const
     QualifiedIdentifier qualifiedName(name);
     if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
 	// Search the scopes.
-	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	const NodeModule *searchedModule = getImportModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
 	    return false;
 	}
@@ -102,7 +102,7 @@ NodeModule::getDataType(const std::string & name) const
     QualifiedIdentifier qualifiedName(name);
     if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
 	// Search the scopes.
-	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	const NodeModule *searchedModule = getImportModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
 	    return nullptr;
 	}
@@ -136,7 +136,7 @@ NodeModule::getNodeType(const std::string & name) const
     QualifiedIdentifier qualifiedName(name);
     if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
 	// Search the scopes.
-	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
+	const NodeModule *searchedModule = getImportModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
 	    return nullptr;
 	}
@@ -203,15 +203,35 @@ NodeModule::getMetadata(void)
 {
     return mMetadata;
 }
+
 void
-NodeModule::loadModule(std::unique_ptr<NodeModule> aModule)
+NodeModule::addImportModule(const NodeModule *nodeModule)
 {
-    std::string packageNamespace = aModule->getPackage();
-    mImportedModules.insert(std::make_pair(packageNamespace, std::move(aModule)));
+    mImportedModules.insert(
+	std::make_pair(
+	    nodeModule->getPackage(),
+	    nodeModule
+	    )
+	);
+}
+
+const NodeModule *
+NodeModule::getImportModule(std::string packageName) const
+{
+    const auto it = mImportedModules.find(packageName);
+    if (it == mImportedModules.end()) return nullptr;
+    return it->second;
+}
+
+bool
+NodeModule::hasImportModule(std::string packageName) const
+{
+    const auto it = mImportedModules.find(packageName);
+    return (it != mImportedModules.end());
 }
 
 std::vector<std::string>
-NodeModule::getLoadedNamespaces(void) const
+NodeModule::getImportModuleList(void) const
 {
     std::vector<std::string> loadedNamespaces;
 
@@ -221,18 +241,3 @@ NodeModule::getLoadedNamespaces(void) const
     
     return loadedNamespaces;
 }
-
-bool
-NodeModule::hasModule(std::string aPackageNamespace)
-{
-    return mImportedModules.find(aPackageNamespace) != mImportedModules.end();
-}
-
-NodeModule *
-NodeModule::getLoadedModule(std::string moduleName) const
-{
-    const auto it = mImportedModules.find(moduleName);
-    if (it == mImportedModules.end()) return nullptr;
-    return it->second.get();
-}
-

@@ -21,10 +21,11 @@ int main(int argc, char **argv)
     
     const SerializerXML & ser = SerializerXML::instance();
 
-    ModuleLoaderNodeJSPath loader;
+    auto pathLoader = std::make_unique<ModuleLoaderNodeJSPath>();
+    ModuleLoader loader(std::move(pathLoader));
     SerializerErrorReporterStream err(std::cerr);
-    
-    std::unique_ptr<NodeModule> mod = loader.loadModule(std::string(argv[1]), err);
+
+    NodeModule *mod = loader.loadModule(std::string(argv[1]), err);
     if (!mod) {
 	fprintf(stderr, "No such module found.  Please check NODEJS_PATH\n");
 	return 1;

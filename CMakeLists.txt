@@ -57,6 +57,7 @@ set(CPP_SOURCE_FILES
   src/QualifiedIdentifier.cpp
   src/Edge.cpp
   src/Metadata.cpp
+  src/ModuleLoader.cpp
   src/NodeType.cpp
   src/NodePort.cpp
   src/NamedPorts.cpp
