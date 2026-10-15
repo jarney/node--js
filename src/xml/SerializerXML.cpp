@@ -56,7 +56,7 @@ writeDataType(
     )
 {
     XmlNodeWrapper node("data-type");
-    node.setAttribute("id", id);
+    node.setAttribute("id", data_type.getLocalId());
     node.setAttribute("name", data_type.getName());
     dataTypesNode.addChild(node);
 }
@@ -85,6 +85,7 @@ writePackage(
 {
     XmlNodeWrapper package("package");
     package.setAttribute("id", node_module.getPackage());
+    package.setAttribute("version", "1");
     package.setAttribute("description", node_module.getDescription());
     root.addChild(package);
 }
@@ -102,7 +103,11 @@ writeNamedPorts(
 	XmlNodeWrapper portNode("port");
 	portNode.setAttribute("id", id);
 	portNode.setAttribute("description", port->getDescription());
-	portNode.setAttribute("data-type", port->getDataType());
+        // TODO: un-qualify this if it's a part of our own package,
+	// but we can't do that until we factor all these statics out into
+	// a stateful writer object so we can access the module directly
+	// and check that.
+	portNode.setAttribute("data-type", port->getDataType());  
 	portNode.setAttribute("connection-policy", port->getConnectionPolicy() == NodePort::ConnectionPolicy::Multiple ? "multi" : "one");
 
 	writeMetadata(port->getMetadata(), portNode, err);
@@ -194,7 +199,9 @@ writeGraphNode(
     )
 {
     const NodeType & type = node.getType();
-    nodeNode.setAttribute("type", type.getId());
+    // TODO: If the node type is local, we should omit the
+    // package name.
+    nodeNode.setAttribute("type", type.getFullyQualifiedId());
     writeGraphNodeData(node.getData(), nodeNode, err);
     
     if (type.getAllowPortOverride()) {

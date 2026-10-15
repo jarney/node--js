@@ -78,8 +78,9 @@ namespace NodeJS {
 	    NodeType() = default;
 	    ~NodeType() = default;
 
-	    const PortId & getId() const;
-	    void setId(PortId id);
+	    const PortId & getLocalId() const;
+	    const PortId & getFullyQualifiedId() const;
+	    void setId(PortId id, PortId package);
 	    
 	    
 	    /**
@@ -143,6 +144,7 @@ namespace NodeJS {
 	    
 	private:
 	    std::string mId;
+	    std::string mFullyQualifiedId;
 	    Visibility mVisibility;
 	    Type mType;
 	    bool mAllowPortOverride;

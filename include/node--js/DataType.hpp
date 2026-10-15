@@ -20,8 +20,8 @@ namespace NodeJS {
 	     * @param id Unique identifier
 	     * @param name Name which is human-readable.
 	     */
-	    DataType(std::string id, std::string name);
-	    
+	    DataType(std::string id, std::string package, std::string name);
+
 	    /**
 	     * This makes a copy of a data type.  This is
 	     * needed in order to hold the DataType objects
@@ -44,7 +44,9 @@ namespace NodeJS {
 	    /**
 	     * Returns the unique identifier for this data type.
 	     */
-	    const std::string & getId() const;
+	    const std::string & getLocalId() const;
+	    
+	    const std::string & getFullyQualifiedId() const;
 
 	    /**
 	     * Returns the human-readable name for this data type.
@@ -61,6 +63,7 @@ namespace NodeJS {
 	    bool operator!=(const DataType & other) const;
 	private:
 	    std::string mId;
+	    std::string mFullyQualifiedId;
 	    std::string mName;
 	};
     }

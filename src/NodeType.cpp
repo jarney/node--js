@@ -3,15 +3,22 @@
 using namespace NodeJS::core;
 
 const std::string &
-NodeType::getId() const
+NodeType::getLocalId() const
 {
     return mId;
 }
 
+const std::string &
+NodeType::getFullyQualifiedId() const
+{
+    return mFullyQualifiedId;
+}
+
 void
-NodeType::setId(std::string id)
+NodeType::setId(std::string id, std::string package)
 {
     mId = id;
+    mFullyQualifiedId = package + std::string(".") + id;
 }
 
 NodeJS::core::NodeType::Visibility

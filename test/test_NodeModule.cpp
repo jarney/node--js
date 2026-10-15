@@ -25,7 +25,7 @@ TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
     auto nodeModule = loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
-    nodeType->setId("add");
+    nodeType->setId("add", "fish");
     nodeType->getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
     
     nodeModule->addNodeType(std::move(nodeType));
@@ -34,7 +34,8 @@ TEST_CASE("test_NodeModule_single_type", "[NodeJS][core][NodeModule]")
     
     const NodeType *nt = nodeModule->getNodeType("add");
     
-    CHECK(nt->getId() == "add");
+    CHECK(nt->getLocalId() == "add");
+    CHECK(nt->getFullyQualifiedId() == "fish.add");
     CHECK(nt->getInputs().getCount() == 1);
 
     const NodeType *nonexistent = nodeModule->getNodeType("invalid-node");
@@ -53,7 +54,7 @@ TEST_CASE("test_NodeModule_iterator", "[NodeJS][core][NodeModule]")
     auto nodeModule = loader.newModule("anonymous");
     
     auto nodeType = std::make_unique<NodeType>();
-    nodeType->setId("add");
+    nodeType->setId("add", "fish");
     nodeType->getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
     nodeModule->addNodeType(std::move(nodeType));
 
@@ -71,7 +72,7 @@ TEST_CASE("test_NodeModule_check_basic_data_type_stuff", "[NodeJS][core][NodeMod
     ModuleLoaderNodeJSPath loader;
     auto nodeModule = loader.newModule("anonymous");
 
-    auto dataType = std::make_unique<DataType>("variable", "Variable Type");
+    auto dataType = std::make_unique<DataType>("variable", "pancake", "Variable Type");
     nodeModule->addDataType(std::move(dataType));
 
     CHECK(nodeModule->hasDataType("variable"));
@@ -89,13 +90,13 @@ TEST_CASE("test_NodeModule_data_type_iterator", "[NodeJS][core][NodeModule]")
     ModuleLoaderNodeJSPath loader;
     auto nodeModule = loader.newModule("anonymous");
     
-    auto dataType = std::make_unique<DataType>("variable", "Variable Type");
+    auto dataType = std::make_unique<DataType>("variable", "pancake", "Variable Type");
     nodeModule->addDataType(std::move(dataType));
 
     int i = 0;
     for (const auto & it : nodeModule->getDataTypes()) {
 	CHECK(it.first == "variable");
-	CHECK(it.second->getId() == "variable");
+	CHECK(it.second->getFullyQualifiedId() == "pancake.variable");
 	i++;
     }
     // Check that we actually iterated.

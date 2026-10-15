@@ -1,5 +1,6 @@
 #include "SerializerXMLReader.hpp"
 #include "node--js/ModuleLoader.hpp"
+#include "node--js/QualifiedIdentifier.hpp"
 #include "node--js/Metadata.hpp"
 
 using namespace NodeJS::xml;
@@ -136,6 +137,10 @@ SerializerXMLReader::parseDataType(
 	return parseError(SerializerErrorCode::DATA_TYPE_ID_MISSING, dataTypeElement, "Missing id for data type");
     }
     std::string id = dataTypeElement.getAttribute("id");
+    QualifiedIdentifier qualifiedId(id);
+    if (qualifiedId.isQualified()) {
+	return parseError(SerializerErrorCode::DATA_TYPE_ID_INVALID, dataTypeElement, "Data type must not be qualified and must always reside in the current package.");
+    }
     std::string name;
     if (dataTypeElement.hasAttribute("name")) {
 	name = dataTypeElement.getAttribute("name");
@@ -146,8 +151,7 @@ SerializerXMLReader::parseDataType(
     if (mNodeModule.hasDataType(id)) {
 	return parseError(SerializerErrorCode::DATA_TYPE_ID_DUPLICATE, dataTypeElement, "Duplicate id '" + id + "' for data type.");
     }
-    
-    std::unique_ptr<DataType> dataType = std::make_unique<DataType>(id, name);
+    std::unique_ptr<DataType> dataType = std::make_unique<DataType>(id, mNodeModule.getPackage(), name);
     mNodeModule.addDataType(std::move(dataType));
     
     return true;
@@ -199,6 +203,8 @@ bool SerializerXMLReader::parsePort(
        return parseError(SerializerErrorCode::PORT_DATA_TYPE_INVALID, portNode, desc + " '" + id + "' refers to invalid data type '" + dataType + "'");
     }
 
+    const DataType *dataTypeObj = mNodeModule.getDataType(dataType);
+    
     NodePort::ConnectionPolicy connectionPolicy = NodePort::ConnectionPolicy::One;
     if (portNode.hasAttribute("connection-policy")) {
 	std::string connectionPolicy_str = portNode.getAttribute("connection-policy");
@@ -213,7 +219,7 @@ bool SerializerXMLReader::parsePort(
 	}
     }
     
-    std::unique_ptr<NodePort> port = std::make_unique<NodePort>(dataType, description, connectionPolicy);
+    std::unique_ptr<NodePort> port = std::make_unique<NodePort>(dataTypeObj->getFullyQualifiedId(), description, connectionPolicy);
     
     // Node-type metadata (optional)
     if (!parseMetadata(portNode, port->getMetadata())) return false;
@@ -290,7 +296,7 @@ SerializerXMLReader::parseNodeType(
     }
 
     std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
-    nodeType->setId(id);
+    nodeType->setId(id, mNodeModule.getPackage());
     nodeType->setVisibility(visibility);
     nodeType->setType(type);
 
@@ -416,14 +422,14 @@ SerializerXMLReader::parseEdge(
     }
     Node & fromNodeObj = *nodeGraph.getNode(fromNode);
     if (!fromNodeObj.getOutputs().hasPort(fromPort)) {
-      return parseError(SerializerErrorCode::EDGE_FROM_PORT_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' does not have output port '" + fromPort + "'.");
+      return parseError(SerializerErrorCode::EDGE_FROM_PORT_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getFullyQualifiedId() + "' does not have output port '" + fromPort + "'.");
     }
     if (!nodeGraph.hasNode(toNode)) {
       return parseError(SerializerErrorCode::EDGE_TO_NODE_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' is not defined in this graph.");      
     }
     Node & toNodeObj = *nodeGraph.getNode(toNode);
     if (!toNodeObj.getInputs().hasPort(toPort)) {
-      return parseError(SerializerErrorCode::EDGE_TO_PORT_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' does not have input port '" + toPort + "'.");
+      return parseError(SerializerErrorCode::EDGE_TO_PORT_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' of type '" + toNodeObj.getType().getFullyQualifiedId() + "' does not have input port '" + toPort + "'.");
     }
 
     // Make sure that the data-types in the from and to line up correctly.
@@ -438,8 +444,8 @@ SerializerXMLReader::parseEdge(
     
     if (fromPortObj.getDataType() != toPortObj.getDataType()) {
 	return parseError(SerializerErrorCode::EDGE_PORT_DATA_MISMATCH, edgeNode,
-			  "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
-			  " to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' input port '" + toPort + "' has data type '" + toPortObj.getDataType() + "'");
+			  "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getFullyQualifiedId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
+			  " to-node '" + toNode + "' of type '" + toNodeObj.getType().getFullyQualifiedId() + "' input port '" + toPort + "' has data type '" + toPortObj.getDataType() + "'");
     }
 
     if (nodeGraph.hasEdge(fromNode, fromPort, toNode, toPort)) {
@@ -545,12 +551,10 @@ SerializerXMLReader::parseScope() const
 	    ModuleLoader & loader = mNodeModule.getModuleLoader();
 	    std::unique_ptr<NodeModule> loadedModule = loader.loadModule(id, mReporter);
 	    if (loadedModule) {
-		fprintf(stderr, "Loaded package %s\n", id.c_str());
-		//nodeGraph.addScope(scope_package);
 		mNodeModule.loadModule(std::move(loadedModule));
 	    }
 	    else {
-		fprintf(stderr, "Failed to load scope %s\n", packageNode.getAttribute("id").c_str());
+		return parseError(SerializerErrorCode::PACKAGE_SCOPE_FAILED_TO_LOAD, scopeNode, "Could not load package scope '" + id + "'.");
 		return false;
 	    }
 	}

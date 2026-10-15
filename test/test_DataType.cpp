@@ -6,8 +6,8 @@ using namespace NodeJS::core;
 
 TEST_CASE("test_DataType_equality", "[NodeJS][core][DataType]")
 {
-    DataType dataType1("int", "Integer");
-    DataType dataType2("int", "Another integer");
+    DataType dataType1("int", "pancake", "Integer");
+    DataType dataType2("int", "pancake", "Another integer");
     
     CHECK(dataType1 == dataType2);
     CHECK(!(dataType1 != dataType2));
@@ -20,7 +20,7 @@ TEST_CASE("test_DataType_equality", "[NodeJS][core][DataType]")
 
 TEST_CASE("test_DataType_copy", "[NodeJS][core][DataType]")
 {
-    DataType dataType1("int", "Integer");
+    DataType dataType1("int", "pancake", "Integer");
     DataType dataType2(dataType1);
     
     CHECK(dataType1 == dataType2);
@@ -33,15 +33,15 @@ TEST_CASE("test_DataType_copy", "[NodeJS][core][DataType]")
 
 TEST_CASE("test_DataType_assign", "[NodeJS][core][DataType]")
 {
-    DataType dataType1("int", "Integer");
-    DataType dataType2("float", "Float");
+    DataType dataType1("int", "pancake", "Integer");
+    DataType dataType2("float", "pancake", "Float");
 
     dataType2 = dataType1;
 
     // After assignment, these two objects
     // should compare equal in all ways.
     CHECK(dataType1 == dataType2);
-    CHECK(dataType1.getId() == dataType2.getId());
+    CHECK(dataType1.getFullyQualifiedId() == dataType2.getFullyQualifiedId());
     CHECK(dataType1.getName() == dataType2.getName());
     
 }

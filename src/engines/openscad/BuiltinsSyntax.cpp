@@ -161,7 +161,7 @@ _OPENSCAD_PROCESSOR_DEF(syntax_custom_node)
 	    conditionalArg(args, input, node, argname);
 	}
 
-	out += nodeType.getId();
+	out += nodeType.getLocalId();
 	out += std::string("(") + joinArguments(args) + std::string(")");
 	output.setValue("value", out);
     }

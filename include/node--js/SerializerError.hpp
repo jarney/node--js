@@ -15,10 +15,13 @@ namespace NodeJS {
 	    PACKAGE_MISSING = 1003, //
 	    PACKAGE_ID_MISSING = 1004, //
 	    PACKAGE_ID_INCONSISTENT = 1005, //
+	    PACKAGE_SCOPE_FAILED_TO_LOAD = 1006, //
+	    
 	    
 	    // Data-type level errors
 	    DATA_TYPE_ID_MISSING = 2000, //
 	    DATA_TYPE_ID_DUPLICATE = 2001, //
+	    DATA_TYPE_ID_INVALID = 2002,
 	    
 	    // Node type level errors
 	    NODE_TYPE_ID_MISSING = 3000, //

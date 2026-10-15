@@ -8,7 +8,7 @@ TEST_CASE("test_NodeType_empty", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
 
-    nodeType.setId("add");
+    nodeType.setId("add", "scad");
     nodeType.setVisibility(NodeType::Visibility::PRIVATE);
     nodeType.setType(NodeType::Type::NATIVE);
 
@@ -26,7 +26,7 @@ TEST_CASE("test_NodeType_empty", "[NodeJS][core][NodeType]")
 TEST_CASE("test_NodeType_some_ports", "[NodeJS][core][NodeType]")
 {
     NodeType nodeType;
-    nodeType.setId("add");
+    nodeType.setId("add", "scad");
     nodeType.getInputs().addPort("first", std::make_unique<NodePort>("variable", "First Argument"));
     nodeType.getInputs().addPort("second", std::make_unique<NodePort>("variable", "Second Argument"));
     nodeType.getOutputs().addPort("output", std::make_unique<NodePort>("variable", "Result"));

@@ -61,11 +61,11 @@ TEST_CASE("test_Processor_minimal", "[NodeJS][core][Processor]")
     NodeType nodeType;
 
     NodeType unaryType;
-    unaryType.setId("unary");
+    unaryType.setId("unary", "testing");
     unaryType.setType(NodeType::Type::NATIVE);
 
     NodeType binType;
-    binType.setId("binary");
+    binType.setId("binary", "testing");
     binType.setType(NodeType::Type::NATIVE);
     
     const Node & main = graph.newNode(binType, "main", nodeData);
@@ -76,8 +76,8 @@ TEST_CASE("test_Processor_minimal", "[NodeJS][core][Processor]")
     graph.newEdge(call2.getId(), "out", main.getId(), "in2");
 
     Processor processor;
-    processor.setNativeImpl("unary", std::make_unique<NodeProcessor_unary>());
-    processor.setNativeImpl("binary", std::make_unique<NodeProcessor_binary>());
+    processor.setNativeImpl("testing.unary", std::make_unique<NodeProcessor_unary>());
+    processor.setNativeImpl("testing.binary", std::make_unique<NodeProcessor_binary>());
     
     ConnectionData input;
     ConnectionData output;

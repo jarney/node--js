@@ -44,7 +44,11 @@ NodeModule::getModuleLoader(void) const
 void
 NodeModule::addDataType(std::unique_ptr<DataType> dataType)
 {
-    mDataTypes.insert(std::make_pair(dataType->getId(), std::move(dataType)));
+    // Node and data types need to answer with their fully-qualified names
+    // when they are asked who they are, but inside the module's map, their
+    // name is just their local identifier (already qualified by the module's namespace)
+//    dataType->setNamespace(getPackage());
+    mDataTypes.insert(std::make_pair(dataType->getLocalId(), std::move(dataType)));
 }
 
 void
@@ -83,10 +87,8 @@ NodeModule::hasNodeType(const std::string & name) const
 	// Search the scopes.
 	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
-	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
 	    return false;
 	}
-	fprintf(stderr, "Found module, just can't find type\n");
 	return searchedModule->hasNodeType(qualifiedName.getName());
     }
     else {
@@ -102,10 +104,8 @@ NodeModule::getDataType(const std::string & name) const
 	// Search the scopes.
 	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
-	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
 	    return nullptr;
 	}
-	fprintf(stderr, "Found module, just can't find type\n");
 	return searchedModule->getDataType(qualifiedName.getName());
     }
     else {
@@ -121,7 +121,7 @@ NodeModule::getDataType(const std::string & name) const
 void
 NodeModule::addNodeType(std::unique_ptr<NodeType> nodeType)
 {
-    mNodeTypes.insert(std::make_pair(nodeType->getId(), std::move(nodeType)));
+    mNodeTypes.insert(std::make_pair(nodeType->getLocalId(), std::move(nodeType)));
 }
 
 void
@@ -138,10 +138,8 @@ NodeModule::getNodeType(const std::string & name) const
 	// Search the scopes.
 	NodeModule *searchedModule = getLoadedModule(qualifiedName.getNamespace());
 	if (searchedModule == nullptr) {
-	    fprintf(stderr, "Could not find module from fully qualified name %s", qualifiedName.getNamespace().c_str());
 	    return nullptr;
 	}
-	fprintf(stderr, "Found module, just can't find type\n");
 	return searchedModule->getNodeType(qualifiedName.getName());
     }
     else {

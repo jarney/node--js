@@ -79,7 +79,10 @@ Processor::processNodeType(
     ConnectionData & toData)
 {
     if (nodeType.getType() == NodeType::Type::NATIVE) {
-	NodeTypeId nodeTypeId = nodeType.getId();
+	// Node here needs to be fully qualified
+	// in order to make sure we're running a truly unique
+	// processor per node.
+	NodeTypeId nodeTypeId = nodeType.getFullyQualifiedId();
 	const auto nodeProcessorIt = mNodeProcessors.find(nodeTypeId);
 	if (nodeProcessorIt == mNodeProcessors.end()) {
 	    default_processor(*this, node, fromData, toData);
@@ -93,7 +96,7 @@ Processor::processNodeType(
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
 	NodeModule & module = graph.getModule();
-	NodeGraph *subgraph = module.getGraph(nodeType.getId());
+	NodeGraph *subgraph = module.getGraph(nodeType.getLocalId());
 	if (subgraph == nullptr) {
 	    default_processor(*this, node, fromData, toData);
 	    return;
@@ -119,5 +122,5 @@ Processor::default_processor(
     ConnectionData & output
     )
 {
-    fprintf(stderr, "Default processing unregistered node %s\n", node.getType().getId().c_str());
+    fprintf(stderr, "Default processing unregistered node %s\n", node.getType().getFullyQualifiedId().c_str());
 }
