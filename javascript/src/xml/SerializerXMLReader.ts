@@ -1,19 +1,19 @@
-import type {SerializerErrorReporter} from "../SerializerError.ts";
+import type {SerializerErrorReporter} from "../SerializerError";
 
-import {NodeModule} from "../NodeModule.ts";
-import {DataType} from "../DataType.ts";
-import {NodeType} from "../NodeType.ts";
-import {Metadata} from "../Metadata.ts";
-import {ConnectionData} from "../ConnectionData.ts";
-import type {NodeId} from "../Definitions.ts";
-import type {Serializer} from "../Serializer.ts";
-import {Node} from "../Node.ts";
-import {Edge} from "../Edge.ts";
-import {NodePort} from "../NodePort.ts";
-import {NodeGraph} from "../NodeGraph.ts";
-import {NamedPorts} from "../NamedPorts.ts";
-import {SerializerErrorCode, SerializerErrorReporterNil} from "../SerializerError.ts";
-import {DomUtils} from "./DomUtils.ts";
+import {NodeModule} from "../NodeModule";
+import {DataType} from "../DataType";
+import {NodeType} from "../NodeType";
+import {Metadata} from "../Metadata";
+import {ConnectionData} from "../ConnectionData";
+import type {NodeId} from "../Definitions";
+import type {Serializer} from "../Serializer";
+import {Node} from "../Node";
+import {Edge} from "../Edge";
+import {NodePort} from "../NodePort";
+import {NodeGraph} from "../NodeGraph";
+import {NamedPorts} from "../NamedPorts";
+import {SerializerErrorCode, SerializerErrorReporterNil} from "../SerializerError";
+import {DomUtils} from "./DomUtils";
 
 export class SerializerXMLReader {
   mDocument: Document;

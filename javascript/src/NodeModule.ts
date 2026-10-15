@@ -1,8 +1,8 @@
-import {DataType} from "./DataType.ts"
-import {NodeType} from "./NodeType.ts"
-import {Metadata} from "./Metadata.ts";
-import {NodeGraph} from "./NodeGraph.ts";
-import type {ModuleLoader} from "./ModuleLoader.ts";
+import {DataType} from "./DataType"
+import {NodeType} from "./NodeType"
+import {Metadata} from "./Metadata";
+import {NodeGraph} from "./NodeGraph";
+import type {ModuleLoader} from "./ModuleLoader";
 
 export class NodeModule {
   mPackage: string = "";

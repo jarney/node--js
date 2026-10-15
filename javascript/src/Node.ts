@@ -1,10 +1,10 @@
 
-import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions.ts"
-import { NodeGraph } from "./NodeGraph.ts";
-import { NodeType } from "./NodeType.ts";
-import { NamedPorts } from "./NamedPorts.ts";
-import { ConnectionData } from "./ConnectionData.ts";
-import { Metadata } from "./Metadata.ts";
+import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions"
+import { NodeGraph } from "./NodeGraph";
+import { NodeType } from "./NodeType";
+import { NamedPorts } from "./NamedPorts";
+import { ConnectionData } from "./ConnectionData";
+import { Metadata } from "./Metadata";
 
 
 export class Node {

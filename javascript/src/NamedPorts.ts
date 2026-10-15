@@ -1,5 +1,5 @@
 
-import { NodePort } from "./NodePort.ts";
+import { NodePort } from "./NodePort";
 
 export class NamedPorts {
     mPortsByName: { [ key: string]: NodePort };

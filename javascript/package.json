@@ -9,7 +9,9 @@
         "preview": "vite preview",
         "test:unit": "vitest",
         "build-only": "vite build",
-        "type-check": "vue-tsc --build"
+        "type-check": "vue-tsc --build",
+	"cmdline:build": "cd examples; npm run build",
+	"cmdline:run": "cd examples; npm run run"
     },
     "dependencies": {
         "baklavajs": "^2.8.1",

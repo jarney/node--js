@@ -1,8 +1,8 @@
-import type {NodeId} from "../Definitions.ts";
-import type {Serializer} from "../Serializer.ts";
-import type {SerializerErrorReporter} from "../SerializerError.ts";
-import {NodeModule} from "../NodeModule.ts";
-import {SerializerXMLReader} from "./SerializerXMLReader.ts";
+import type {NodeId} from "../Definitions";
+import type {Serializer} from "../Serializer";
+import type {SerializerErrorReporter} from "../SerializerError";
+import {NodeModule} from "../NodeModule";
+import {SerializerXMLReader} from "./SerializerXMLReader";
 
 export class SerializerXML implements Serializer {
   private constructor() {

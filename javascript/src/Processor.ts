@@ -1,10 +1,10 @@
-import type {NodeId, NodeTypeId} from "./Definitions.ts";
-import {Node} from "./Node.ts";
-import {NodeType} from "./NodeType.ts";
-import {NodeModule} from "./NodeModule.ts";
-import {Edge} from "./Edge.ts";
-import {ConnectionData} from "./ConnectionData.ts";
-import {NodeGraph} from "./NodeGraph.ts";
+import type {NodeId, NodeTypeId} from "./Definitions";
+import {Node} from "./Node";
+import {NodeType} from "./NodeType";
+import {NodeModule} from "./NodeModule";
+import {Edge} from "./Edge";
+import {ConnectionData} from "./ConnectionData";
+import {NodeGraph} from "./NodeGraph";
 
 
 function dumpDict(msg: string, data: ConnectionData) : void {

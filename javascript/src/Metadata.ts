@@ -1,4 +1,4 @@
-import { ConnectionData } from "./ConnectionData.ts";
+import { ConnectionData } from "./ConnectionData";
 
 /**
  * A port is a part of a node that can exchange data.

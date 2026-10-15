@@ -1,5 +1,5 @@
-import {NodeModule} from "./NodeModule.ts";
-import type {SerializerErrorReporter} from "./SerializerError.ts";
+import {NodeModule} from "./NodeModule";
+import type {SerializerErrorReporter} from "./SerializerError";
 
 export interface Serializer {
   read(

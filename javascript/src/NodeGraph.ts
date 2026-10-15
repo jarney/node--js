@@ -1,11 +1,11 @@
-import type {NodeId, EdgeId, PortId, NodeTypeId, DataTypeId} from "./Definitions.ts";
-import {Node} from "./Node.ts";
-import {DataType} from "./DataType.ts";
-import {NodeType} from "./NodeType.ts";
-import {Edge} from "./Edge.ts";
-import {ConnectionData} from "./ConnectionData.ts";
-import {NodeModule} from "./NodeModule.ts";
-import {Metadata} from "./Metadata.ts";
+import type {NodeId, EdgeId, PortId, NodeTypeId, DataTypeId} from "./Definitions";
+import {Node} from "./Node";
+import {DataType} from "./DataType";
+import {NodeType} from "./NodeType";
+import {Edge} from "./Edge";
+import {ConnectionData} from "./ConnectionData";
+import {NodeModule} from "./NodeModule";
+import {Metadata} from "./Metadata";
 
 class StackEntry {
   public nodeId: NodeId;

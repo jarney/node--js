@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import {ModuleLoaderNodeJSPath} from "../xml/ModuleLoaderNodeJSPath.ts";
-import type {SerializerErrorReporter} from "../SerializerError.ts";
-import {SerializerErrorReporterStream} from "../SerializerError.ts";
+import {ModuleLoaderNodeJSPath} from "../xml/ModuleLoaderNodeJSPath";
+import type {SerializerErrorReporter} from "../SerializerError";
+import {SerializerErrorReporterStream} from "../SerializerError";
 
 //const response = await fetch("org.ensor.nodejs.openscad.xml");
 //console.log(response);

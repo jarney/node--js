@@ -1,4 +1,4 @@
-import { Metadata } from "./Metadata.ts";
+import { Metadata } from "./Metadata";
 /**
  * A port is a part of a node that can exchange data.
  * Ports may play the role of either input or output data

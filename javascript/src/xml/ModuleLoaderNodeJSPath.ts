@@ -1,8 +1,8 @@
 
-import { NodeModule } from "../NodeModule.ts";
-import type { ModuleLoader } from "../ModuleLoader.ts";
-import type { SerializerErrorReporter } from "../SerializerError.ts";
-import { SerializerXML } from "./SerializerXML.ts";
+import { NodeModule } from "../NodeModule";
+import type { ModuleLoader } from "../ModuleLoader";
+import type { SerializerErrorReporter } from "../SerializerError";
+import { SerializerXML } from "./SerializerXML";
 
 export class ModuleLoaderNodeJSPath implements ModuleLoader {
   mPath: string[];
@@ -57,6 +57,7 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
       return this.mLoadedModules[aPackageName]!;
     }
     var nodeModule = new NodeModule(this);
+    nodeModule.setPackage(aPackageName);
     this.mLoadedModules[aPackageName] = nodeModule;
     return nodeModule;
   }

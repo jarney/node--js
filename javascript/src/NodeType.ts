@@ -1,8 +1,8 @@
 
-import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions.ts"
-import { NamedPorts } from "./NamedPorts.ts";
-import { ConnectionData } from "./ConnectionData.ts";
-import { Metadata } from "./Metadata.ts";
+import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions"
+import { NamedPorts } from "./NamedPorts";
+import { ConnectionData } from "./ConnectionData";
+import { Metadata } from "./Metadata";
 
 /**
  * This class represents a type of node in a node program.
