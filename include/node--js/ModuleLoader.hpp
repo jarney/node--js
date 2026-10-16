@@ -76,15 +76,13 @@ namespace NodeJS {
 		std::string packageName
 		);
 
-#if NEED_MODULE_REFLECTION
 	    void loadModule(std::unique_ptr<NodeModule> aModule);
 	    
-	    std::vector<std::string> getLoadedNamespaces(void) const;
+	    std::vector<std::string> getLoadedModules(void) const;
 	    
 	    bool hasModule(std::string aPackageNamespace);
 	    
 	    NodeModule *getLoadedModule(std::string moduleName) const;
-#endif	    
 	    
 	private:
 	    std::unique_ptr<ModuleLoaderPlugin> mPlugin;

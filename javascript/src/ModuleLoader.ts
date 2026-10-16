@@ -59,7 +59,6 @@ export class ModuleLoader {
     this.mLoadedModules[aFullyQualifiedModuleName] = nodeModule;
     return nodeModule;
   }
-  
 
   public newModule(aFullyQualifiedModuleName: string) : NodeModule {
     if (aFullyQualifiedModuleName in this.mLoadedModules) {
@@ -69,5 +68,24 @@ export class ModuleLoader {
     this.mLoadedModules[aFullyQualifiedModuleName] = nodeModule;
     return nodeModule;
   }
+
+  public getLoadedModules() : string[] {
+    var loadedNamespaces: string[] = [];
+
+    for (var ns in this.mLoadedModules) {
+	loadedNamespaces.push(ns);
+    }
+    
+    return loadedNamespaces;
+  }
+
+  public hasModule(aPackageNamespace: string) : boolean {
+    return aPackageNamespace in this.mLoadedModules.find(aPackageNamespace);
+  }
+
+  public getLoadedModule(aPackageNamespace: string) : NodeModule | undefined {
+    return this.mLoadedModules[aPackageNamespace];
+  }
+  
 }
 

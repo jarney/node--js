@@ -82,9 +82,10 @@ ModuleLoader::loadModule(std::unique_ptr<NodeModule> aModule)
     std::string packageNamespace = aModule->getPackage();
     mLoadedModules.insert(std::make_pair(packageNamespace, std::move(aModule)));
 }
+#endif
 
 std::vector<std::string>
-ModuleLoader::getLoadedNamespaces(void) const
+ModuleLoader::getLoadedModules(void) const
 {
     std::vector<std::string> loadedNamespaces;
 
@@ -108,7 +109,6 @@ ModuleLoader::getLoadedModule(std::string moduleName) const
     if (it == mLoadedModules.end()) return nullptr;
     return it->second.get();
 }
-#endif
 
 std::unique_ptr<NodeModule>
 ModuleLoaderPluginNil::loadModule(
