@@ -43,7 +43,6 @@ export class PopulateBaklava {
         var dataType: DataType = dataTypeMap[id]!;
 	var interfaceType: NodeInterfaceType<string> = new NodeInterfaceType<string>(dataType.getName());
 	
-        console.log("Defining DataType " + dataType.getFullyQualifiedId());
 	this.mInterfaceTypeMap[dataType.getFullyQualifiedId()] = interfaceType;
 	
 	nodeInterfaceTypes.addTypes(interfaceType);
@@ -57,7 +56,7 @@ export class PopulateBaklava {
     for (var i: number = 0; i < ports.getCount(); i++) {
       const id: string = ports.getName(i);
       const port: NodePort = ports.getByIndex(i)!;
-      console.log(prefix + id + ":" + port.getDataType());
+      //console.log(prefix + id + ":" + port.getDataType());
       var interfaceType: NodeInterfaceType<string> = this.mInterfaceTypeMap[port.getDataType()]!;
       var dt: string = port.getDataType();
       portMap[id] = () => new NodeInterface(id, "").use(setType, interfaceType);
@@ -68,13 +67,12 @@ export class PopulateBaklava {
   public populateNodeTypes() {
     for (const ns of this.mModuleLoader.getLoadedModules()) {
       var mod: NodeModule = this.mModuleLoader.getLoadedModule(ns)!;
-      console.log("Loaded module " + ns);
       var nodeTypeMap: { [ key: string ] : NodeType } = mod.getNodeTypes();
       for (const id in nodeTypeMap) {
         var nodeType: NodeType = nodeTypeMap[id]!;
-	
-        console.log("Defining type " + nodeType.getFullyQualifiedId());
 
+        //console.log("Defining type " + nodeType.getFullyQualifiedId());
+	
 	var inputMap: { [key: string] : () => NodeInterface } = {};
 	var inputs: NamedPorts = nodeType.getInputs();
 
@@ -90,7 +88,7 @@ export class PopulateBaklava {
 	  inputs: inputMap,
 	  outputs: outputMap,
 	});
-        console.log("Registering node type " + nodeType.getFullyQualifiedId());
+        //console.log("Registering node type " + nodeType.getFullyQualifiedId());
         this.mBaklavaView.editor.registerNodeType(this.mUINodeType[nodeType.getFullyQualifiedId()]);
 
       }
@@ -103,7 +101,7 @@ export class PopulateBaklava {
     this.populateDataTypes();
     this.populateNodeTypes();
     
-    console.log("Populated node interface types");
-    console.log(this.mInterfaceTypeMap);
+    //console.log("Populated node interface types");
+    //console.log(this.mInterfaceTypeMap);
   }
 }

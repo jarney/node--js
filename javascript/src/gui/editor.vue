@@ -1,19 +1,21 @@
 <template>
-    <div class="settings-example">
-        <div class="settings-controls">
-            <label><input type="checkbox" v-model="baklava.settings.enableMinimap" /> Minimap</label>
-            <label
-                ><input type="checkbox" v-model="baklava.settings.useStraightConnections" /> Straight connections</label
-            >
-            <label><input type="checkbox" v-model="baklava.settings.displayValueOnHover" /> Show value on hover</label>
-            <label><input type="checkbox" v-model="baklava.settings.nodes.resizable" /> Resizable nodes</label>
-        </div>
-        <div class="editor-container">
-            <h1>s</h1>
-            <BaklavaEditor :view-model="baklava" />
-            <h1>e</h1>
-        </div>
+  <div class="nodejs">
+    <div class="nodejs-container">
+      <div class="nodejs-left-sidebar">
+          <ul id="node-tree">
+	    <button @click="doAddNodeOnClick">Create Node</button>
+	  </ul>
+      </div>
+      <div class="nodejs-content">
+          <div class="editor-container">
+              <BaklavaEditor :view-model="baklava" />
+	  </div>
+      </div>
+      <div class="nodejs-right-sidebar">
+      c
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -59,6 +61,8 @@ if (nodeModule != undefined) {
 console.log("Defining node interface types:");
 
 const baklava = useBaklava();
+baklava.settings.enableMinimap = true;
+
 
 var uiDataTypes: { [key: string] : NodeInterfaceType<string>} = {};
 
@@ -100,11 +104,21 @@ const node2 = new MathNode();
 node2.position = { x: 450, y: 100 };
 baklava.editor.graph.addNode(node2);
 
+function doAddNodeOnClick() {
+    const node2 = new MathNode();
+    node2.position = { x: 450, y: 100 };
+    baklava.editor.graph.addNode(node2);
+}
+
 console.log("Adding a connection in our graph");
 
 baklava.editor.graph.addConnection(node1.outputs.output, node2.inputs.number1);
 
 console.log("Initialization complete, graph visible?");
+
+function doit() {
+  console.log("asdfasdfadfadfasdf");
+}
 
 </script>
 
@@ -136,6 +150,27 @@ console.log("Initialization complete, graph visible?");
     height: 500px;
 /*    position: relative;*/
 /*    flex: 1;*/
+}
+
+.nodejs {
+  display: table;
+  width: 100%;
+}
+
+.nodejs-container {
+    display: table-row;
+}
+.nodejs-left-sidebar {
+    display: table-cell;
+    width: 15%;
+}
+.nodejs-content {
+    display: table-cell;
+    width: 70%;
+}
+.nodejs-right-sidebar {
+    display: table-cell;
+    width: 15%;
 }
 
 </style>
