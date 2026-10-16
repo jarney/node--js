@@ -1,8 +1,8 @@
-import { NodeModule } from "../NodeModule";
-import type { ModuleLoaderPlugin } from "../ModuleLoader";
-import {ModuleLoader} from "../ModuleLoader";
-import type { SerializerErrorReporter } from "../SerializerError";
-import { SerializerXML } from "./SerializerXML";
+import { NodeModule } from "../src/NodeModule";
+import type { ModuleLoaderPlugin } from "../src/ModuleLoader";
+import {ModuleLoader} from "../src/ModuleLoader";
+import type { SerializerErrorReporter } from "../src/SerializerError";
+import { SerializerXML } from "../src/xml/SerializerXML";
 import fs from "fs";
 
 

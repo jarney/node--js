@@ -19,8 +19,11 @@
 <script setup lang="ts">
 import {ModuleLoaderHTTP} from "../xml/ModuleLoaderHTTP";
 import {ModuleLoader} from "../ModuleLoader";
+import {NodeModule} from "../NodeModule";
+import type {Serializer} from "../Serializer";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
+import {SerializerXML} from "../xml/SerializerXML";
 
 //const response = await fetch("org.ensor.nodejs.openscad.xml");
 //console.log(response);
@@ -37,8 +40,18 @@ const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
 const loader: ModuleLoader = new ModuleLoader();
 loader.setPlugin(loaderPlugin);
 loaderPlugin.addPath("");
-await loader.loadModule("org.ensor.nodejs.openscad", err);
 
+const nodeModule: NodeModule | undefined = await loader.loadModule("foo", err);
+
+if (nodeModule != undefined) {
+   var ser: Serializer = SerializerXML.instance();
+   var outstream: WritableStream = new WritableStream({
+       write(chunk) {
+               console.log(chunk);
+       }
+   });
+   ser.write(nodeModule!, outstream, err);
+}    
 
 import { defineNode, NodeInterface } from "@baklavajs/core";
 import { BaklavaEditor, useBaklava, NumberInterface, SelectInterface } from "@baklavajs/renderer-vue";

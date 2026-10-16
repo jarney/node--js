@@ -39,11 +39,11 @@ describe("Processor", function(){
     var graph: NodeGraph = module.addGraph("graph");;
 
     var unaryType: NodeType = new NodeType();
-    unaryType.setId("unary");
+    unaryType.setId("unary", "scad");
     unaryType.setType(NodeType.Type.NATIVE);
 
     var binType: NodeType = new NodeType();
-    binType.setId("binary");
+    binType.setId("binary", "scad");
     binType.setType(NodeType.Type.NATIVE);
     
     var main: Node = graph.newNode(binType, "main")!;
@@ -54,8 +54,8 @@ describe("Processor", function(){
     graph.newEdge(call2.getId(), "out", main.getId(), "in2");
 
     var processor: Processor = new Processor();
-    processor.setNativeImpl("unary", new NodeProcessor_unary());
-    processor.setNativeImpl("binary", new NodeProcessor_binary());
+    processor.setNativeImpl("scad.unary", new NodeProcessor_unary());
+    processor.setNativeImpl("scad.binary", new NodeProcessor_binary());
     
     var input: ConnectionData = new ConnectionData();
     var output: ConnectionData = new ConnectionData();

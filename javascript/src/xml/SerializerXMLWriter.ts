@@ -88,8 +88,10 @@ export class SerializerXMLWriter {
   
   public writeDataTypes() {
     var dataTypesNode: Element = this.mDocument.createElement("data-types");
-    for (const id in this.mNodeModule.getDataTypes()) {
-      this.writeDataType(id, this.mNodeModule.getDataTypes()[id], dataTypesNode);
+    var dataTypeMap: { [ key: string ] : DataType } = this.mNodeModule.getDataTypes();
+    for (const id in dataTypeMap) {
+      var dataType: DataType = dataTypeMap[id]!;
+      this.writeDataType(id, dataType, dataTypesNode);
     }
     this.mRoot.appendChild(dataTypesNode);
   }
@@ -169,17 +171,20 @@ export class SerializerXMLWriter {
     var nodeTypesNode: Element = this.mDocument.createElement("node-types");
     const nodeTypesDict: { [key: string] : NodeType } = this.mNodeModule.getNodeTypes();
     for (var id in nodeTypesDict) {
-      var value: NodeType = nodeTypesDict[id];
-      this.writeNodeType(id, value, nodeTypesNode);
+      var nodeType: NodeType = nodeTypesDict[id]!;
+      this.writeNodeType(id, nodeType, nodeTypesNode);
     }
     this.mRoot.appendChild(nodeTypesNode);
   }
 
   public writeGraphNodeData(data: ConnectionData, nodeNode: Element) {
-    for (var key in data.getData()) {
+    var dataMap: { [key: string ] : string } = data.getData();
+    
+    for (var key in dataMap) {
       var valueNode : Element = this.mDocument.createElement("value");
       valueNode.setAttribute("key", key);
-      valueNode.textContent = data.getData()[key];
+      var value = dataMap[key]!;
+      valueNode.textContent = value;
       
       nodeNode.appendChild(valueNode);
     }
@@ -231,7 +236,8 @@ export class SerializerXMLWriter {
     for (const id in graphNodes) {
       var nodeNode: Element = this.mDocument.createElement("node");
       nodeNode.setAttribute("id", id);
-      this.writeGraphNode(graphNodes[id], nodeNode);
+      var graphNode: Node = graphNodes[id]!;
+      this.writeGraphNode(graphNode, nodeNode);
       nodesNode.appendChild(nodeNode);
     }
   }
@@ -242,8 +248,7 @@ export class SerializerXMLWriter {
     var edgeMap: { [ key: string ] : Edge } = graph.getEdges();
     for (const id in edgeMap) {
       var edgeNode: Element = this.mDocument.createElement("edge");
-
-      var edge: Edge = edgeMap[id];
+      var edge: Edge = edgeMap[id]!;
       edgeNode.setAttribute("from-node", edge.fromNode);
       edgeNode.setAttribute("from-port", edge.fromPort);
       edgeNode.setAttribute("to-node", edge.toNode);
@@ -278,7 +283,8 @@ export class SerializerXMLWriter {
     var graphsNode: Element = this.mDocument.createElement("graphs");
     var graphsDict: { [key: string] : NodeGraph } = this.mNodeModule.getGraphs();
     for (var id in graphsDict) {
-	  this.writeGraph(id, graphsDict[id], graphsNode);
+      var graph: NodeGraph = graphsDict[id]!;
+      this.writeGraph(id, graph, graphsNode);
     }
     this.mRoot.appendChild(graphsNode);
   }

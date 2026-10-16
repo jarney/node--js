@@ -2,7 +2,7 @@
 
 import {NodeModule} from "../src/NodeModule";
 import {ModuleLoader} from "../src/ModuleLoader";
-import {ModuleLoaderNodeJSPath} from "../src/xml/ModuleLoaderNodeJSPath";
+import {ModuleLoaderNodeJSPath} from "./ModuleLoaderNodeJSPath";
 import type {SerializerErrorReporter} from "../src/SerializerError";
 import {SerializerErrorReporterStream } from "../src/SerializerError";
 import {Serializer} from "../src/Serializer";

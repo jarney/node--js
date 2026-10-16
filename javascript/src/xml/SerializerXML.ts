@@ -55,7 +55,7 @@ export class SerializerXML implements Serializer {
     //outstream.getWriter().write("----- this is lit");
 
     const parser = JOS.domParser();
-    const stubdoc: Document = parser.parseFromString("<?xml version=\"1.0\"><root></root>", "application/xml");
+    const stubdoc: Document = parser.parseFromString("<?xml version=\"1.0\"?><root></root>", "application/xml");
 
     var xmlDoc: Document = stubdoc.implementation.createDocument("", "", null);
 

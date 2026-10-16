@@ -101,7 +101,7 @@ export class Processor {
     toData: ConnectionData
   ) : void {
     if (nodeType.getType() == NodeType.Type.NATIVE) {
-      var nodeTypeId: NodeTypeId = nodeType.getId();
+      var nodeTypeId: NodeTypeId = nodeType.getFullyQualifiedId();
       if (!(nodeTypeId in this.mNodeProcessors)) {
 	Processor.default_processor(this, node, fromData, toData);
 	return;
@@ -114,7 +114,7 @@ export class Processor {
     }
     else if (nodeType.getType() == NodeType.Type.GRAPH) {
       var module: NodeModule = graph.getModule();
-      var subgraph: NodeGraph | undefined = module.getGraph(nodeType.getId());
+      var subgraph: NodeGraph | undefined = module.getGraph(nodeType.getFullyQualifiedId());
       if (subgraph == undefined) {
 	Processor.default_processor(this, node, fromData, toData);
 	return;

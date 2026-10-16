@@ -23,7 +23,7 @@ describe("NodeModule", () => {
     var nodeModule: NodeModule = loader.newModule("anonymous");
     
     var nodeType: NodeType = new NodeType();
-    nodeType.setId("add");
+    nodeType.setId("add", "fish");
     nodeType.getInputs().addPort("first", new NodePort("variable", "First Argument"));
     
     nodeModule.addNodeType(nodeType);
@@ -32,7 +32,8 @@ describe("NodeModule", () => {
     
     var nt: NodeType | undefined = nodeModule.getNodeType("add");
     
-    expect.assert(nt!.getId() == "add");
+    expect.assert(nt!.getLocalId() == "add");
+    expect.assert(nt!.getFullyQualifiedId() == "fish.add");
     expect.assert(nt!.getInputs().getCount() == 1);
 
     var nonexistent: NodeType | undefined = nodeModule.getNodeType("invalid-node");
