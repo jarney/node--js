@@ -23,6 +23,10 @@ namespace NodeJS {
 	  bool write(void);
       private:
 
+	  void writePackage(void);
+
+	  void writeScopes(void);
+
 	  void writeMetadata(
 	      const NodeJS::core::Metadata & metadata,
 	      XmlNodeWrapper & parentNode
@@ -36,8 +40,6 @@ namespace NodeJS {
 	  
 	  void writeDataTypes(void);
 	  
-	  void writePackage(void);
-
 	  void writeNamedPorts(
 	      const NodeJS::core::NamedPorts & namedPorts,
 	      XmlNodeWrapper portsNode
@@ -70,7 +72,6 @@ namespace NodeJS {
 	      const NodeJS::core::NodeGraph & graph,
 	      XmlNodeWrapper edgesNode
 	      );
-	  void writeScopes(void);
 	  void writeGraph(
 	      std::string id,
 	      const NodeJS::core::NodeGraph & graph,

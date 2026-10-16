@@ -23,6 +23,33 @@ SerializerXMLWriter::SerializerXMLWriter(
 
 
 void
+SerializerXMLWriter::writePackage(void)
+{
+    XmlNodeWrapper packageEl("package");
+    packageEl.setAttribute("id", mNodeModule.getPackage());
+    packageEl.setAttribute("version", "1");
+    packageEl.setAttribute("description", mNodeModule.getDescription());
+    mRoot.addChild(packageEl);
+
+    writeMetadata(mNodeModule.getMetadata(), mRoot);
+}
+
+void
+SerializerXMLWriter::writeScopes(void)
+{
+    XmlNodeWrapper scopeNode("scope");
+    // Skip the first scope because that's
+    // always the 'current' scope, so we don't want
+    // to include it artificially
+    for (const auto & packageNamespace : mNodeModule.getImportModuleList()) {
+	XmlNodeWrapper packageNode("package");
+	packageNode.setAttribute("id", packageNamespace);
+	scopeNode.addChild(packageNode);
+    }
+    mRoot.addChild(scopeNode);
+}
+
+void
 SerializerXMLWriter::writeMetadata(
     const Metadata & metadata,
     XmlNodeWrapper & parentNode
@@ -64,18 +91,6 @@ SerializerXMLWriter::writeDataTypes(void)
     }
     
     mRoot.addChild(dataTypesNode);
-}
-
-void
-SerializerXMLWriter::writePackage(void)
-{
-    XmlNodeWrapper packageEl("package");
-    packageEl.setAttribute("id", mNodeModule.getPackage());
-    packageEl.setAttribute("version", "1");
-    packageEl.setAttribute("description", mNodeModule.getDescription());
-    mRoot.addChild(packageEl);
-
-    writeMetadata(mNodeModule.getMetadata(), mRoot);
 }
 
 void
@@ -251,21 +266,6 @@ SerializerXMLWriter::writeGraphEdges(
 	
 	edgesNode.addChild(edgeNode);
     }
-}
-
-void
-SerializerXMLWriter::writeScopes(void)
-{
-    XmlNodeWrapper scopeNode("scope");
-    // Skip the first scope because that's
-    // always the 'current' scope, so we don't want
-    // to include it artificially
-    for (const auto & packageNamespace : mNodeModule.getImportModuleList()) {
-	XmlNodeWrapper packageNode("package");
-	packageNode.setAttribute("id", packageNamespace);
-	scopeNode.addChild(packageNode);
-    }
-    mRoot.addChild(scopeNode);
 }
 
 void

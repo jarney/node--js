@@ -24,14 +24,24 @@ var moduleLoader: ModuleLoader = new ModuleLoader();
 var pathLoader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
 pathLoader.addPath("../../test-data/xml/Serializer");
 moduleLoader.setPlugin(pathLoader);
-
-var nodeModule: NodeModule = moduleLoader.newModule("Something wild");
-
-console.log("nodeModule package " + nodeModule.getPackage());
-
 var err: SerializerErrorReporter = new SerializerErrorReporterStream();
 
-function finishit(nodeModule: NodeModule | undefined) {
+console.log(process.argv);
+if (process.argv.length < 3) {
+    console.log("Usage: passthrough package");
+    process.exit(1);
+}
+var packageName: string = process.argv[2];
+console.log(process.env["NODEJS_PATH"]);
+var path: string | undefined = process.env["NODEJS_PATH"]
+var split: string[] = [];
+if (path != undefined) {
+	split = path.split(":");
+}
+console.log(split);
+//process.exit(1);
+
+moduleLoader.loadModule(packageName, err).then((nodeModule: NodeModule | undefined) => {
     if (nodeModule == undefined) {
 	console.log("Error: could nod load module");
 	return;
@@ -45,8 +55,4 @@ function finishit(nodeModule: NodeModule | undefined) {
     
     var ser: Serializer = new SerializerXML();
     ser.write(nodeModule!, outstream, err);
-}
-moduleLoader.loadModule("org.ensor.nodejs.openscad", err).then((nodeModule2: NodeModule | undefined) => {
-    console.log(nodeModule2);
-    finishit(nodeModule2);
 });

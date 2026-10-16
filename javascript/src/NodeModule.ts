@@ -81,7 +81,7 @@ export class NodeModule {
     }
   }
   public addNodeType(nodeType: NodeType) {
-    this.mNodeTypes[nodeType.getId()] = nodeType;
+    this.mNodeTypes[nodeType.getLocalId()] = nodeType;
   }
   public getNodeTypes() : { [key: string]: NodeType } {
     return this.mNodeTypes;
@@ -91,8 +91,12 @@ export class NodeModule {
     if (qualifiedName.isQualified() && qualifiedName.getNamespace() != this.mPackage) {
 	// Search the scopes.
       var searchedModule: NodeModule | undefined = this.getImportModule(qualifiedName.getNamespace());
-	if (searchedModule == undefined) return false;
-	return searchedModule.hasNodeType(qualifiedName.getName());
+      if (searchedModule == undefined) {
+	console.log("Searched module does not exist " + id);
+	return false;
+      }
+      console.log("Searched for node type " + id + " and found the module it is supposed to be inside.");
+      return searchedModule.hasNodeType(qualifiedName.getName());
     }
     else {
       return (qualifiedName.getName() in this.mNodeTypes);

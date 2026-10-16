@@ -11,6 +11,11 @@ export class ModuleLoaderNodeJSPath implements ModuleLoaderPlugin {
   
   constructor() {
     this.mPath = [];
+    var path: string | undefined = process.env["NODEJS_PATH"]
+    var split: string[] = [];
+    if (path != undefined) {
+      this.mPath = path.split(":");
+    }
   }
   public addPath(path: string) {
     this.mPath.push(path);
@@ -32,19 +37,19 @@ export class ModuleLoaderNodeJSPath implements ModuleLoaderPlugin {
       var pathEl: string = this.mPath[pathIndex]!;
       var filename: string = pathEl + "/" + aFullyQualifiedModuleName + ".xml";
 
-      var xmlString: string = (fs.readFileSync(filename) as unknown) as string;
+      try {
+	var xmlString: string = (fs.readFileSync(filename) as unknown) as string;
       
-      var serializer: SerializerXML = SerializerXML.instance();
-      newModule = new NodeModule(aModuleLoader, aFullyQualifiedModuleName);
-      var success: boolean = await serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);
-      if (success) break;
-
-      newModule = undefined;
+	var serializer: SerializerXML = SerializerXML.instance();
+	newModule = new NodeModule(aModuleLoader, aFullyQualifiedModuleName);
+	var success: boolean = await serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);
+	break;
+      }
+      catch (ex) {
+	newModule = undefined;
+      }
       
     }
-    
-    console.log("This is really a thing now, isn't it?");
-    
     return newModule;
   }
 }

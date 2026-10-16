@@ -17,11 +17,11 @@
   
   <data-types>
     <!--
-      - These are (for now) purely documentary.
-      - There is no 'hard' validation of data types,
-      - their origin, or function at this level.  They
-      - exist purely as identifiers that tie ports together.
-      -->
+        - These are (for now) purely documentary.
+        - There is no 'hard' validation of data types,
+        - their origin, or function at this level.  They
+        - exist purely as identifiers that tie ports together.
+    -->
     <data-type id="variable" name="OpenSCAD Variable"/>
     <data-type id="module-instantiation" name="OpenSCAD Geometry"/>
     <data-type id="assignment" name="OpenSCAD Variable Assignment"/>
@@ -29,36 +29,36 @@
     <data-type id="module-definition" name="OpenSCAD Module"/>
   </data-types>
   <!--
-    - This is the set of nodes provided by the OpenSCAD
-    - implementation.  Each of these node processors
-    - are added by a native implementation library.
-    -->
+      - This is the set of nodes provided by the OpenSCAD
+      - implementation.  Each of these node processors
+      - are added by a native implementation library.
+  -->
   <node-types>
     <!-- Output to be rendered -->
     <node-type id="output" visibility="public" type="native">
       <inputs>
-	<port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"></port>
-	<port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
-	<port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
-	<port id="module-instantiations" description="Output to render" data-type="module-instantiation" connection-policy="multi"/>
+        <port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"></port>
+        <port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
+        <port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
+        <port id="module-instantiations" description="Output to render" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
       <outputs/>
       <metadata>
-	<data namespace="http://jarney.github.io/nodejs/editor">
-	  <value key="caption">Output</value>
-	  <value key="tooltip">
-	    This is the output node that formats the data from the graph into an OpenSCAD file for rendering.
-	  </value>
-	</data>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+          <value key="caption">Output</value>
+          <value key="tooltip">
+            This is the output node that formats the data from the graph into an OpenSCAD file for rendering.
+          </value>
+        </data>
       </metadata>
     </node-type>
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">
       <metadata>
-	<data namespace="http://jarney.github.io/nodejs/editor">
-	  <value key="caption">Circle</value>
-	  <value key="tooltip">Produces a 2d circle based on either a radius or diameter.</value>
-	</data>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+          <value key="caption">Circle</value>
+          <value key="tooltip">Produces a 2d circle based on either a radius or diameter.</value>
+        </data>
       </metadata>
       <inputs>
         <port id="r" description="r" data-type="variable" connection-policy="one"/>
@@ -70,12 +70,12 @@
     </node-type>
     <node-type id="square" visibility="public" type="native">
       <metadata>
-	<data namespace="http://jarney.github.io/nodejs/editor">
-	  <value key="caption">Square</value>
-	  <value key="tooltip">Produces a 2d square with a given size.
-	  Starts at the origin and goes to positive x,y unless 'center'
-	  is selected, in which case it centers.</value>
-	</data>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+          <value key="caption">Square</value>
+          <value key="tooltip">Produces a 2d square with a given size.
+          Starts at the origin and goes to positive x,y unless 'center'
+          is selected, in which case it centers.</value>
+        </data>
       </metadata>
       <inputs>
         <port id="size" description="size" data-type="variable" connection-policy="one"/>
@@ -130,9 +130,9 @@
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
       <metadata>
-	<data namespace="http://jarney.github.io/nodejs/editor">
-	  <value key="caption">Sphere</value>
-	</data>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+          <value key="caption">Sphere</value>
+        </data>
       </metadata>
     </node-type>
     <node-type id="cube" visibility="public" type="native">
@@ -946,7 +946,7 @@
         <port id="value" description="value" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-	<port id="assignment" description="value" data-type="assignment" connection-policy="multi"/>
+        <port id="assignment" description="value" data-type="assignment" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="variable" visibility="public" type="native">
@@ -958,7 +958,7 @@
     </node-type>
     <node-type id="function" visibility="public" type="native" allow-port-override="true">
       <inputs>
-	<!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
+        <!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
       </inputs>
       <outputs>
         <port id="out" description="Function Definition" data-type="function-definition" connection-policy="one"/>
@@ -966,10 +966,10 @@
     </node-type>
     <node-type id="function-call" visibility="public" type="native" allow-port-override="true">
       <inputs>
-	<!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
+        <!-- Inputs are not defined because this node defines its own ports on a per-node basis -->
       </inputs>
       <outputs>
-	<port id="out" description="Result" data-type="variable" connection-policy="multi"/>
+        <port id="out" description="Result" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
     <!-- Type Test -->

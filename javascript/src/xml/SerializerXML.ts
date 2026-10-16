@@ -32,6 +32,21 @@ export class SerializerXML implements Serializer {
     const serializer: SerializerXMLReader = new SerializerXMLReader(aFilename, doc, nodeModule, reporter);
     return serializer.read();
   }
+
+  private static INDENT_PATTERN = '  ';
+  private static formatXml(xml: string, tab: string): string { // tab = optional indent value, default is tab (\t)
+    var formatted = '', indent= '';
+    tab = tab || SerializerXML.INDENT_PATTERN;
+    xml.split(/>\s*</).forEach(function(node) {
+      if (node.match( /^\/\w/ )) indent = indent.substring(tab.length); // decrease indent by one 'tab'
+      formatted += indent + '<' + node + '>\n';
+      if (node.match( /^<?\w[^>]*[^\/]$/ )) indent += tab;              // increase indent
+    });
+    return formatted.substring(1, formatted.length-3);
+  }
+    
+
+  
   public write(
     nodeModule: NodeModule,
     outstream: WritableStream,
@@ -49,9 +64,9 @@ export class SerializerXML implements Serializer {
 
     
     const serializer: XMLSerializer = JOS.xmlSerializer();
-    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
     const xmlStr: string = serializer.serializeToString(xmlDoc);
-    outstream.getWriter().write(xmlStr);
+    
+    outstream.getWriter().write(SerializerXML.formatXml(xmlStr, ''));
     
     return false;
   }

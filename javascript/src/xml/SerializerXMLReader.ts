@@ -400,14 +400,14 @@ export class SerializerXMLReader {
     }
     var fromNodeObj: Node = nodeGraph.getNode(fromNode)!;
     if (!fromNodeObj.getOutputs().hasPort(fromPort)) {
-      return this.parseError(SerializerErrorCode.EDGE_FROM_PORT_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' does not have output port '" + fromPort + "'.");
+      return this.parseError(SerializerErrorCode.EDGE_FROM_PORT_INVALID, edgeNode, "Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getFullyQualifiedId() + "' does not have output port '" + fromPort + "'.");
     }
     if (!nodeGraph.hasNode(toNode)) {
       return this.parseError(SerializerErrorCode.EDGE_TO_NODE_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' is not defined in this graph.");      
     }
     var toNodeObj: Node = nodeGraph.getNode(toNode)!;
     if (!toNodeObj.getInputs().hasPort(toPort)) {
-      return this.parseError(SerializerErrorCode.EDGE_TO_PORT_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' does not have input port '" + toPort + "'.");
+      return this.parseError(SerializerErrorCode.EDGE_TO_PORT_INVALID, edgeNode, "Graph edge to-node '" + toNode + "' of type '" + toNodeObj.getType().getFullyQualifiedId() + "' does not have input port '" + toPort + "'.");
     }
 
     // Make sure that the data-types in the from and to line up correctly.
@@ -416,8 +416,8 @@ export class SerializerXMLReader {
 
     if (fromPortObj.getDataType() != toPortObj.getDataType()) {
       return this.parseError(SerializerErrorCode.EDGE_PORT_DATA_MISMATCH, edgeNode,
-	"Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
-	  " to-node '" + toNode + "' of type '" + toNodeObj.getType().getId() + "' input port '" + toPort + "' has data type '" + toPortObj.getDataType() + "'");
+	"Graph edge from-node '" + fromNode + "' of type '" + fromNodeObj.getType().getFullyQualifiedId() + "' output port '" + fromPort + "' has data type '" + fromPortObj.getDataType() + "', " +
+	  " to-node '" + toNode + "' of type '" + toNodeObj.getType().getFullyQualifiedId() + "' input port '" + toPort + "' has data type '" + toPortObj.getDataType() + "'");
     }
 
     if (nodeGraph.hasEdge(fromNode, fromPort, toNode, toPort)) {
@@ -471,16 +471,6 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.GRAPH_ID_DUPLICATE, graphNode, "Duplicate graph id '" + id + "' for graph.");
     }
 
-    // TODO: Scope resolution needs to be symbolic
-    // at this point.  Actual scope resolution needs to happen
-    // in a context where we actually have access to a module
-    // loader mechanism and this is too low-level for that.
-    for (var scopeNode of DomUtils.getChildrenByTagName(graphNode, "scope")) {
-      for (var packageNode of DomUtils.getChildrenByTagName(scopeNode, "package")) {
-	// TODO: We need to figure out how to unwind the recursiveness here.
-      }
-    }
-
     var nodeGraph: NodeGraph = this.mNodeModule.addGraph(id)!;
 
     for (var nodesNode of DomUtils.getChildrenByTagName(graphNode, "nodes")) {
@@ -511,7 +501,6 @@ export class SerializerXMLReader {
     return true;
   }
   
-
   public async parseScope(): Promise<boolean> {
     for (var scopeNode of DomUtils.getChildrenByTagName(this.mRoot, "scope")) {
       for (var packageNode of DomUtils.getChildrenByTagName(scopeNode, "package")) {
@@ -527,6 +516,8 @@ export class SerializerXMLReader {
 	var loader: ModuleLoader = this.mNodeModule.getModuleLoader();
 	var loadedModule: NodeModule | undefined = await loader.loadModule(id, this.mReporter);
 	if (loadedModule) {
+	  console.log("Loaded module during scope loading: " + id);
+	  //console.log(loadedModule);
 	  this.mNodeModule.addImportModule(loadedModule);
 	}
 	else {
@@ -543,6 +534,8 @@ export class SerializerXMLReader {
     // other data is registered.
     if (!this.parsePackage()) return false;
 
+    // XXX The async loading is killing us here.  We need a way
+    // to break up th async stuff so we can load in the correct order!!!
     // Scopes are loaded at the package level.
     if (!this.parseScope()) return false;
     

@@ -42,8 +42,11 @@ export class NodeType {
     this.mAllowPortOverride = false;
   }
   
-  public getId(): NodeTypeId {
+  public getLocalId(): NodeTypeId {
     return this.mId;
+  }
+  public getFullyQualifiedId() : NodeTypeId {
+    return this.mFullyQualifiedId;
   }
   
   public setId(aId: NodeTypeId, aPackageName: string) {
