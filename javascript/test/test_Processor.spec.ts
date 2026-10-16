@@ -1,14 +1,14 @@
 import { describe, it, expect } from "vitest";
 
-import type { NodeProcessor } from "../src/Processor.ts";
+import type { NodeProcessor } from "../src/Processor";
 
-import {Node} from "../src/Node.ts";
-import {NodeType} from "../src/NodeType.ts";
-import {NodeModule} from "../src/NodeModule.ts";
-import {ConnectionData} from "../src/ConnectionData.ts";
-import {NodeGraph} from "./src/NodeGraph.ts";
-import {Processor} from "../src/Processor.ts";
-import {ModuleLoaderNodeJSPath} from "../src/xml/ModuleLoaderNodeJSPath.ts";
+import {Node} from "../src/Node";
+import {NodeType} from "../src/NodeType";
+import {NodeModule} from "../src/NodeModule";
+import {ConnectionData} from "../src/ConnectionData";
+import {NodeGraph} from "./src/NodeGraph";
+import {Processor} from "../src/Processor";
+import {ModuleLoader} from "../src/ModuleLoader";
 
 class NodeProcessor_binary implements NodeProcessor {
   public process(
@@ -34,7 +34,7 @@ class NodeProcessor_unary implements NodeProcessor {
 
 describe("Processor", function(){
   it("test_Processor_minimal", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");;
 

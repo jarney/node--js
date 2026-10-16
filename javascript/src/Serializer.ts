@@ -7,7 +7,7 @@ export interface Serializer {
     xmlString: string,
     nodeModule: NodeModule,
     reporter: SerializerErrorReporter
-  ) : boolean;
+  ) : Promise<boolean>;
   
   write(
     nodeModule: NodeModule,

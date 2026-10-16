@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { NodePort } from "../src/NodePort.ts";
+import { NodePort } from "../src/NodePort";
 
 describe("NodePort", function(){
 

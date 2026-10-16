@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import {ModuleLoaderNodeJSPath} from "../xml/ModuleLoaderNodeJSPath";
+import {ModuleLoader} from "../ModuleLoader";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
 
@@ -32,8 +33,10 @@ import {SerializerErrorReporterStream} from "../SerializerError";
 //console.log(doc1);
 
 const err: SerializerErrorReporter = new SerializerErrorReporterStream();
-const loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
-loader.addPath("");
+const loaderPlugin: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+const loader: ModuleLoader = new ModuleLoader();
+loader.setPlugin(loaderPlugin);
+loaderPlugin.addPath("");
 await loader.loadModule("org.ensor.nodejs.openscad", err);
 
 

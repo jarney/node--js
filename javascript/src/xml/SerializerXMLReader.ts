@@ -1,6 +1,7 @@
 import type {SerializerErrorReporter} from "../SerializerError";
 
 import {NodeModule} from "../NodeModule";
+import {ModuleLoader} from "../ModuleLoader";
 import {DataType} from "../DataType";
 import {NodeType} from "../NodeType";
 import {Metadata} from "../Metadata";
@@ -12,6 +13,7 @@ import {Edge} from "../Edge";
 import {NodePort} from "../NodePort";
 import {NodeGraph} from "../NodeGraph";
 import {NamedPorts} from "../NamedPorts";
+import {QualifiedIdentifier} from "../QualifiedIdentifier";
 import {SerializerErrorCode, SerializerErrorReporterNil} from "../SerializerError";
 import {DomUtils} from "./DomUtils";
 
@@ -133,6 +135,11 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_MISSING, dataTypeElement, "Missing id for data type");
     }
     var id: string = id_or_n!;
+    var qualifiedId: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedId.isQualified()) {
+	return this.parseError(SerializerErrorCode.DATA_TYPE_ID_INVALID, dataTypeElement, "Data type must not be qualified and must always reside in the current package.");
+    }
+    
     var name: string | null = dataTypeElement.getAttribute("name");
     if (name == null) {
       name = id;
@@ -141,7 +148,7 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.DATA_TYPE_ID_DUPLICATE, dataTypeElement, "Duplicate id '" + id + "' for data type.");
     }
     
-    var dataType: DataType = new DataType(id, name!);
+    var dataType: DataType = new DataType(id, this.mNodeModule.getPackage(), name!);
     this.mNodeModule.addDataType(dataType);
     
     return true;
@@ -233,6 +240,10 @@ export class SerializerXMLReader {
     if (this.mNodeModule.hasNodeType(id)) {
       return this.parseError(SerializerErrorCode.NODE_TYPE_ID_DUPLICATE, nodeTypeNode, "Duplicate id '" + id + "' for node type.");
     }
+    var qualifiedId: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedId.isQualified()) {
+	return this.parseError(SerializerErrorCode.NODE_TYPE_ID_INVALID, nodeTypeNode, "Node type must not be qualified and must always reside in the current package.");
+    }
 
     var visibility: NodeType.Visibility = NodeType.Visibility.PRIVATE;
 
@@ -270,7 +281,7 @@ export class SerializerXMLReader {
     }
 
     var nodeType: NodeType = new NodeType();
-    nodeType.setId(id);
+    nodeType.setId(id, this.mNodeModule.getPackage());
     nodeType.setVisibility(visibility);
     nodeType.setType(type);
 
@@ -500,10 +511,41 @@ export class SerializerXMLReader {
     return true;
   }
   
-  public read() : boolean {
+
+  public async parseScope(): Promise<boolean> {
+    for (var scopeNode of DomUtils.getChildrenByTagName(this.mRoot, "scope")) {
+      for (var packageNode of DomUtils.getChildrenByTagName(scopeNode, "package")) {
+	var id_or_n: string | null = packageNode.getAttribute("id");
+	if (id_or_n == null) {
+		return this.parseError(SerializerErrorCode.PACKAGE_SCOPE_MISSING_ID, packageNode, "Package element is missing 'id' attribute");
+	}
+	var id: string = id_or_n!;
+	if (this.mNodeModule.hasImportModule(id)) {
+	  // We've already loaded this one, we can ignore it (silently?)
+	  return true;
+	}
+	var loader: ModuleLoader = this.mNodeModule.getModuleLoader();
+	var loadedModule: NodeModule | undefined = await loader.loadModule(id, this.mReporter);
+	if (loadedModule) {
+	  this.mNodeModule.addImportModule(loadedModule);
+	}
+	else {
+	  return this.parseError(SerializerErrorCode.PACKAGE_SCOPE_FAILED_TO_LOAD, packageNode, "Could not load package scope '" + id + "'.");
+	}
+      }
+    }
+    return true;
+  }
+
+  public async read() : Promise<boolean> {
     
+    // The package needs to be read first because that determines where
+    // other data is registered.
     if (!this.parsePackage()) return false;
 
+    // Scopes are loaded at the package level.
+    if (!this.parseScope()) return false;
+    
     // Data types need to be read before node types
     // even if they appear later in the file.
     if (!this.parseDataTypes()) return false;

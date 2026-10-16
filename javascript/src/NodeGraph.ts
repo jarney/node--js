@@ -23,7 +23,6 @@ export class NodeGraph {
   mEdges: { [ key: EdgeId ] : Edge };
   mEdgesByFromNode: { [key: NodeId] : Edge[] };
   mEdgesByToNode: { [key: EdgeId] : Edge[] };
-  mScopes: NodeModule[];
   mMetadata: Metadata;
   
   constructor(aModule: NodeModule) {
@@ -32,7 +31,6 @@ export class NodeGraph {
     this.mEdges = {};
     this.mEdgesByFromNode = {};
     this.mEdgesByToNode = {};
-    this.mScopes = [];
     this.mMetadata = new Metadata();
   }
 
@@ -226,37 +224,6 @@ export class NodeGraph {
   public getEdges() : { [ key: EdgeId ] : Edge } {
     return this.mEdges;
   }
-  public getScopes() : NodeModule[] {
-    return this.mScopes;
-  }
-  public addScope(aNodeModule : NodeModule ) : void {
-    this.mScopes.push(aNodeModule);
-  }
-  public copyScope(aOther: NodeGraph) : void {
-    this.mScopes = [];
-    for (var scopeIndex in aOther.mScopes) {
-      this.mScopes.push(aOther.mScopes[scopeIndex]!);
-    }
-  }
-  public getNodeType(aNodeTypeId: NodeTypeId) : NodeType | undefined {
-    for (var scopeIndex in this.mScopes) {
-      var scope : NodeModule = this.mScopes[scopeIndex]!;
-      if (scope.hasNodeType(aNodeTypeId)) {
-	return scope.getNodeType(aNodeTypeId);
-      }
-    }
-    return undefined;
-  }
-  public getDataType(aDataTypeId: DataTypeId) : DataType | undefined {
-    for (var scopeIndex in this.mScopes) {
-      var scope : NodeModule = this.mScopes[scopeIndex]!;
-      if (scope.hasDataType(aDataTypeId)) {
-	return scope.getDataType(aDataTypeId);;
-      }
-    }
-    return undefined;    
-  }
-
   public getNodeIds() : NodeId[] {
     return Object.keys(this.mNodes);
   }

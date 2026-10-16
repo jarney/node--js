@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 
-import { ConnectionData } from "../src/ConnectionData.ts";
+import { ConnectionData } from "../src/ConnectionData";
 
 describe("ConnectionData", () => {
     it("test_ConnectionData_constructor", () => {

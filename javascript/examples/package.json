@@ -2,6 +2,6 @@
   "type": "commonjs",
   "scripts": {
       "build": "tsc",
-      "run": "node dist/examples/index.js"
+      "passthrough": "node dist/examples/passthrough.js"
   }
 }

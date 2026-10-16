@@ -67,9 +67,9 @@ ModuleLoader::newModule(
 {
     const auto it = mLoadedModules.find(aFullyQualifiedModuleName);
     if (it == mLoadedModules.end()) {
-	std::unique_ptr<NodeModule> module = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
-	NodeModule *ret_module = module.get();
-	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(module)));
+	std::unique_ptr<NodeModule> nodeModule = std::make_unique<NodeModule>(*this, aFullyQualifiedModuleName);
+	NodeModule *ret_module = nodeModule.get();
+	mLoadedModules.insert(std::make_pair(aFullyQualifiedModuleName, std::move(nodeModule)));
 	return ret_module;
     }
     return it->second.get();

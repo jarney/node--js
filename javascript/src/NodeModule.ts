@@ -2,6 +2,7 @@ import {DataType} from "./DataType"
 import {NodeType} from "./NodeType"
 import {Metadata} from "./Metadata";
 import {NodeGraph} from "./NodeGraph";
+import {QualifiedIdentifier} from "./QualifiedIdentifier";
 import type {ModuleLoader} from "./ModuleLoader";
 
 export class NodeModule {
@@ -12,17 +13,20 @@ export class NodeModule {
   mNodeTypes: { [key: string]: NodeType } = {};
   mGraphs: { [ key: string ] : NodeGraph } = {};
   mMetadata: Metadata;
+  mImportedModules: { [key: string]: NodeModule } = {};
   
   constructor(
-    aModuleLoader: ModuleLoader
+    aModuleLoader: ModuleLoader,
+    aFullyQualifiedModuleName: string = ""
   ) {
-    this.mPackage = "";
-    this.mDescription = "";
+    this.mPackage = aFullyQualifiedModuleName;
+    this.mDescription = aFullyQualifiedModuleName;
     this.mModuleLoader = aModuleLoader;
     this.mDataTypes = {};
     this.mNodeTypes = {};
     this.mGraphs = {};
     this.mMetadata = new Metadata();
+    this.mImportedModules = {};
   }
   public setPackage(aPackage: string) {
     this.mPackage = aPackage;
@@ -40,8 +44,8 @@ export class NodeModule {
     return this.mModuleLoader;
   }
   public addDataType(aDataType: DataType) {
-    if (aDataType.getId() in this.mDataTypes) return;
-    this.mDataTypes[aDataType.getId()] = aDataType;
+    if (aDataType.getLocalId() in this.mDataTypes) return;
+    this.mDataTypes[aDataType.getLocalId()] = aDataType;
   }
   public removeDataType(aId: string) {
     delete this.mDataTypes[aId];
@@ -53,10 +57,28 @@ export class NodeModule {
     return this.mDataTypes;
   }
   public hasDataType(id: string) : boolean {
-    return (id in this.mDataTypes);
+    var qualifiedName: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != this.mPackage) {
+	// Search the scopes.
+      var searchedModule: NodeModule | undefined = this.getImportModule(qualifiedName.getNamespace());
+	if (searchedModule == undefined) return false;
+	return searchedModule.hasDataType(qualifiedName.getName());
+    }
+    else {
+      return (qualifiedName.getName() in this.mDataTypes);
+    }
   }
   public getDataType(id: string) : DataType | undefined {
-    return this.mDataTypes[id];
+    var qualifiedName: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != this.mPackage) {
+	// Search the scopes.
+      var searchedModule: NodeModule | undefined = this.getImportModule(qualifiedName.getNamespace());
+      if (searchedModule == undefined) return undefined;
+      return searchedModule.getDataType(qualifiedName.getName());
+    }
+    else {
+      return this.mDataTypes[qualifiedName.getName()];
+    }
   }
   public addNodeType(nodeType: NodeType) {
     this.mNodeTypes[nodeType.getId()] = nodeType;
@@ -65,10 +87,28 @@ export class NodeModule {
     return this.mNodeTypes;
   }
   public hasNodeType(id: string) : boolean {
-    return (id in this.mNodeTypes);
+    var qualifiedName: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != this.mPackage) {
+	// Search the scopes.
+      var searchedModule: NodeModule | undefined = this.getImportModule(qualifiedName.getNamespace());
+	if (searchedModule == undefined) return false;
+	return searchedModule.hasNodeType(qualifiedName.getName());
+    }
+    else {
+      return (qualifiedName.getName() in this.mNodeTypes);
+    }
   }
   public getNodeType(id: string) : NodeType | undefined {
-    return this.mNodeTypes[id];
+    var qualifiedName: QualifiedIdentifier = new QualifiedIdentifier(id);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != this.mPackage) {
+	// Search the scopes.
+      var searchedModule: NodeModule | undefined = this.getImportModule(qualifiedName.getNamespace());
+      if (searchedModule == undefined) return undefined;
+      return searchedModule.getNodeType(qualifiedName.getName());
+    }
+    else {
+      return this.mNodeTypes[qualifiedName.getName()];
+    }
   }
   public addGraph(id: string) : NodeGraph | undefined {
     if (id in this.mGraphs) {
@@ -90,7 +130,20 @@ export class NodeModule {
   public getMetadata() : Metadata {
     return this.mMetadata;
   }
+  public addImportModule(nodeModule: NodeModule) : void {
+    this.mImportedModules[nodeModule.getPackage()] = nodeModule;
+  }
+  public hasImportModule(packageId: string) : boolean {
+    return packageId in this.mImportedModules;
+  }
+  public getImportModule(packageId: string) : NodeModule | undefined {
+    return this.mImportedModules[packageId];
+  }
+  public getImportModuleList() : string[] {
+    var retList: string[] = [];
+    for (var packageId in this.mImportedModules) {
+      retList.push(packageId);
+    }
+    return retList;
+  }
 }
-
-
-

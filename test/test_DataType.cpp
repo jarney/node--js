@@ -34,7 +34,7 @@ TEST_CASE("test_DataType_copy", "[NodeJS][core][DataType]")
 TEST_CASE("test_DataType_assign", "[NodeJS][core][DataType]")
 {
     DataType dataType1("int", "pancake", "Integer");
-    DataType dataType2("float", "pancake", "Float");
+    DataType dataType2("float", "waffle", "Float");
 
     dataType2 = dataType1;
 

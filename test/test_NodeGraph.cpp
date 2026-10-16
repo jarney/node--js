@@ -309,47 +309,6 @@ TEST_CASE("test_NodeGraph_erase_single_edge", "[NodeJS][core][NodeGraph][Node]")
     CHECK(graph.getEdgesTo("b").size() == 1);
 }
 
-#if 0
-TEST_CASE("test_NodeGraph_search_scopes", "[NodeJS][core][NodeGraph][Node]")
-{
-    ModuleLoader loader;
-    auto nodeModule = loader.newModule("anonymous");
-    NodeGraph & graph = *nodeModule->addGraph("graph");
-
-    NodeModule & typesScope = loader.newModule("where-we-define-the-types");
-    auto nodeType1 = std::make_unique<NodeType>();
-    nodeType1->setId("type1-node");
-    typesScope.addNodeType(std::move(nodeType1));
-
-    auto dataType1 = std::make_unique<DataType>("foo", "bar");
-    typesScope.addDataType(std::move(dataType1));
-
-    // Before we add the search scope,
-    // we cannot resolve this type.
-    CHECK(graph.getNodeType("type1-node") == nullptr);
-    CHECK(graph.getDataType("foo") == nullptr);
-
-    // Add nodeModule to our search scope.
-    graph.addScope(&typesScope);
-
-    // After we add the scope, we can find it.
-    CHECK(graph.getNodeType("type1-node") != nullptr);
-    CHECK(graph.getDataType("foo") != nullptr);
-
-    NodeGraph & graphCopy = *nodeModule->addGraph("graph-copy");
-
-    // Before we copy the scope, we can't resolve it.
-    CHECK(graphCopy.getNodeType("type1-node") == nullptr);
-    CHECK(graphCopy.getDataType("foo") == nullptr);
-
-    graphCopy.copyScope(&graph);
-
-    // After copying the scopes, we can resolve the names.
-    CHECK(graphCopy.getNodeType("type1-node") != nullptr);
-    CHECK(graphCopy.getDataType("foo") != nullptr);
-}
-#endif
-
 TEST_CASE("test_NodeGraph_specific_metadata", "[NodeJS][core][NodeGraph][Node]")
 {
     ModuleLoader loader;

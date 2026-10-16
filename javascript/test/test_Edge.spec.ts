@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { Edge } from "../src/Edge.ts";
+import { Edge } from "../src/Edge";
 
 describe("Edge", function(){
     it("test_Edge_equality", function() {

@@ -13,12 +13,12 @@ export class SerializerXML implements Serializer {
     return SerializerXML._instance;
   }
   
-  public read(
+  public async read(
     aFilename: string,
     xmlString: string,
     nodeModule: NodeModule,
     reporter: SerializerErrorReporter
-  ) : boolean {
+  ) : Promise<boolean> {
     
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "application/xml");

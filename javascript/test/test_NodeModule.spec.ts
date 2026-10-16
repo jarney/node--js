@@ -1,15 +1,14 @@
 import { describe, it, expect } from 'vitest'
 
-import { DataType } from "../src/DataType.ts";
-import { NodeType } from "../src/NodeType.ts";
-import { NodePort } from "../src/NodePort.ts";
-import { NodeModule } from "../src/NodeModule.ts"
-import type { ModuleLoader } from "../src/ModuleLoader.ts"
-import { ModuleLoaderNodeJSPath } from "../src/xml/ModuleLoaderNodeJSPath.ts";
+import { DataType } from "../src/DataType";
+import { NodeType } from "../src/NodeType";
+import { NodePort } from "../src/NodePort";
+import { NodeModule } from "../src/NodeModule"
+import { ModuleLoader } from "../src/ModuleLoader";
 
 describe("NodeModule", () => {
   it("test_NodeModule_package_id", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     
     nodeModule.setPackage("simple.package.name");
@@ -20,7 +19,7 @@ describe("NodeModule", () => {
   });
 
   it("test_NodeModule_single_type", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     
     var nodeType: NodeType = new NodeType();
@@ -47,7 +46,7 @@ describe("NodeModule", () => {
   });
 
   it("test_NodeModule_iterator", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     
     var nodeType: NodeType = new NodeType();
@@ -65,10 +64,10 @@ describe("NodeModule", () => {
   });
 
   it("test_NodeModule_check_basic_data_type_stuff", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
 
-    var dataType: DataType = new DataType("variable", "Variable Type");
+    var dataType: DataType = new DataType("variable", "pancake", "Variable Type");
     nodeModule.addDataType(dataType);
 
     expect.assert(nodeModule.hasDataType("variable"));
@@ -81,16 +80,16 @@ describe("NodeModule", () => {
   });
 
   it("test_NodeModule_data_type_iterator", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     
-    var dataType: DataType = new DataType("variable", "Variable Type");
+    var dataType: DataType = new DataType("variable", "namespace", "Variable Type");
     nodeModule.addDataType(dataType);
 
     var i: number = 0;
     for (var key in nodeModule.getDataTypes()) {
       expect.assert(key == "variable");
-      expect.assert(nodeModule.getDataType(key).getId() == "variable");
+      expect.assert(nodeModule.getDataType(key).getFullyQualifiedId() == "namespace.variable");
       i++;
     }
     // Check that we actually iterated.
@@ -98,14 +97,14 @@ describe("NodeModule", () => {
   });
 
   it("test_NodeModule_getModuleLoader", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
 
     expect.assert(loader == nodeModule.getModuleLoader());
   });
 
   it("test_NodeModule_add_graph_uniqueness_conditions", function() {
-    var loader: ModuleLoader  = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader  = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
 
     var graph1: NodeGraph = nodeModule.addGraph("graph");

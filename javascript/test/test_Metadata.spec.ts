@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { Metadata } from "../src/Metadata.ts";
+import { Metadata } from "../src/Metadata";
 
 describe("Metadata", function(){
     it("test_Metadata_equality", function() {

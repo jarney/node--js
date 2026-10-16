@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest"
 
-import { NamedPorts } from "../src/NamedPorts.ts";
-import { NodePort } from "../src/NodePort.ts";
-
-
+import { NamedPorts } from "../src/NamedPorts";
+import { NodePort } from "../src/NodePort";
 
 describe("NamedPorts", () => {
     it("test_NamedPorts_features", () => {

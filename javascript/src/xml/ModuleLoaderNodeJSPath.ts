@@ -1,16 +1,15 @@
 
 import { NodeModule } from "../NodeModule";
-import type { ModuleLoader } from "../ModuleLoader";
+import type { ModuleLoaderPlugin } from "../ModuleLoader";
+import {ModuleLoader} from "../ModuleLoader";
 import type { SerializerErrorReporter } from "../SerializerError";
 import { SerializerXML } from "./SerializerXML";
 
-export class ModuleLoaderNodeJSPath implements ModuleLoader {
+export class ModuleLoaderNodeJSPath implements ModuleLoaderPlugin {
   mPath: string[];
-  mLoadedModules: { [ key: string ] : NodeModule};
   
   constructor() {
     this.mPath = [];
-    this.mLoadedModules = {};
   }
   public addPath(path: string) {
     this.mPath.push(path);
@@ -22,6 +21,7 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
   // TODO: Load module from HTTP via browser fetch, whatever.
   public async loadModule(
     aFullyQualifiedModuleName: string,
+    aModuleLoader: ModuleLoader,
     reporter: SerializerErrorReporter
   ) : Promise<NodeModule | undefined> {
 
@@ -39,8 +39,8 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
       }
 
       var serializer: SerializerXML = SerializerXML.instance();
-      newModule = this.newModule(aFullyQualifiedModuleName);
-      var success: boolean = serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);
+      newModule = new NodeModule(aModuleLoader, aFullyQualifiedModuleName);
+      var success: boolean = await serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);
       if (success) break;
 
       newModule = undefined;
@@ -50,16 +50,6 @@ export class ModuleLoaderNodeJSPath implements ModuleLoader {
     console.log("This is really a thing now, isn't it?");
     
     return newModule;
-  }
-  
-  public newModule(aPackageName: string) : NodeModule {
-    if (aPackageName in this.mLoadedModules) {
-      return this.mLoadedModules[aPackageName]!;
-    }
-    var nodeModule = new NodeModule(this);
-    nodeModule.setPackage(aPackageName);
-    this.mLoadedModules[aPackageName] = nodeModule;
-    return nodeModule;
   }
 }
 

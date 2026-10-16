@@ -2,18 +2,6 @@
 
 using namespace NodeJS::core;
 
-const std::string &
-QualifiedIdentifier::getName() const
-{ return mName; }
-
-bool
-QualifiedIdentifier::isQualified() const
-{ return mIsQualified; }
-
-const std::string &
-QualifiedIdentifier::getNamespace() const
-{ return mNamespace; }
-
 QualifiedIdentifier::QualifiedIdentifier(
     std::string aQualifiedIdentifier
     )
@@ -31,5 +19,18 @@ QualifiedIdentifier::QualifiedIdentifier(
     }
     
 }
+
+const std::string &
+QualifiedIdentifier::getName() const
+{ return mName; }
+
+bool
+QualifiedIdentifier::isQualified() const
+{ return mIsQualified; }
+
+const std::string &
+QualifiedIdentifier::getNamespace() const
+{ return mNamespace; }
+
 
 

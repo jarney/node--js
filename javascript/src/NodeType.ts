@@ -21,6 +21,7 @@ import { Metadata } from "./Metadata";
 
 export class NodeType {
   mId: NodeTypeId;
+  mFullyQualifiedId: NodeTypeId;
   mVisibility: NodeType.Visibility;
   mType: NodeType.Type;
   mInputs: NamedPorts;
@@ -29,9 +30,9 @@ export class NodeType {
   mMetadata: Metadata;
   mAllowPortOverride: boolean;
   
-  
   constructor() {
     this.mId = "";
+    this.mFullyQualifiedId = ".";
     this.mVisibility = NodeType.Visibility.PRIVATE;
     this.mType = NodeType.Type.NATIVE;
     this.mInputs = new NamedPorts();
@@ -45,8 +46,9 @@ export class NodeType {
     return this.mId;
   }
   
-  public setId(aId: NodeTypeId) {
+  public setId(aId: NodeTypeId, aPackageName: string) {
     this.mId = aId;
+    this.mFullyQualifiedId = aPackageName + "." + aId;
   }
   
   public setVisibility(aVisibility: NodeType.Visibility) {

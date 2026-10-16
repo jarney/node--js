@@ -5,13 +5,12 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "run-p type-check \"build-only {@}\" --",
+        "build": "run-p type-check \"build-only {@}\" --;cd examples;npm run build",
         "preview": "vite preview",
         "test:unit": "vitest",
         "build-only": "vite build",
         "type-check": "vue-tsc --build",
-	"cmdline:build": "cd examples; npm run build",
-	"cmdline:run": "cd examples; npm run run"
+	"passthrough:run": "cd examples; npm run passthrough"
     },
     "dependencies": {
         "baklavajs": "^2.8.1",

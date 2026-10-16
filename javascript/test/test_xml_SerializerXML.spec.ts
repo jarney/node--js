@@ -2,12 +2,12 @@ import fs from "fs";
 
 import { describe, it, expect } from "vitest";
 
-import { NodeModule } from "../src/NodeModule.ts";
+import { NodeModule } from "../src/NodeModule";
 
-import { SerializerXML } from "../src/xml/SerializerXML.ts";
-import { SerializerError, SerializerErrorCode, SerializerErrorReporterByCode } from "../src/SerializerError.ts";
+import { SerializerXML } from "../src/xml/SerializerXML";
+import { SerializerError, SerializerErrorCode, SerializerErrorReporterByCode } from "../src/SerializerError";
 
-function testPackageFile(
+async function testPackageFile(
   packageName: string,
   callback: (result: boolean, nodeModule: NodeModule, errorReporter: SerializerErrorReporterByCode) => void
 ) {
@@ -18,7 +18,7 @@ function testPackageFile(
   
   var nodeModule: NodeModule = new NodeModule();
   
-  var result: boolean = serializer.read(packageName, xmlData, nodeModule, errorReporter);
+  var result: boolean = await serializer.read(packageName, xmlData, nodeModule, errorReporter);
   
   callback(result, nodeModule, errorReporter);
 }

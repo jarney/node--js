@@ -1,17 +1,16 @@
 import { describe, it, expect } from 'vitest'
 
-import { DataType } from "../src/DataType.ts";
-import { NodeType } from "../src/NodeType.ts";
-import { NodePort } from "../src/NodePort.ts";
-import { NodeModule } from "../src/NodeModule.ts"
-import { NodeGraph } from "../src/NodeGraph.ts";
-import { ConnectionData } from "../src/ConnectionData.ts";
-import type { ModuleLoader } from "../src/ModuleLoader.ts"
-import { ModuleLoaderNodeJSPath } from "../src/xml/ModuleLoaderNodeJSPath.ts";
+import { DataType } from "../src/DataType";
+import { NodeType } from "../src/NodeType";
+import { NodePort } from "../src/NodePort";
+import { NodeModule } from "../src/NodeModule"
+import { NodeGraph } from "../src/NodeGraph";
+import { ConnectionData } from "../src/ConnectionData";
+import { ModuleLoader } from "../src/ModuleLoader";
 
 describe("NodeGraph", () => {
   it("test_NodeGraph_create_node", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     var nodeData: ConnectionData = new ConnectionData();
@@ -32,7 +31,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_registered_node_type", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");;
     var nodeData: ConnectionData = new ConnectionData();
@@ -51,7 +50,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_copied_data", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");;
     var nodeData: ConnectionData = new ConnectionData();
@@ -76,7 +75,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_node_existence", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");;
     var nodeData: ConnectionData = new ConnectionData();
@@ -98,7 +97,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_create_edge", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");;
     var edgeId: EdgeId? = graph.newEdge("a", "first", "b", "second");
@@ -106,7 +105,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_edge_duplicate", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");;
     var edgeId: Edge?  = graph.newEdge("a", "first", "b", "second");
@@ -116,7 +115,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_topological_sort", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("main");
     var plain: NodeType = new NodeType();
@@ -146,7 +145,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_topological_sort_cycle_detection", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("main");
     var plain: NodeType = new NodeType();
@@ -164,7 +163,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_topological_sort_self_cycle", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("main");
     var plain: NodeType = new NodeType();
@@ -178,7 +177,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_getModule", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     
@@ -186,7 +185,7 @@ describe("NodeGraph", () => {
   });
   
   it("test_NodeGraph_erase_node", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     var nodeType: NodeType = new NodeType();
@@ -201,7 +200,7 @@ describe("NodeGraph", () => {
   });
 
   it("test_NodeGraph_erase_node_with_edges", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     var nodeType: NodeType = new NodeType();
@@ -233,7 +232,7 @@ describe("NodeGraph", () => {
     expect.assert(Object.keys(graph.getEdges()).length == 0);
   });
   it("test_NodeGraph_erase_node_with_extra_edges", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     var nodeType: NodeType = new NodeType();
@@ -273,7 +272,7 @@ describe("NodeGraph", () => {
     expect.assert(Object.keys(graph.getEdges()).length == 3);
   });
   it("test_NodeGraph_erase_single_edge", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
     var nodeType: NodeType = new NodeType();
@@ -298,46 +297,8 @@ describe("NodeGraph", () => {
     expect.assert(graph.getEdgesTo("b").length == 1);
   });
 
-  it("test_NodeGraph_search_scopes", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
-    var nodeModule: NodeModule = loader.newModule("anonymous");
-    var graph: NodeGraph = nodeModule.addGraph("graph");
-    
-    var typesScope: NodeModule = loader.newModule("where-we-define-the-types");
-    var nodeType1: NodeType = new NodeType();
-    nodeType1.setId("type1-node");
-    typesScope.addNodeType(nodeType1);
-
-    var dataType1: DataType = new DataType("foo", "bar");
-    typesScope.addDataType(dataType1);
-
-    // Before we add the search scope,
-    // we cannot resolve this type.
-    expect.assert(graph.getNodeType("type1-node") == undefined);
-    expect.assert(graph.getDataType("foo") == undefined);
-
-    // Add nodeModule to our search scope.
-    graph.addScope(typesScope);
-
-    // After we add the scope, we can find it.
-    expect.assert(graph.getNodeType("type1-node") != undefined);
-    expect.assert(graph.getDataType("foo") != undefined);
-
-    var graphCopy: NodeGraph = nodeModule.addGraph("graph-copy");
-
-    // Before we copy the scope, we can't resolve it.
-    expect.assert(graphCopy.getNodeType("type1-node") == undefined);
-    expect.assert(graphCopy.getDataType("foo") == undefined);
-
-    graphCopy.copyScope(graph);
-
-    // After copying the scopes, we can resolve the names.
-    expect.assert(graphCopy.getNodeType("type1-node") != undefined);
-    expect.assert(graphCopy.getDataType("foo") != undefined);
-  });
-
   it("test_NodeGraph_specific_metadata", function() {
-    var loader: ModuleLoader = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var nodeModule: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = nodeModule.addGraph("graph");
 

@@ -256,8 +256,12 @@ SerializerXMLReader::parseNodeType(
     if (!nodeTypeNode.hasAttribute("id")) {
 	return parseError(SerializerErrorCode::NODE_TYPE_ID_MISSING, nodeTypeNode, "Node Type id missing.");
     }
-    
     std::string id = nodeTypeNode.getAttribute("id");
+    QualifiedIdentifier qualifiedId(id);
+    if (qualifiedId.isQualified()) {
+	return parseError(SerializerErrorCode::NODE_TYPE_ID_INVALID, nodeTypeNode, "Data type must not be qualified and must always reside in the current package.");
+    }
+    
     if (mNodeModule.hasNodeType(id)) {
 	return parseError(SerializerErrorCode::NODE_TYPE_ID_DUPLICATE, nodeTypeNode, "Duplicate id '" + id + "' for node type.");
     }
@@ -543,6 +547,9 @@ SerializerXMLReader::parseScope() const
 {
     for (XmlNodeWrapper scopeNode : mRoot.getChildrenByTagName("scope")) {
 	for (XmlNodeWrapper packageNode : scopeNode.getChildrenByTagName("package")) {
+	    if (!packageNode.hasAttribute("id")) {
+		return parseError(SerializerErrorCode::PACKAGE_SCOPE_MISSING_ID, packageNode, "Package element is missing 'id' attribute");
+	    }
 	    std::string id = packageNode.getAttribute("id");
 	    if (mNodeModule.hasImportModule(id)) {
 		// We've already loaded this one, we can ignore it (silently?)
@@ -554,8 +561,7 @@ SerializerXMLReader::parseScope() const
 		mNodeModule.addImportModule(loadedModule);
 	    }
 	    else {
-		return parseError(SerializerErrorCode::PACKAGE_SCOPE_FAILED_TO_LOAD, scopeNode, "Could not load package scope '" + id + "'.");
-		return false;
+		return parseError(SerializerErrorCode::PACKAGE_SCOPE_FAILED_TO_LOAD, packageNode, "Could not load package scope '" + id + "'.");
 	    }
 	}
     }

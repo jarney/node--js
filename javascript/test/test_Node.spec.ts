@@ -1,19 +1,19 @@
 import { describe, it, expect } from 'vitest'
 
-import { NodeGraph } from "../src/NodeType.ts";
-import { NodeModule } from "../src/NodeType.ts";
-import { NodeType } from "../src/NodeType.ts";
-import { Node } from "../src/Node.ts";
-import { NodePort } from "../src/NodePort.ts";
-import { ConnectionData } from "../src/ConnectionData.ts";
-import { Metadata } from "../src/Metadata.ts";
-import { ModuleLoaderNodeJSPath } from "../src/xml/ModuleLoaderNodeJSPath.ts";
+import { NodeGraph } from "../src/NodeType";
+import { NodeModule } from "../src/NodeType";
+import { NodeType } from "../src/NodeType";
+import { Node } from "../src/Node";
+import { NodePort } from "../src/NodePort";
+import { ConnectionData } from "../src/ConnectionData";
+import { Metadata } from "../src/Metadata";
+import { ModuleLoader } from "../src/ModuleLoader";
 
 const DATA_TYPE: string = "variable";
 
 describe("Node", () => {
   it("test_Node_create_node", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");;
     
@@ -26,7 +26,7 @@ describe("Node", () => {
   });
   
   it("test_Node_type_io", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");
     
@@ -52,7 +52,7 @@ describe("Node", () => {
   });
   
   it("test_Node_specific_io", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");
     
@@ -87,7 +87,7 @@ describe("Node", () => {
   });
   
   it("test_Node_initialize_with_data", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");
     
@@ -116,7 +116,7 @@ describe("Node", () => {
   });
   
   it("test_Node_specific_metadata", function() {
-    var loader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+    var loader: ModuleLoader = new ModuleLoader();
     var module: NodeModule = loader.newModule("anonymous");
     var graph: NodeGraph = module.addGraph("graph");
     

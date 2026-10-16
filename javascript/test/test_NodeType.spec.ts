@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
 
-import { NodeType } from "../src/NodeType.ts";
-import { NodePort } from "../src/NodePort.ts";
-import { ConnectionData } from "../src/ConnectionData.ts";
-import { Metadata } from "../src/Metadata.ts";
+import { NodeType } from "../src/NodeType";
+import { NodePort } from "../src/NodePort";
+import { ConnectionData } from "../src/ConnectionData";
+import { Metadata } from "../src/Metadata";
 
 describe("NodeType", () => {
   it("test_NodeType_empty", () => {
 
     var nodeType = new NodeType();
     
-    nodeType.setId("add");
+    nodeType.setId("add", "scad");
     nodeType.setVisibility(NodeType.Visibility.PRIVATE);
     nodeType.setType(NodeType.Type.NATIVE);
 
@@ -26,7 +26,7 @@ describe("NodeType", () => {
 
 it("test_NodeType_some_ports", () => {
     var nodeType = new NodeType();
-    nodeType.setId("add");
+    nodeType.setId("add", "scad");
     nodeType.getInputs().addPort("first", new NodePort("variable", "First Argument"));
     nodeType.getInputs().addPort("second", new NodePort("variable", "Second Argument"));
     nodeType.getOutputs().addPort("output", new NodePort("variable", "Result"));
