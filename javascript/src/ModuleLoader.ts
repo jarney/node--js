@@ -80,7 +80,7 @@ export class ModuleLoader {
   }
 
   public hasModule(aPackageNamespace: string) : boolean {
-    return aPackageNamespace in this.mLoadedModules.find(aPackageNamespace);
+    return aPackageNamespace in this.mLoadedModules;
   }
 
   public getLoadedModule(aPackageNamespace: string) : NodeModule | undefined {

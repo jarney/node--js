@@ -17,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+
+// node--js stuff
 import {ModuleLoaderHTTP} from "../xml/ModuleLoaderHTTP";
 import {ModuleLoader} from "../ModuleLoader";
 import {NodeModule} from "../NodeModule";
@@ -24,7 +26,16 @@ import type {Serializer} from "../Serializer";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
 import {SerializerXML} from "../xml/SerializerXML";
+import {DataType} from "../DataType";
 
+// baklavajs stuff
+import { defineNode, NodeInterface } from "@baklavajs/core";
+import { BaklavaEditor, useBaklava, NumberInterface, SelectInterface } from "@baklavajs/renderer-vue";
+import "@baklavajs/themes/dist/syrup-dark.css";
+import { NodeInterfaceType } from "@baklavajs/interface-types";
+
+// bridge between node--js and baklavajs
+import { PopulateBaklava } from "./PopulateBaklava";
 
 const err: SerializerErrorReporter = new SerializerErrorReporterStream();
 const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
@@ -44,77 +55,35 @@ if (nodeModule != undefined) {
 //   ser.write(nodeModule!, outstream, err);
 }    
 
-import { defineNode, NodeInterface } from "@baklavajs/core";
-import { BaklavaEditor, useBaklava, NumberInterface, SelectInterface } from "@baklavajs/renderer-vue";
-import "@baklavajs/themes/dist/syrup-dark.css";
 
-console.log("Defining some nodes");
-
-// Define all of the data types first.
-var nodeInterfaceTypes = {};
-for (const ns of loader.getLoadedModules()) {
-    var mod: NodeModule = loader.getLoadedModule(ns)!;
-    console.log("Loaded module " + ns);
-    var dataTypeMap: { [ key: string ] : DataType } = mod.getDataTypes();
-    for (const id in dataTypeMap) {
-        console.log("Defining type " + id);
-        var dataType: DataType = dataTypeMap[id]!;
-	var fn = function() {
-	    return new NodeInterface(dataType.getName());
-	};
-	nodeInterfaceTypes[dataType.getFullyQualifiedId()] = fn;
-    }
-}
-console.log(nodeInterfaceTypes);
-
-const bni = new NodeInterface("myType");
+console.log("Defining node interface types:");
 
 const baklava = useBaklava();
 
-var uiNodeType = {};
-for (const ns of loader.getLoadedModules()) {
-    var mod: NodeModule = loader.getLoadedModule(ns)!;
-    console.log("Loaded module " + ns);
-    var nodeTypeMap: { [ key: string ] : NodeType } = mod.getNodeTypes();
-    console.log(nodeTypeMap);
-    for (const id in nodeTypeMap) {
-        console.log("Defining type " + id);
-        var nodeType: NodeType = nodeTypeMap[id]!;
-	var inputMap = {};
-	var inputs: NamedPorts = nodeType.getInputs();
-	
-        for (var i: number = 0; i < inputs.getCount(); i++) {
-            const id: string = inputs.getName(i);
-	    const port: NodePort = inputs.getByIndex(i)!;
-    	    console.log("    Port " + port.getDataType());
-	    var dt: string = port.getDataType();
-	    inputMap[id] = () => nodeInterfaceTypes[dt]();
-        }
-	
-	uiNodeType[nodeType.getFullyQualifiedId()] = defineNode({
-	type: nodeType.getLocalId(),
-	inputs: inputMap,
-	outputs: {
-	    "d": () => nodeInterfaceTypes["org.ensor.nodejs.openscad.variable"](),
-	}
-	});
-        console.log("Registering node type " + nodeType.getFullyQualifiedId());
-        baklava.editor.registerNodeType(uiNodeType[nodeType.getFullyQualifiedId()]);
-    }
-}
+var uiDataTypes: { [key: string] : NodeInterfaceType<string>} = {};
 
+var populateBaklava: PopulateBaklava = new PopulateBaklava(nodeModule!, baklava);
+
+populateBaklava.run()
+
+import { setType } from "@baklavajs/interface-types";
+
+console.log("About to use a data type");
+console.log(uiDataTypes);
+console.log(uiDataTypes["org.ensor.nodejs.openscad.variable"]);
 
 // Next, define all of the node types:
 
 const MathNode = defineNode({
     type: "MathNode",
     inputs: {
-    "two": () => nodeInterfaceTypes["org.ensor.nodejs.openscad.variable"](),
+//        "foo": () => new NodeInterface("Radius", "default").use(setType, uiDataTypes["org.ensor.nodejs.openscad.variable"]!),
         number1: () => new NumberInterface("Number", 1),
         number2: () => new NumberInterface("Number", 10),
         operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
     },
     outputs: {
+//        "out": () => new NodeInterface("FnDef", "default").use(setType, uiDataTypes["org.ensor.nodejs.openscad.function-definition"]!),
         output: () => new NodeInterface("Output", 0),
     },
 });
