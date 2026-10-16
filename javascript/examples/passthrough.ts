@@ -26,20 +26,11 @@ pathLoader.addPath("../../test-data/xml/Serializer");
 moduleLoader.setPlugin(pathLoader);
 var err: SerializerErrorReporter = new SerializerErrorReporterStream();
 
-console.log(process.argv);
 if (process.argv.length < 3) {
     console.log("Usage: passthrough package");
     process.exit(1);
 }
 var packageName: string = process.argv[2];
-console.log(process.env["NODEJS_PATH"]);
-var path: string | undefined = process.env["NODEJS_PATH"]
-var split: string[] = [];
-if (path != undefined) {
-	split = path.split(":");
-}
-console.log(split);
-//process.exit(1);
 
 moduleLoader.loadModule(packageName, err).then((nodeModule: NodeModule | undefined) => {
     if (nodeModule == undefined) {

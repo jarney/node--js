@@ -52,7 +52,7 @@ export class SerializerXMLWriter {
     // Skip the first scope because that's
     // always the 'current' scope, so we don't want
     // to include it artificially
-    for (const packageNamespace in this.mNodeModule.getImportModuleList()) {
+    for (const packageNamespace of this.mNodeModule.getImportModuleList()) {
       var packageNode: Element = this.mDocument.createElement("package");
       packageNode.setAttribute("id", packageNamespace);
       scopeNode.appendChild(packageNode);

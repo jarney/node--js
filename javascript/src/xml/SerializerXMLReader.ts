@@ -190,6 +190,7 @@ export class SerializerXMLReader {
     if (!this.mNodeModule.hasDataType(dataType)) {
       return this.parseError(SerializerErrorCode.PORT_DATA_TYPE_INVALID, portNode, desc + " '" + id + "' refers to invalid data type '" + dataType + "'");
     }
+    var dataTypeObj: DataType = this.mNodeModule.getDataType(dataType)!;
     
     var connectionPolicy: NodePort.ConnectionPolicy = NodePort.ConnectionPolicy.One;
     var connectionPolicy_str: string | null = portNode.getAttribute("connection-policy");
@@ -206,7 +207,7 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.PORT_CONNECTION_POLICY_INVALID, portNode, desc + " '" + id + "' has invalid connection policy '" + connectionPolicy_str + "'");
     }
     
-    var port: NodePort = new NodePort(dataType, description!, connectionPolicy);
+    var port: NodePort = new NodePort(dataTypeObj.getFullyQualifiedId(), description!, connectionPolicy);
     
     // Node-type metadata (optional)
     if (!this.parseMetadata(portNode, port.getMetadata())) return false;
@@ -516,8 +517,6 @@ export class SerializerXMLReader {
 	var loader: ModuleLoader = this.mNodeModule.getModuleLoader();
 	var loadedModule: NodeModule | undefined = await loader.loadModule(id, this.mReporter);
 	if (loadedModule) {
-	  console.log("Loaded module during scope loading: " + id);
-	  //console.log(loadedModule);
 	  this.mNodeModule.addImportModule(loadedModule);
 	}
 	else {
@@ -537,7 +536,7 @@ export class SerializerXMLReader {
     // XXX The async loading is killing us here.  We need a way
     // to break up th async stuff so we can load in the correct order!!!
     // Scopes are loaded at the package level.
-    if (!this.parseScope()) return false;
+    if (!await this.parseScope()) return false;
     
     // Data types need to be read before node types
     // even if they appear later in the file.
