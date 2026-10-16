@@ -2,8 +2,14 @@
   <div class="nodejs">
     <div class="nodejs-container">
       <div class="nodejs-left-sidebar">
+      <ul>
+          <li>Graph Selection</li>
+          <li>Palette</li>
+	  <li>Type Editor</li>
+      </ul>
+          <p>Select Node to place</p>
           <ul id="node-tree">
-	    <button @click="doAddNodeOnClick">Create Node</button>
+              <li><button @click="doAddNodeOnClick">Create Node</button></li>
 	  </ul>
       </div>
       <div class="nodejs-content">
@@ -12,14 +18,26 @@
 	  </div>
       </div>
       <div class="nodejs-right-sidebar">
-      c
+          Node-specific editing can happen here based on what node has been
+	  selected.
       </div>
     </div>
   </div>
+    <div >
+        Output goes here in scroll area along bottom?
+    </div>
 </template>
 
 <script setup lang="ts">
-
+/*
+ * Inventory of things for the module editor:
+ *    * Place to extract the model xml: copy button?
+ *    * Palette for listing the 'tree' of available nodes.
+ *    * Place to select/open different graphs in the model.
+ *    * Way to 'import/select' other modules (i.e. openscad, elisp, c, llvm, etc)
+ *    * Place to 'render' the output of the model's 'Processor'
+ *          Probably a window along the bottom?
+ */
 // node--js stuff
 import {ModuleLoaderHTTP} from "../xml/ModuleLoaderHTTP";
 import {ModuleLoader} from "../ModuleLoader";
@@ -163,6 +181,7 @@ function doit() {
 .nodejs-left-sidebar {
     display: table-cell;
     width: 15%;
+    vertical-align: top;
 }
 .nodejs-content {
     display: table-cell;
@@ -171,6 +190,7 @@ function doit() {
 .nodejs-right-sidebar {
     display: table-cell;
     width: 15%;
+    vertical-align: top;
 }
 
 </style>
