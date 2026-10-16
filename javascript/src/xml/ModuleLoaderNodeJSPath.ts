@@ -1,9 +1,10 @@
-
 import { NodeModule } from "../NodeModule";
 import type { ModuleLoaderPlugin } from "../ModuleLoader";
 import {ModuleLoader} from "../ModuleLoader";
 import type { SerializerErrorReporter } from "../SerializerError";
 import { SerializerXML } from "./SerializerXML";
+import fs from "fs";
+
 
 export class ModuleLoaderNodeJSPath implements ModuleLoaderPlugin {
   mPath: string[];
@@ -29,15 +30,10 @@ export class ModuleLoaderNodeJSPath implements ModuleLoaderPlugin {
     
     for (var pathIndex in this.mPath) {
       var pathEl: string = this.mPath[pathIndex]!;
-      var filename: string = aFullyQualifiedModuleName + ".xml";
-      const response = await fetch(filename);
-      console.log(response);
-      var xmlString: string;
-      xmlString = await response.text();
-      if (!response.ok) {
-	continue;
-      }
+      var filename: string = pathEl + "/" + aFullyQualifiedModuleName + ".xml";
 
+      var xmlString: string = (fs.readFileSync(filename) as unknown) as string;
+      
       var serializer: SerializerXML = SerializerXML.instance();
       newModule = new NodeModule(aModuleLoader, aFullyQualifiedModuleName);
       var success: boolean = await serializer.read(aFullyQualifiedModuleName, xmlString, newModule, reporter);

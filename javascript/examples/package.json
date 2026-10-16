@@ -1,7 +1,13 @@
 {
-  "type": "commonjs",
-  "scripts": {
-      "build": "tsc",
-      "passthrough": "node dist/examples/passthrough.js"
-  }
+    "type": "commonjs",
+    "scripts": {
+        "build": "tsc",
+        "passthrough": "node dist/examples/passthrough.js"
+    },
+    "dependencies": {
+        "@types/jsdom": "^30.0.0",
+        "@types/node": "^26.6.5",
+        "jsdom": "^29.1.1",
+        "typescript": "~6.0.0"
+    }
 }

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import {ModuleLoaderNodeJSPath} from "../xml/ModuleLoaderNodeJSPath";
+import {ModuleLoaderHTTP} from "../xml/ModuleLoaderHTTP";
 import {ModuleLoader} from "../ModuleLoader";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
@@ -33,7 +33,7 @@ import {SerializerErrorReporterStream} from "../SerializerError";
 //console.log(doc1);
 
 const err: SerializerErrorReporter = new SerializerErrorReporterStream();
-const loaderPlugin: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
+const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
 const loader: ModuleLoader = new ModuleLoader();
 loader.setPlugin(loaderPlugin);
 loaderPlugin.addPath("");

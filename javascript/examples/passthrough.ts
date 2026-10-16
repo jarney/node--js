@@ -5,25 +5,24 @@ import {ModuleLoader} from "../src/ModuleLoader";
 import {ModuleLoaderNodeJSPath} from "../src/xml/ModuleLoaderNodeJSPath";
 import type {SerializerErrorReporter} from "../src/SerializerError";
 import {SerializerErrorReporterStream } from "../src/SerializerError";
-    
-class Foo {
-  constructor() {
-    console.log("Constructor");
-  }
-  doit(st: string) : void {
-      console.log("And another thing");
-      console.log(st);
-  }
-}
+import {Serializer} from "../src/Serializer";
+import {SerializerXML} from "../src/xml/SerializerXML";
+import {JOS} from "../src/jos";
+import {JSDOM} from "jsdom";
 
-var foo: Foo = new Foo();
-foo.doit("xx");
+var x = new JSDOM();
+var w = x.window;
 
-console.log("Hello world");
+JOS.domParser = function() {
+    return new w.DOMParser();
+};
+JOS.xmlSerializer = function() {
+    return new w.XMLSerializer();
+};
 
 var moduleLoader: ModuleLoader = new ModuleLoader();
 var pathLoader: ModuleLoaderNodeJSPath = new ModuleLoaderNodeJSPath();
-pathLoader.addPath("../test-data/xml/Serializer");
+pathLoader.addPath("../../test-data/xml/Serializer");
 moduleLoader.setPlugin(pathLoader);
 
 var nodeModule: NodeModule = moduleLoader.newModule("Something wild");
@@ -32,4 +31,22 @@ console.log("nodeModule package " + nodeModule.getPackage());
 
 var err: SerializerErrorReporter = new SerializerErrorReporterStream();
 
-moduleLoader.loadModule("org.ensor.nodejs.openscad", err);
+function finishit(nodeModule: NodeModule | undefined) {
+    if (nodeModule == undefined) {
+	console.log("Error: could nod load module");
+	return;
+    }
+   
+    var outstream: WritableStream = new WritableStream({
+	write(chunk) {
+	    console.log(chunk);
+	}
+    });
+    
+    var ser: Serializer = new SerializerXML();
+    ser.write(nodeModule!, outstream, err);
+}
+moduleLoader.loadModule("org.ensor.nodejs.openscad", err).then((nodeModule2: NodeModule | undefined) => {
+    console.log(nodeModule2);
+    finishit(nodeModule2);
+});

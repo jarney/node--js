@@ -11,7 +11,7 @@ export interface Serializer {
   
   write(
     nodeModule: NodeModule,
-    out: string,
+    outstream: WritableStream,
     reporter: SerializerErrorReporter) : boolean;
 }
 

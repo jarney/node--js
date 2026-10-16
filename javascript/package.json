@@ -10,6 +10,7 @@
         "test:unit": "vitest",
         "build-only": "vite build",
         "type-check": "vue-tsc --build",
+	"examples": "cd examples; npm run build",
 	"passthrough:run": "cd examples; npm run passthrough"
     },
     "dependencies": {

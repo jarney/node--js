@@ -69,11 +69,11 @@ SerializerXMLWriter::writeDataTypes(void)
 void
 SerializerXMLWriter::writePackage(void)
 {
-    XmlNodeWrapper package("package");
-    package.setAttribute("id", mNodeModule.getPackage());
-    package.setAttribute("version", "1");
-    package.setAttribute("description", mNodeModule.getDescription());
-    mRoot.addChild(package);
+    XmlNodeWrapper packageEl("package");
+    packageEl.setAttribute("id", mNodeModule.getPackage());
+    packageEl.setAttribute("version", "1");
+    packageEl.setAttribute("description", mNodeModule.getDescription());
+    mRoot.addChild(packageEl);
 
     writeMetadata(mNodeModule.getMetadata(), mRoot);
 }
