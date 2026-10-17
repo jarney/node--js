@@ -68,6 +68,7 @@
     <div >
       <VTabs>
         <VTab title="Output">
+	<TextBox></TextBox>
           Output from running the graph goes here.
 	  This is a large scroll area with a 'copy' button.
 	</VTab>
@@ -80,8 +81,10 @@
 </template>
 
 <script setup lang="ts">
-import VTabs from './VTabs.vue'
-import VTab from './VTab.vue'
+import VTabs from "./VTabs.vue";
+import VTab from "./VTab.vue";
+import TextBox from "./TextBox.vue";
+import {EventBus} from "./EventBus";
 
 /*
  * Inventory of things for the module editor:
@@ -119,17 +122,6 @@ loaderPlugin.addPath("");
 
 const nodeModule: NodeModule | undefined = await loader.loadModule("foo", err);
 
-if (nodeModule != undefined) {
-   var ser: Serializer = SerializerXML.instance();
-   var outstream: WritableStream = new WritableStream({
-       write(chunk) {
-               console.log(chunk);
-       }
-   });
-//   ser.write(nodeModule!, outstream, err);
-}    
-
-
 console.log("Defining node interface types:");
 
 const baklava = useBaklava();
@@ -142,8 +134,6 @@ var populateBaklava: PopulateBaklava = new PopulateBaklava(nodeModule!, baklava)
 
 populateBaklava.run()
 
-import { setType } from "@baklavajs/interface-types";
-
 console.log("About to use a data type");
 console.log(uiDataTypes);
 console.log(uiDataTypes["org.ensor.nodejs.openscad.variable"]);
@@ -153,13 +143,11 @@ console.log(uiDataTypes["org.ensor.nodejs.openscad.variable"]);
 const MathNode = defineNode({
     type: "MathNode",
     inputs: {
-//        "foo": () => new NodeInterface("Radius", "default").use(setType, uiDataTypes["org.ensor.nodejs.openscad.variable"]!),
         number1: () => new NumberInterface("Number", 1),
         number2: () => new NumberInterface("Number", 10),
         operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
     },
     outputs: {
-//        "out": () => new NodeInterface("FnDef", "default").use(setType, uiDataTypes["org.ensor.nodejs.openscad.function-definition"]!),
         output: () => new NodeInterface("Output", 0),
     },
 });
@@ -180,6 +168,22 @@ function doAddNodeOnClick() {
     const node2 = new MathNode();
     node2.position = { x: 450, y: 100 };
     baklava.editor.graph.addNode(node2);
+    //EventBus.emit("change_n", "xxx");
+
+
+    if (nodeModule != undefined) {
+       var ser: Serializer = SerializerXML.instance();
+       var outstream: WritableStream = new WritableStream({
+           write(chunk) {
+                   EventBus.get().emit("changeText", { msg: chunk});
+                   //console.log(chunk);
+           }
+       });
+       ser.write(nodeModule!, outstream, err);
+}    
+
+
+
 }
 
 console.log("Adding a connection in our graph");
