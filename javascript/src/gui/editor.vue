@@ -67,12 +67,12 @@
   </div>
     <div >
       <VTabs>
-        <VTab title="Output">
-	<TextBox></TextBox>
-          Output from running the graph goes here.
-	  This is a large scroll area with a 'copy' button.
-	</VTab>
         <VTab title="Source">
+            <div style="height: 90px; overflow-y: scroll;">
+                <TextBox></TextBox>
+            </div>
+	</VTab>
+        <VTab title="Output">
 	  XML of the graph (module) goes here.
 	  This is a large scroll area with a 'copy' button.
 	</VTab>

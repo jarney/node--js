@@ -1,6 +1,5 @@
 <template>
-  <h1>node--js node editor</h1>
-      <h2 class="text-xl font-bold mb-8" id="tabs">Tabs</h2>
+  <h1 class="text-xl font-bold mb-8" id="tabs">node--js Editor</h1>
   <Suspense>
           <editor/>
   </Suspense>
