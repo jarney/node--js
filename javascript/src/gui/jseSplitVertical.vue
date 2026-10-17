@@ -1,10 +1,10 @@
 <template>
   <div ref="container" class="container split">
-      <div class="split__left"></div>
+      <div class="split__left">content-1</div>
       <div class="split__bar"></div>
-      <div class="split__left"></div>
+      <div class="split__right">content-2</div>
       <div class="split__bar"></div>
-      <div class="split__right"></div>
+      <div class="split__right">content-3</div>
   </div>
 </template>
 
@@ -14,10 +14,9 @@
     name: "jse-split-vertical",
     data() {
       return {
-        elementSizes: [],
-        xpos: {},
-	currentlyMoving: null,
-	currentlyMovingIndex: 0
+	currentlyMovingIndex: 0,
+	containerRect: {},
+	panels: []
       };
     },
     methods: {
@@ -27,64 +26,56 @@
     },
     mounted() {
         const container = this.$refs.container;
-	console.log(container);
 	const list = container.getElementsByTagName("div");
-	console.log(list.length);
 
-        var x_start = 0;
-        var x_end = 0;
+        this.containerRect = container.getBoundingClientRect();
+	if ((list.length % 2) != 1) {
+	    alert("jse-vertical-split expects an odd number of elements");
+	    return;
+	}
 
+        console.log("Sizes are");
 	for (var i = 0; i < list.length; i++) {
 	    var el = list[i];
 	    
-	    const bbox = el.getBoundingClientRect();
-	    console.log(bbox);
-	    if (i == 0) {
-	        x_start = bbox.x;
-	    }
-	    else {
-	        x_start = x_end;
-	    }
-	    x_end = x_end + bbox.width;
-	    this.xpos[i] = {start: x_start, end: x_end};
-	    console.log(x_start + " - " + x_end);
 	    if (el.getAttribute("class").includes("bar")) {
-	        console.log("bar");
-		const idx = i-1;
-		const lastel = list[i-1];
+	        if ((i % 2) != 1) {
+		    alert("Expected bar to have odd index");
+		    return;
+		}
+		const idx = (i-1)/2;
                 el.addEventListener('mousedown', (e) => {
                     console.log("Event mousedown on element " + idx);
-                    mouse_is_down = true;
-		    this.currentlyMoving = lastel;
+                    this.mouseDown = true;
 		    this.currentlyMovingIndex = idx;
+		    this.startPosX = e.clientX;
+		    this.startPosY = e.clientY;
+		    console.log(e);
                 });
 	    }
 	    else {
-	        console.log("area");
+		console.log(el.getBoundingClientRect());
+	        this.panels.push(el);
 	    }
-	    this.elementSizes.push(list[i].offsetWidth);
-    	    console.log("Got element " + list[i].getAttribute("class") + " " + this.elementSizes[i]);
 	}
-        const bar = document.querySelector('.split__bar');
-        const left = document.querySelector('.split__left');
-        let mouse_is_down = false;
-
+	this.panels[this.panels.length-1].style.flex = "1"; /* the right panel will stretch to fit */
+	
         document.addEventListener('mousemove', (e) => {
-            if (!mouse_is_down) return;
-	    var w = this.xpos[this.currentlyMovingIndex].end - this.xpos[this.currentlyMovingIndex].start;
-            console.log("Currently moving bar that goes from " +
-            this.xpos[this.currentlyMovingIndex].end + " - " + this.xpos[this.currentlyMovingIndex].start);
-            if (this.currentlyMovingIndex > 2) {
-                var xval = e.clientX - this.xpos[this.currentlyMovingIndex].start - this.xpos[this.currentlyMovingIndex-2].end;
-                this.currentlyMoving.style.width = `${xval}px`;
-            }
-            else {
-                var xval = e.clientX - this.xpos[this.currentlyMovingIndex].start;
-                this.currentlyMoving.style.width = `${xval}px`;
-            }
+            if (!this.mouseDown) return;
+	    // We want to resize both the left and right
+	    // panels so that we keep the total width the same.
+	    const panel = this.panels[this.currentlyMovingIndex];
+	    const next = this.panels[this.currentlyMovingIndex+1];
+	    const panelSize = panel.getBoundingClientRect();
+	    const nextSize = next.getBoundingClientRect();
+	    var xval = panelSize.width + (e.clientX - this.startPosX);
+	    var xval2 = nextSize.width - (e.clientX - this.startPosX);
+	    this.startPosX = e.clientX;
+            panel.style.width = `${xval}px`;
+	    next.style.width = `${xval2}px`;
         });
         document.addEventListener('mouseup', () => {
-            mouse_is_down = false;
+            this.mouseDown = false;
         });
     },
     created() {
@@ -97,12 +88,10 @@
 </script>
 <style scoped>
 .split__left {
-  width: 50%;
   background-color: #404040;
 }
 
 .split__right {
-  flex: 1; /* the right panel will stretch the bg color*/
   background-color: #C5C6B6;
 }
 
