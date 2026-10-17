@@ -2,15 +2,50 @@
   <div class="nodejs">
     <div class="nodejs-container">
       <div class="nodejs-left-sidebar">
-      <ul>
-          <li>Graph Selection</li>
-          <li>Palette</li>
-	  <li>Type Editor</li>
-      </ul>
-          <p>Select Node to place</p>
-          <ul id="node-tree">
-              <li><button @click="doAddNodeOnClick">Create Node</button></li>
+      <VTabs>
+        <VTab title="Graphs">
+          <ul>
+            <li>main</li>
+            <li>goxhoin</li>
+	</ul>
+	</VTab>
+        <VTab title="Palette">
+	  Showing all node types available/imported.
+	  Organize them by some kind of metadata tags.
+	  <ul>
+            <li><button @click="doAddNodeOnClick">Create Node</button></li>
+            <li>sphere</li>
+            <li>extrude</li>
+            <li>translate</li>
+            <li>union</li>
 	  </ul>
+	</VTab>
+        <VTab title="Module">
+	  <ul>
+            <li>Module namespace/package</li>
+	    <li>Description</li>
+	    <li>Imported namespaces</li>
+            <li>Module-level metadata</li>
+	  </ul>
+	</VTab>
+        <VTab title="Node Types">
+	  <ul>
+            <li>sphere</li>
+            <li>extrude</li>
+            <li>translate</li>
+            <li>union</li>
+	  </ul>
+	</VTab>
+        <VTab title="Data Types">
+	  Editing the data-types that are defined in this module.
+	  <ul>
+            <li>sphere</li>
+            <li>extrude</li>
+            <li>translate</li>
+            <li>union</li>
+	  </ul>
+	</VTab>
+      </VTabs>
       </div>
       <div class="nodejs-content">
           <div class="editor-container">
@@ -18,17 +53,36 @@
 	  </div>
       </div>
       <div class="nodejs-right-sidebar">
-          Node-specific editing can happen here based on what node has been
-	  selected.
+          When a node is selected, detailed information about the node appears here.
+	  <ul>
+	  <li>* Node level metadata</li>
+	  <li>* Node level metadata</li>
+	  </ul>
+	  When a node is not selected, detailed information about the graph appears here.
+	  <ul>
+	  <li>* Graph level metadata</li>
+	  </ul>
       </div>
     </div>
   </div>
     <div >
-        Output goes here in scroll area along bottom?
+      <VTabs>
+        <VTab title="Output">
+          Output from running the graph goes here.
+	  This is a large scroll area with a 'copy' button.
+	</VTab>
+        <VTab title="Source">
+	  XML of the graph (module) goes here.
+	  This is a large scroll area with a 'copy' button.
+	</VTab>
+      </VTabs>
     </div>
 </template>
 
 <script setup lang="ts">
+import VTabs from './VTabs.vue'
+import VTab from './VTab.vue'
+
 /*
  * Inventory of things for the module editor:
  *    * Place to extract the model xml: copy button?
