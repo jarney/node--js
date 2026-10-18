@@ -4,73 +4,76 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-    name: "jse-split-vertical",
-    data() {
-      return {
-          panel: null,
-	  next: null,
-          startPosX: 0,
-	  startPosY: 0,
-          startWidth: 99,
-          nextWidth: 99
-      }
-    },
-    methods: {
-    },
-    mounted() {
-        const clist: Element[] = this.$refs.container!.children!;
-	const list = [];
-	for (var i = 0; i < clist.length; i++) {
-	    list.push(clist[i]);
-	}
+<script setup lang="ts">
 
+import { useTemplateRef, onMounted } from 'vue';
+
+class Props {
+    panel: HTMLElement;
+    next: HTMLElement;
+    mouseDown: boolean;
+    startPosX: number;
+    startPosY: number;
+    startWidth: number;
+    nextWidth: number;
+    constructor(_panel: HTMLElement, _next: HTMLElement, clientX:number, clientY:number) {
+        this.panel = _panel;
+        this.next = _next;
+	
+        // Track all of the information we need to
+        // perform the movement.  Where did the mouse start?
+        // Where did the widths start?
+        this.mouseDown = true;
+        this.startPosX = clientX;
+        this.startPosY = clientY;
+        this.startWidth = this.panel.getBoundingClientRect().width;
+        this.nextWidth = this.next.getBoundingClientRect().width;
+    }
+}
+
+var props: Props | null = null;
+
+const containerElement = useTemplateRef('container')!;
+
+onMounted(() => {
+	const list : HTMLElement[] = [];
+        for (var cle of containerElement.value.children) {
+	    list.push(cle);
+	}
 	for (var i = 0; i < list.length; i++) {
-	    var el = list[i];
+	    var el = list[i]!;
             if (i != 0) {
 	        var bar = document.createElement("div");
 		bar.setAttribute("class", "split__bar");
-		el.parentElement.insertBefore(bar, el);
+		el.parentElement!.insertBefore(bar, el);
                 //container.insertBefore(bar, el);
 		
-                bar.addEventListener('mousedown', (e: Event) => {
-                    this.panel = e.target!.previousSibling;
-                    this.next = e.target!.nextSibling;
-
-                    // Track all of the information we need to
-		    // perform the movement.  Where did the mouse start?
-		    // Where did the widths start?
-                    this.mouseDown = true;
-		    this.startPosX = e.clientX;
-		    this.startPosY = e.clientY;
-		    this.startWidth = this.panel.getBoundingClientRect().width;
-	            this.nextWidth = this.next.getBoundingClientRect().width;
-
+                bar.addEventListener('mousedown', (e: MouseEvent) => {
+                    const target: HTMLElement = e.target! as HTMLElement;
+                    props = new Props(
+		        target.previousElementSibling! as HTMLElement,
+                        target.nextElementSibling! as HTMLElement,
+			e.clientX, e.clientY);
                     e.preventDefault();
                 });
 	    }
 	}
-	list[list.length-1].style.flex = "1"; /* the right panel will stretch to fit */
+        list[list.length-1]!.style.flex = "1"; // the right panel will stretch to fit
 	
         document.addEventListener('mousemove', (e) => {
-            if (!this.mouseDown) return;
+            if (props == null) return;
+	    
 	    // We want to resize both the left and right
 	    // panels so that we keep the total width the same.
-	    var xval = this.startWidth + (e.clientX - this.startPosX);
-	    var xval2 = this.nextWidth - (e.clientX - this.startPosX);
-            this.panel.style.width = `${xval}px`;
-	    this.next.style.width = `${xval2}px`;
+	    var xval = props!.startWidth + (e.clientX - props!.startPosX);
+	    var xval2 = props!.nextWidth - (e.clientX - props!.startPosX);
+            props.panel.style.width = `${xval}px`;
+	    props.next.style.width = `${xval2}px`;
         });
         document.addEventListener('mouseup', () => {
-            this.mouseDown = false;
+            props = null;
         });
-    },
-    created() {
-    },
-    destroyed() {
-    }
-};
+});
 
 </script>
 

@@ -50,18 +50,13 @@ import { PopulateBaklava } from "./PopulateBaklava";
 import type {IBaklavaViewModel} from "@baklavajs/renderer-vue";
 import { useTemplateRef, onMounted } from 'vue';
 
-//interface Props {
-//    baklava: IBaklavaViewModel;
-//}
-//const props = defineProps<Props>();
-
 var baklava = useBaklava();
 baklava = useBaklava();
 baklava.settings.enableMinimap = true;
 baklava.settings.palette.enabled = false;
 baklava.settings.toolbar.enabled = false;
 
-const leftSidebar = useTemplateRef('leftSidebar');
+const leftSidebar = useTemplateRef('leftSidebar')!;
 
 function onModuleLoaded(nodeModule: NodeModule) {
     console.log("Got template ref");
@@ -70,7 +65,6 @@ function onModuleLoaded(nodeModule: NodeModule) {
     console.log("Defining node interface types:");
             
     var populateBaklava: PopulateBaklava = new PopulateBaklava(nodeModule, baklava);
-            
     populateBaklava.run()
             
     // Next, define all of the node types:
@@ -121,33 +115,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.settings-example {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.settings-controls {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 12px 16px;
-    background: var(--vp-c-bg-soft);
-    border-bottom: 1px solid var(--vp-c-divider);
-    font-size: 14px;
-}
-
-.settings-controls label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
 .editor-container {
     height: 500px;
 /*    position: relative;*/
-/*    flex: 1;*/
 }
 
 .nodejs {

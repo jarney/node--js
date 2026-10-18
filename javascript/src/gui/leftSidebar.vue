@@ -51,12 +51,14 @@
 import VTabs from './VTabs.vue'
 import VTab from './VTab.vue'
 import {EventBus} from "./EventBus";
+import {NodeModule} from "../NodeModule";
+import type {Serializer} from "../Serializer";
 import {SerializerXML} from "../xml/SerializerXML";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
 
 interface ScriptData {
-    mNodeModule: NodeModule;
+    mNodeModule: NodeModule | null;
 };
 
 var data:ScriptData = {mNodeModule: null};
