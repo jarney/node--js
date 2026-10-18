@@ -81,7 +81,6 @@ onMounted(() => {
 .horiz-container {
   display: table;
   width: 100%;
-  height: 75vh;
 }
 .resize_bar_horizontal {
   background-color: #3C3530;

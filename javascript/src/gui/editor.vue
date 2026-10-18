@@ -1,6 +1,7 @@
 <template>
     <div class="nodejs">
         <div class="nodejs-container">
+        <jse-split-horizontal>
             <jse-split-vertical>
                 <div class="nodejs-left-sidebar">
 		  <jse-left-sidebar ref="leftSidebar"/>
@@ -14,9 +15,8 @@
                     <jse-right-sidebar/>
                 </div>
             </jse-split-vertical>
-<!--
-            <jse-bottom/>
--->
+            <jse-bottom></jse-bottom>
+        </jse-split-horizontal>
         </div>
     </div>
 </template>
@@ -27,6 +27,7 @@ import VTab from "./VTab.vue";
 import TextBox from "./TextBox.vue";
 import {EventBus} from "./EventBus";
 import jseSplitVertical from "./jseSplitVertical.vue";
+import jseSplitHorizontal from "./jse-split-horizontal.vue";
 import jseLeftSidebar from "./leftSidebar.vue";
 import jseRightSidebar from "./rightSidebar.vue";
 import jseBottom from "./jseBottom.vue";
@@ -118,8 +119,7 @@ onMounted(() => {
 
 <style scoped>
 .editor-container {
-    height: 500px;
-/*    position: relative;*/
+    height: 100%;
 }
 
 .nodejs {
@@ -134,15 +134,19 @@ onMounted(() => {
     display: table-cell;
     width: 15%;
     vertical-align: top;
+    overflow:scroll;
 }
 .nodejs-content {
     display: table-cell;
     width: 70%;
+    height: 100%;
+    overflow:scroll;
 }
 .nodejs-right-sidebar {
     display: table-cell;
     width: 15%;
     vertical-align: top;
+    overflow:scroll;
 }
 
 </style>
