@@ -62,6 +62,8 @@ baklava.settings.toolbar.enabled = false;
 const leftSidebar = useTemplateRef('leftSidebar')!;
 
 function onModuleLoaded(nodeModule: NodeModule) {
+    // TODO: This needs to fully reset the loaded
+    // module so we can switch contexts to other modules.
     console.log("Got template ref");
     console.log(leftSidebar);
     leftSidebar.value.setModule(nodeModule);
@@ -101,18 +103,27 @@ function onModuleLoaded(nodeModule: NodeModule) {
     console.log("Initialization complete, graph visible?");
 }
 
+const err: SerializerErrorReporter = new SerializerErrorReporterStream();
+const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
+const loader: ModuleLoader = new ModuleLoader();
+loader.setPlugin(loaderPlugin);
+loaderPlugin.addPath("");
+	
 onMounted(() => {
     console.log("Mounted");
-        const err: SerializerErrorReporter = new SerializerErrorReporterStream();
-        const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
-        const loader: ModuleLoader = new ModuleLoader();
-        loader.setPlugin(loaderPlugin);
-        loaderPlugin.addPath("");
-
 	loader
 	    .loadModule("foo", err)
+//	    .loadModule("org.ensor.nodejs.openscad", err)
 	    .then((nodeModule: NodeModule | undefined) => {onModuleLoaded(nodeModule!);});
 
+});
+
+EventBus.get().on("module-load", (data: any) => {
+console.log("Trying to newly load a module");
+console.log(data);
+    loader
+	    .loadModule(data.msg, err)
+	    .then((nodeModule: NodeModule | undefined) => {onModuleLoaded(nodeModule!);});
 });
 
 </script>

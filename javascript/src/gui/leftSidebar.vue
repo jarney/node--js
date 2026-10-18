@@ -1,42 +1,14 @@
 <template>
     <div class="nodejs-left-sidebar">
           <VTabs>
-            <VTab title="Graphs">
-              <ul>
-                <li>main</li>
-                <li>goxhoin</li>
-            </ul>
+            <VTab title="Tree View">
+	      <nodejs-treeview ref="treeview"/>
             </VTab>
             <VTab title="Palette">
               Showing all node types available/imported.
               Organize them by some kind of metadata tags.
               <ul>
                 <li><button @click="doAddNodeOnClick">Create Node</button></li>
-                <li>sphere</li>
-                <li>extrude</li>
-                <li>translate</li>
-                <li>union</li>
-              </ul>
-            </VTab>
-            <VTab title="Module">
-              <ul>
-                <li>Module namespace/package</li>
-                <li>Description</li>
-                <li>Imported namespaces</li>
-                <li>Module-level metadata</li>
-              </ul>
-            </VTab>
-            <VTab title="Node Types">
-              <ul>
-                <li>sphere</li>
-                <li>extrude</li>
-                <li>translate</li>
-                <li>union</li>
-              </ul>
-            </VTab>
-            <VTab title="Data Types">
-              Editing the data-types that are defined in this module.
-              <ul>
                 <li>sphere</li>
                 <li>extrude</li>
                 <li>translate</li>
@@ -50,12 +22,17 @@
 <script setup lang="ts">
 import VTabs from './VTabs.vue'
 import VTab from './VTab.vue'
+import nodejsTreeview from "./nodejs-treeview.vue";
+
+import { useTemplateRef, onMounted } from 'vue';
 import {EventBus} from "./EventBus";
+
 import {NodeModule} from "../NodeModule";
 import type {Serializer} from "../Serializer";
 import {SerializerXML} from "../xml/SerializerXML";
 import type {SerializerErrorReporter} from "../SerializerError";
 import {SerializerErrorReporterStream} from "../SerializerError";
+
 
 interface ScriptData {
     mNodeModule: NodeModule | null;
@@ -63,10 +40,13 @@ interface ScriptData {
 
 var data:ScriptData = {mNodeModule: null};
 
+const treeview = useTemplateRef('treeview');
+
 function setModule(module: NodeModule) {
-	    data.mNodeModule = module;
-            console.log("Set the module");
-	    console.log(data.mNodeModule);
+    data.mNodeModule = module;
+    console.log("Set the module");
+    console.log(data.mNodeModule);
+    treeview.value.setModule(data.mNodeModule);
 }
 
 function doAddNodeOnClick() {

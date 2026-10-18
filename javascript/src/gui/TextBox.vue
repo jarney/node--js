@@ -26,15 +26,8 @@ import {EventBus} from "./EventBus"
         });
     },
     created() {
-        // Sets up the Event Bus listener using 
-        // the custom event name and assosciates
-        // it with a component method.
-	// EventBus.$on("changeText", this.changeText);
-      },
+    },
     destroyed() {
-        // Removes Event Bus listener upon removal
-        // of template from DOM.
-        // EventBus.$off("changeText", this.changeText);
-      },
+    }
   };
 </script>
