@@ -1,9 +1,6 @@
 <template>
   <div>
-    <pre>
-    here?
-        {{labelText}}
-    </pre>
+<pre>{{labelText}}</pre>
   </div>
 </template>
 
@@ -24,6 +21,7 @@ import {EventBus} from "./EventBus"
     },
     mounted() {
         EventBus.get().on("changeText", (data: any) => {
+	console.log("Received change text message");
             this.labelText = data.msg;
         });
     },

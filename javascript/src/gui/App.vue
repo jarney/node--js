@@ -1,13 +1,6 @@
 <template>
   <h1 class="text-xl font-bold mb-8" id="tabs">node--js Editor</h1>
-  <jse-split-vertical>
-      <div class="split__left">content-1</div>
-      <div class="split__bar"></div>
-      <div class="split__right">content-2</div>
-      <div class="split__bar"></div>
-      <div class="split__right">content-3</div>
-  </jse-split-vertical>
-
+          <editor/>
 <!--
   <Suspense>
           <editor/>

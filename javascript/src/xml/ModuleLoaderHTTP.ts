@@ -31,7 +31,7 @@ export class ModuleLoaderHTTP implements ModuleLoaderPlugin {
       var pathEl: string = this.mPath[pathIndex]!;
       var filename: string = aFullyQualifiedModuleName + ".xml";
       const response = await fetch(filename);
-      console.log(response);
+      //console.log(response);
       var xmlString: string;
       xmlString = await response.text();
       if (!response.ok) {
@@ -46,8 +46,6 @@ export class ModuleLoaderHTTP implements ModuleLoaderPlugin {
       newModule = undefined;
       
     }
-    
-    console.log("This is really a thing now, isn't it?");
     
     return newModule;
   }

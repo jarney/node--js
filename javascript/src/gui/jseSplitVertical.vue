@@ -5,40 +5,38 @@
 </template>
 
 <script lang="ts">
-
-  export default {
+export default {
     name: "jse-split-vertical",
     data() {
       return {
-      };
+          panel: null,
+	  next: null,
+          startPosX: 0,
+	  startPosY: 0,
+          startWidth: 99,
+          nextWidth: 99
+      }
     },
     methods: {
-      changeText(text: string) {
-        this.labelText = text;
-      },
     },
     mounted() {
-        const container = this.$refs.container;
-	const list = container.getElementsByTagName("div");
-
-	if ((list.length % 2) != 1) {
-	    alert("jse-vertical-split expects an odd number of elements");
-	    return;
+        const clist: Element[] = this.$refs.container!.children!;
+	const list = [];
+	for (var i = 0; i < clist.length; i++) {
+	    list.push(clist[i]);
 	}
 
-        console.log("Sizes are");
 	for (var i = 0; i < list.length; i++) {
 	    var el = list[i];
-	    // Find a more elegant way to do this?  Maybe insert
-	    // the bars programatically?
-	    if (el.getAttribute("class").includes("bar")) {
-	        if ((i % 2) != 1) {
-		    alert("Expected bar to have odd index");
-		    return;
-		}
-                el.addEventListener('mousedown', (e) => {
-                    this.panel = e.target.previousSibling;
-                    this.next = e.target.nextSibling;
+            if (i != 0) {
+	        var bar = document.createElement("div");
+		bar.setAttribute("class", "split__bar");
+		el.parentElement.insertBefore(bar, el);
+                //container.insertBefore(bar, el);
+		
+                bar.addEventListener('mousedown', (e: Event) => {
+                    this.panel = e.target!.previousSibling;
+                    this.next = e.target!.nextSibling;
 
                     // Track all of the information we need to
 		    // perform the movement.  Where did the mouse start?
@@ -49,11 +47,8 @@
 		    this.startWidth = this.panel.getBoundingClientRect().width;
 	            this.nextWidth = this.next.getBoundingClientRect().width;
 
-		    console.log(e);
+                    e.preventDefault();
                 });
-	    }
-	    else {
-		console.log(el.getBoundingClientRect());
 	    }
 	}
 	list[list.length-1].style.flex = "1"; /* the right panel will stretch to fit */
@@ -74,8 +69,16 @@
     created() {
     },
     destroyed() {
-    },
-  };
-
+    }
+};
 
 </script>
+
+<style>
+.split__bar {
+  background-color: #3C3530;
+  width: 15px;
+  height: 100%;
+  cursor: col-resize;
+}
+</style>

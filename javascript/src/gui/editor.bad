@@ -1,0 +1,31 @@
+<script lang="ts">
+/*
+ * Inventory of things for the module editor:
+ *    * Place to extract the model xml: copy button?
+ *    * Palette for listing the 'tree' of available nodes.
+ *    * Place to select/open different graphs in the model.
+ *    * Way to 'import/select' other modules (i.e. openscad, elisp, c, llvm, etc)
+ *    * Place to 'render' the output of the model's 'Processor'
+ *          Probably a window along the bottom?
+ */
+// node--js stuff
+
+export default {
+    name: "jse-editor",
+    data() {
+      var props: Props = {
+          baklava: useBaklava()
+      };
+      return props;
+    },
+    methods: {
+    },
+    mounted() {
+    },
+    created() {
+    },
+    destroyed() {
+    }
+};
+
+</script>

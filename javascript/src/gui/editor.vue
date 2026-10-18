@@ -1,82 +1,21 @@
 <template>
-  <div class="nodejs">
-    <div class="nodejs-container">
-      <div class="nodejs-left-sidebar">
-      <VTabs>
-        <VTab title="Graphs">
-          <ul>
-            <li>main</li>
-            <li>goxhoin</li>
-	</ul>
-	</VTab>
-        <VTab title="Palette">
-	  Showing all node types available/imported.
-	  Organize them by some kind of metadata tags.
-	  <ul>
-            <li><button @click="doAddNodeOnClick">Create Node</button></li>
-            <li>sphere</li>
-            <li>extrude</li>
-            <li>translate</li>
-            <li>union</li>
-	  </ul>
-	</VTab>
-        <VTab title="Module">
-	  <ul>
-            <li>Module namespace/package</li>
-	    <li>Description</li>
-	    <li>Imported namespaces</li>
-            <li>Module-level metadata</li>
-	  </ul>
-	</VTab>
-        <VTab title="Node Types">
-	  <ul>
-            <li>sphere</li>
-            <li>extrude</li>
-            <li>translate</li>
-            <li>union</li>
-	  </ul>
-	</VTab>
-        <VTab title="Data Types">
-	  Editing the data-types that are defined in this module.
-	  <ul>
-            <li>sphere</li>
-            <li>extrude</li>
-            <li>translate</li>
-            <li>union</li>
-	  </ul>
-	</VTab>
-      </VTabs>
-      </div>
-      <div class="nodejs-content">
-          <div class="editor-container">
-              <BaklavaEditor :view-model="baklava" />
-	  </div>
-      </div>
-      <div class="nodejs-right-sidebar">
-          When a node is selected, detailed information about the node appears here.
-	  <ul>
-	  <li>* Node level metadata</li>
-	  <li>* Node level metadata</li>
-	  </ul>
-	  When a node is not selected, detailed information about the graph appears here.
-	  <ul>
-	  <li>* Graph level metadata</li>
-	  </ul>
-      </div>
-    </div>
-  </div>
-    <div >
-      <VTabs>
-        <VTab title="Source">
-            <div style="height: 90px; overflow-y: scroll;">
-                <TextBox></TextBox>
-            </div>
-	</VTab>
-        <VTab title="Output">
-	  XML of the graph (module) goes here.
-	  This is a large scroll area with a 'copy' button.
-	</VTab>
-      </VTabs>
+    <div class="nodejs">
+        <div class="nodejs-container">
+            <jse-split-vertical>
+                <div class="nodejs-left-sidebar">
+		  <jse-left-sidebar ref="leftSidebar"/>
+                </div>
+                <div class="nodejs-content">
+                    <div class="editor-container">
+                        <BaklavaEditor :view-model="baklava" />
+                    </div>
+                </div>
+                <div class="nodejs-right-sidebar">
+                    <jse-right-sidebar/>
+                </div>
+            </jse-split-vertical>
+            <jse-bottom/>
+        </div>
     </div>
 </template>
 
@@ -85,17 +24,11 @@ import VTabs from "./VTabs.vue";
 import VTab from "./VTab.vue";
 import TextBox from "./TextBox.vue";
 import {EventBus} from "./EventBus";
+import jseSplitVertical from "./jseSplitVertical.vue";
+import jseLeftSidebar from "./leftSidebar.vue";
+import jseRightSidebar from "./rightSidebar.vue";
+import jseBottom from "./jseBottom.vue";
 
-/*
- * Inventory of things for the module editor:
- *    * Place to extract the model xml: copy button?
- *    * Palette for listing the 'tree' of available nodes.
- *    * Place to select/open different graphs in the model.
- *    * Way to 'import/select' other modules (i.e. openscad, elisp, c, llvm, etc)
- *    * Place to 'render' the output of the model's 'Processor'
- *          Probably a window along the bottom?
- */
-// node--js stuff
 import {ModuleLoaderHTTP} from "../xml/ModuleLoaderHTTP";
 import {ModuleLoader} from "../ModuleLoader";
 import {NodeModule} from "../NodeModule";
@@ -114,87 +47,76 @@ import { NodeInterfaceType } from "@baklavajs/interface-types";
 // bridge between node--js and baklavajs
 import { PopulateBaklava } from "./PopulateBaklava";
 
-const err: SerializerErrorReporter = new SerializerErrorReporterStream();
-const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
-const loader: ModuleLoader = new ModuleLoader();
-loader.setPlugin(loaderPlugin);
-loaderPlugin.addPath("");
+import type {IBaklavaViewModel} from "@baklavajs/renderer-vue";
+import { useTemplateRef, onMounted } from 'vue';
 
-const nodeModule: NodeModule | undefined = await loader.loadModule("foo", err);
+//interface Props {
+//    baklava: IBaklavaViewModel;
+//}
+//const props = defineProps<Props>();
 
-console.log("Defining node interface types:");
-
-const baklava = useBaklava();
+var baklava = useBaklava();
+baklava = useBaklava();
 baklava.settings.enableMinimap = true;
-
-
-var uiDataTypes: { [key: string] : NodeInterfaceType<string>} = {};
-
-var populateBaklava: PopulateBaklava = new PopulateBaklava(nodeModule!, baklava);
-
-populateBaklava.run()
-
-console.log("About to use a data type");
-console.log(uiDataTypes);
-console.log(uiDataTypes["org.ensor.nodejs.openscad.variable"]);
-
-// Next, define all of the node types:
-
-const MathNode = defineNode({
-    type: "MathNode",
-    inputs: {
-        number1: () => new NumberInterface("Number", 1),
-        number2: () => new NumberInterface("Number", 10),
-        operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
-    },
-    outputs: {
-        output: () => new NodeInterface("Output", 0),
-    },
-});
-
-baklava.editor.registerNodeType(MathNode);
 baklava.settings.palette.enabled = false;
 baklava.settings.toolbar.enabled = false;
 
-const node1 = new MathNode();
-node1.position = { x: 100, y: 100 };
-baklava.editor.graph.addNode(node1);
+const leftSidebar = useTemplateRef('leftSidebar');
 
-const node2 = new MathNode();
-node2.position = { x: 450, y: 100 };
-baklava.editor.graph.addNode(node2);
+function onModuleLoaded(nodeModule: NodeModule) {
+    console.log("Got template ref");
+    console.log(leftSidebar);
+    leftSidebar.value.setModule(nodeModule);
+    console.log("Defining node interface types:");
+            
+    var populateBaklava: PopulateBaklava = new PopulateBaklava(nodeModule, baklava);
+            
+    populateBaklava.run()
+            
+    // Next, define all of the node types:
+            
+    const MathNode = defineNode({
+        type: "MathNode",
+        inputs: {
+            number1: () => new NumberInterface("Number", 1),
+            number2: () => new NumberInterface("Number", 10),
+            operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
+        },
+        outputs: {
+            output: () => new NodeInterface("Output", 0),
+    	}
+    });
 
-function doAddNodeOnClick() {
+    baklava.editor.registerNodeType(MathNode);
+
+    const node1 = new MathNode();
+    node1.position = { x: 100, y: 100 };
+    baklava.editor.graph.addNode(node1);
+    
     const node2 = new MathNode();
     node2.position = { x: 450, y: 100 };
     baklava.editor.graph.addNode(node2);
-    //EventBus.emit("change_n", "xxx");
-
-
-    if (nodeModule != undefined) {
-       var ser: Serializer = SerializerXML.instance();
-       var outstream: WritableStream = new WritableStream({
-           write(chunk) {
-                   EventBus.get().emit("changeText", { msg: chunk});
-                   //console.log(chunk);
-           }
-       });
-       ser.write(nodeModule!, outstream, err);
-}    
-
-
-
+            
+    console.log("Adding a connection in our graph");
+    
+    baklava.editor.graph.addConnection(node1.outputs.output, node2.inputs.number1);
+    
+    console.log("Initialization complete, graph visible?");
 }
 
-console.log("Adding a connection in our graph");
+onMounted(() => {
+    console.log("Mounted");
+        const err: SerializerErrorReporter = new SerializerErrorReporterStream();
+        const loaderPlugin: ModuleLoaderHTTP = new ModuleLoaderHTTP();
+        const loader: ModuleLoader = new ModuleLoader();
+        loader.setPlugin(loaderPlugin);
+        loaderPlugin.addPath("");
 
-baklava.editor.graph.addConnection(node1.outputs.output, node2.inputs.number1);
+	loader
+	    .loadModule("foo", err)
+	    .then((nodeModule: NodeModule | undefined) => {onModuleLoaded(nodeModule!);});
 
-console.log("Initialization complete, graph visible?");
-
-function doit() {
-  console.log("asdfasdfadfadfasdf");
-}
+});
 
 </script>
 
