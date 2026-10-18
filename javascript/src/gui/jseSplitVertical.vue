@@ -80,7 +80,7 @@ onMounted(() => {
 <style>
 .split__bar {
   background-color: #3C3530;
-  width: 15px;
+  width: 5px;
   height: 100%;
   cursor: col-resize;
 }

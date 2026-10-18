@@ -1,15 +1,16 @@
 <template>
-  <h1 class="text-xl font-bold mb-8" id="tabs">node--js Editor</h1>
-          <editor/>
-<!--
-  <Suspense>
-          <editor/>
-  </Suspense>
--->
-  <ul>Powered by:
-  <li><a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a>: General UI framework</li>
-  <li><a href="https://baklavajs.org/" target="_blank" rel="noopener">baklavajs</a>: Node editor visuals</li>
-  </ul>
+<div style="display: flex; flex-direction: column; height: 100vh;">
+    <div style="flex: 1;">
+        <h1 class="text-xl font-bold mb-8" id="tabs">node--js Editor</h1>
+        <editor/>
+    </div>
+    <div style="">
+        <ul>Powered by:
+            <li><a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a>: General UI framework</li>
+            <li><a href="https://baklavajs.org/" target="_blank" rel="noopener">baklavajs</a>: Node editor visuals</li>
+        </ul>
+    </div>
+</div>
 </template>
 
 <style scoped></style>
@@ -25,18 +26,4 @@ import jseSplitVertical from "./jseSplitVertical.vue"
 
 
 <style scoped>
-.split__left {
-  background-color: #404040;
-}
-
-.split__right {
-  background-color: #C5C6B6;
-}
-
-.split__bar {
-  background-color: #3C3530;
-  width: 15px;
-  height: 100%;
-  cursor: col-resize;
-}
 </style>

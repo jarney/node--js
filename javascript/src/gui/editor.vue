@@ -14,7 +14,9 @@
                     <jse-right-sidebar/>
                 </div>
             </jse-split-vertical>
+<!--
             <jse-bottom/>
+-->
         </div>
     </div>
 </template>

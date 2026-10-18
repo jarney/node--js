@@ -3,20 +3,6 @@
 @tailwind components;
 /*@tailwind utilities;*/
 
-/*
-body {
-  height:100%;
-  width:100%;
-  overflow:hidden;
-}
-
-.row {
-  height:33.3vh;
-}
-*/
-
-/* Variables*/
-
 html {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang TC", "Heiti TC", 微軟正黑體, sans-serif;
