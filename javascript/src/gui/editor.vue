@@ -139,7 +139,6 @@ onMounted(() => {
 .nodejs-content {
     display: table-cell;
     width: 70%;
-    height: 100%;
     overflow:scroll;
 }
 .nodejs-right-sidebar {
