@@ -1,15 +1,46 @@
-set(CALC_SOURCE_FILES
+
+#########################################
+# This is a simple 'loopback'
+# kind-of test which reads a module,
+# parses it for validity and writes
+# it back out again.
+#########################################
+set(PASSTHROUGH_SOURCE_FILES
   passthrough.cpp
 )
 
-set(CALC_HEADER_FILES
+set(PASSTHROUGH_HEADER_FILES
 
 )
 
 add_executable(passthrough
-  ${CALC_SOURCE_FILES}
-  ${CALC_HEADER_FILES}
+  ${PASSTHROUGH_SOURCE_FILES}
+  ${PASSTHROUGH_HEADER_FILES}
 )
 
 target_link_libraries(passthrough NodeJS)
 
+#########################################
+# This is just a core 'process' utility
+# which reads a graph, parses it for
+# validity, and then executes the 'main'
+# graph on it.  There are a number of
+# practical examples that can be done with
+# this alone such as generating makfiles,
+# openscad, and even lisp code.
+#########################################
+
+set(PROCESS_SOURCE_FILES
+  process.cpp
+)
+
+set(PROCESS_HEADER_FILES
+
+)
+
+add_executable(process
+  ${PROCESS_SOURCE_FILES}
+)
+target_include_directories(process PUBLIC ${Boost_INCLUDE_DIR} )
+
+target_link_libraries(process NodeJS ${Boost_LIBRARIES})

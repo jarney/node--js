@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="core-example" description="Uncategorized" version="1"/>
+  <scope>
+    <package id="org.ensor.nodejs.core"/>
+  </scope>
+  <data-types/>
+  <node-types>
+    <node-type id="subgraph-call" visibility="public" type="graph" graph-id="subgraph">
+      <inputs>
+        <port id="a" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+        <port id="b" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+  </node-types>
+  <graphs>
+    <graph id="simple">
+      <nodes>
+	<node id="input" type="org.ensor.nodejs.core.input">
+	  <outputs>
+	    <port id="inval" data-type="org.ensor.nodejs.core.string"/>
+	  </outputs>
+	</node>
+	
+	<node id="aval" type="org.ensor.nodejs.core.string">
+	  <value key="string">A String</value>
+	</node>
+	<node id="bval" type="org.ensor.nodejs.core.string">
+	  <value key="string">B String</value>
+	</node>
+
+	<node id="concatenate" type="org.ensor.nodejs.core.concatenate">
+	</node>
+
+	<node id="output" type="org.ensor.nodejs.core.output">
+	  <inputs>
+	    <port id="out" data-type="org.ensor.nodejs.core.string"/>
+	    <port id="fromconst" data-type="org.ensor.nodejs.core.string"/>
+	    <port id="frominput" data-type="org.ensor.nodejs.core.string"/>
+	  </inputs>
+	</node>
+      </nodes>
+      <edges>
+	<edge from-node="aval" from-port="value" to-node="concatenate" to-port="a"/>
+	<edge from-node="bval" from-port="value" to-node="concatenate" to-port="b"/>
+	<edge from-node="concatenate" from-port="out" to-node="output" to-port="out"/>
+	<edge from-node="aval" from-port="value" to-node="output" to-port="fromconst"/>
+	<edge from-node="input" from-port="inval" to-node="output" to-port="frominput"/>
+      </edges>
+    </graph>
+    <graph id="subgraph">
+      <nodes>
+	<node id="input" type="org.ensor.nodejs.core.input">
+	  <outputs>
+            <port id="a" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+            <port id="b" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+	  </outputs>
+	</node>
+	
+	<node id="concatenate" type="org.ensor.nodejs.core.concatenate">
+	</node>
+	
+	<node id="output" type="org.ensor.nodejs.core.output">
+	  <inputs>
+            <port id="out" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+	  </inputs>
+	</node>
+	<edges>
+          <edge from-node="input" from-port="a" to-node="concatenate" to-port="a"/>
+          <edge from-node="input" from-port="b" to-node="concatenate" to-port="b"/>
+	  <edge from-node="concatenate" from-port="out" to-node="output" to-port="out"/>
+	</edges>
+      </nodes>
+    </graph>
+  </graphs>
+</node-module>
+

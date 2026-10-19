@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 cmake_policy(SET CMP0068 NEW) # new in 3.9. The NEW behavior of this policy is to ignore the RPATH settings for install_name on macOS.
-
+cmake_policy(SET CMP0167 NEW)
 
 project(NodeJS CXX)
 
@@ -36,7 +36,6 @@ option(BUILD_MEMCHECK "Valgrind Memory Check" ON)
 
 option(BUILD_PYTHON "Python Module" ON)
 
-
 if(QT_NODES_DEVELOPER_DEFAULTS)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
@@ -60,6 +59,7 @@ set(CPP_SOURCE_FILES
   src/ModuleLoader.cpp
   src/NodeType.cpp
   src/NodePort.cpp
+  src/Natives.cpp
   src/NamedPorts.cpp
   src/NodeModule.cpp
   src/Node.cpp
@@ -137,6 +137,8 @@ endif()
 
 find_package(LibXml2 2.9 REQUIRED QUIET)
 message(STATUS "LibXml2: ${LIBXML2_VERSION_STRING}")
+FIND_PACKAGE( Boost 1.40 COMPONENTS program_options REQUIRED )
+
 target_link_libraries(NodeJS PUBLIC LibXml2::LibXml2)
 
 

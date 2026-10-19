@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+<!---
+    - This is the 'core' package that implements the required
+    - nodes for the system.  All graphs may reference this as
+    - the basis for all computations.
+    -->
+  <package id="org.ensor.nodejs.core" description="NodeJS Core" version="1"/>
+
+  <metadata>
+  </metadata>
+  
+  <data-types>
+    <!--
+        - These are (for now) purely documentary.
+        - There is no 'hard' validation of data types,
+        - their origin, or function at this level.  They
+        - exist purely as identifiers that tie ports together.
+    -->
+    <data-type id="string" name="node--js core string"/>
+  </data-types>
+  <!--
+      - This is the set of nodes provided by the OpenSCAD
+      - implementation.  Each of these node processors
+      - are added by a native implementation library.
+  -->
+  <node-types>
+    <!--
+	- Generic input/output port for a graph (ties graphs to node types)
+	- The idea here is that each graph should have an 'input' and an 'output'
+	- that match the corresponding node type (or function call).
+	- When you call a node type, that may call a graph which in turn
+	- passes input/output through these ports of the graph using 'flexible'
+	- data-types.  Must be natively provided by the platform.
+      -->
+    <node-type id="input" visibility="public" type="native" allow-port-override="true">
+    </node-type>
+
+    <node-type id="output" visibility="public" type="native" allow-port-override="true">
+    </node-type>
+
+    <node-type id="concatenate" visibility="public" type="native">
+      <inputs>
+        <port id="a" description="" data-type="string" connection-policy="multi"/>
+        <port id="b" description="" data-type="string" connection-policy="multi"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="" data-type="string" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+
+    <node-type id="string" visibility="public" type="native">
+      <inputs>
+      </inputs>
+      <outputs>
+        <port id="value" description="" data-type="string" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+
+    <!-- Calls another graph, passing whatever input and output we have to that graph. -->
+    <node-type id="graph-call" visibility="public" type="native" allow-port-override="true">
+    </node-type>
+    
+  </node-types>
+</node-module>

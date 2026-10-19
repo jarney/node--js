@@ -1,6 +1,7 @@
 #include "node--js/Processor.hpp"
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
+#include "node--js/Natives.hpp"
 #include <optional>
 
 using namespace NodeJS::core;
@@ -10,7 +11,9 @@ Processor::setNativeImpl(NodeTypeId aNodeTypeId, std::unique_ptr<NodeProcessor> 
 {
     mNodeProcessors[aNodeTypeId] = std::move(processor);
 }
-        
+
+#define __NODEJS_DEBUGGING_PRINTS
+
 #ifdef __NODEJS_DEBUGGING_PRINTS
 static void
 dumpDict(std::string msg, const ConnectionData & data)
@@ -38,11 +41,52 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         return;
     }
 
-    ConnectionData lastData;
-    nodeData[nodeIds.at(0)] = input;
+    // Find the 'input' and 'output' nodes for the graph.
+    // These are mandatory and should be:
+    // * Mapped to the 'org.ensor.nodejs.core.[input|output]' node types.
+    // * Should be unique in the graph.
+    // * Should match type for type the corresponding
+    //   node type when called from a node type.
+    // All of this should be validated when the graph is serialized/edited.
+
+    std::optional<NodeId> inputNodeId;
+    std::optional<NodeId> outputNodeId;
+
+    static const std::string INPUT_NODE_TYPE("org.ensor.nodejs.core.input");
+    static const std::string OUTPUT_NODE_TYPE("org.ensor.nodejs.core.output");
 
     for (const NodeId & nodeId : nodeIds) {
-	//fprintf(stderr, "Processing node %s\n", nodeId.c_str());
+	const Node & node = *graph.getNode(nodeId);
+	if (node.getType().getFullyQualifiedId() == NodeProcessor_input::ID) {
+	    if (inputNodeId.has_value()) {
+		fprintf(stderr, "Could not process graph, it was not valid\n");
+		fprintf(stderr, "It has a duplicate input node\n");
+		return;
+	    }
+	    inputNodeId = nodeId;
+	}
+	if (node.getType().getFullyQualifiedId() == NodeProcessor_output::ID) {
+	    if (outputNodeId.has_value()) {
+		fprintf(stderr, "Could not process graph, it was not valid\n");
+		fprintf(stderr, "It has a duplicate output node\n");
+		return;
+	    }
+	    outputNodeId = nodeId;
+	}
+    }
+    if (!inputNodeId.has_value()) {
+	fprintf(stderr, "Could not process graph, missing input node\n");
+	return;
+    }
+    if (!outputNodeId.has_value()) {
+	fprintf(stderr, "Could not process graph, missing output node\n");
+	return;
+    }
+    
+    nodeData[inputNodeId.value()] = input;
+    dumpDict("Graph input:", input);
+    
+    for (const NodeId & nodeId : nodeIds) {
         const Node & node = *graph.getNode(nodeId);
 
         // Get the type of the node.
@@ -51,23 +95,27 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
         // When processing a node,
         // we're really getting all of the data from
         // prececessor nodes, so we need to shuttle it
-        // to the right place.
-        ConnectionData fromData;
-        for (const Edge *edge : graph.getEdgesTo(nodeId)) {
+        // to the right place.  The big exception is the
+	// 'input' node which gets it directly from
+	// the graph itself because it has no previous edge.
+	if (nodeType.getFullyQualifiedId() == "org.ensor.nodejs.core.input") {
+	    continue;
+	}
+	ConnectionData fromData;
+	for (const Edge *edge : graph.getEdgesTo(nodeId)) {
 	    std::string data = nodeData[edge->fromNode].getValue(edge->fromPort);
-            fromData.appendValue(edge->toPort, data);
+	    fromData.appendValue(edge->toPort, data);
 	    //fprintf(stderr, "Taking data from %s:%s -> %s:%s = %s\n",
 	    //      edge->fromNode.c_str(), edge->fromPort.c_str(),
-	    //	    edge->toNode.c_str(), edge->toPort.c_str(),
-	    //	    data.c_str());
+            //      edge->toNode.c_str(), edge->toPort.c_str(),
+            //      data.c_str());
 	}
-        ConnectionData toData;
-        processNodeType(graph, nodeType, node, fromData, toData);
-        nodeData[nodeId] = toData;
-        lastData = toData;
+	ConnectionData toData;
+	processNodeType(graph, nodeType, node, fromData, toData);
+	nodeData[nodeId] = toData;
     }
-    output = lastData;
-    //dumpDict("Graph output:", output);
+    output = nodeData[outputNodeId.value()];
+    dumpDict("Graph output:", output);
 }
 
 void
