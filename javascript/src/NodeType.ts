@@ -1,5 +1,5 @@
 
-import type { NodeTypeId, NodeId, EdgeId, PortId} from "./Definitions"
+import type { NodeTypeId, NodeId, EdgeId, PortId, GraphId} from "./Definitions"
 import { NamedPorts } from "./NamedPorts";
 import { ConnectionData } from "./ConnectionData";
 import { Metadata } from "./Metadata";
@@ -22,6 +22,7 @@ import { Metadata } from "./Metadata";
 export class NodeType {
   mId: NodeTypeId;
   mFullyQualifiedId: NodeTypeId;
+  mGraphId: GraphId;
   mVisibility: NodeType.Visibility;
   mType: NodeType.Type;
   mInputs: NamedPorts;
@@ -33,6 +34,7 @@ export class NodeType {
   constructor() {
     this.mId = "";
     this.mFullyQualifiedId = ".";
+    this.mGraphId = "";
     this.mVisibility = NodeType.Visibility.PRIVATE;
     this.mType = NodeType.Type.NATIVE;
     this.mInputs = new NamedPorts();
@@ -52,6 +54,13 @@ export class NodeType {
   public setId(aId: NodeTypeId, aPackageName: string) {
     this.mId = aId;
     this.mFullyQualifiedId = aPackageName + "." + aId;
+  }
+
+  public setGraphId(aGraphId: GraphId) {
+    this.mGraphId = aGraphId;
+  }
+  public getGraphId(): GraphId {
+    return this.mGraphId;
   }
   
   public setVisibility(aVisibility: NodeType.Visibility) {

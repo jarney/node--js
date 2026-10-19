@@ -281,10 +281,24 @@ export class SerializerXMLReader {
       return this.parseError(SerializerErrorCode.NODE_TYPE_TYPE_INVALID, nodeTypeNode, "Type qualifier '" + type_attr + "' is unrecognized on node type '" + id + "'");
     }
 
+    var graphId:string = "";
+    if (type == NodeType.Type.GRAPH) {
+	if (!nodeTypeNode.hasAttribute("graph-id")) {
+	    return this.parseError(SerializerErrorCode.NODE_TYPE_GRAPH_ID_MISSING, nodeTypeNode, "Node type '" + id + "' is a graph node, but does not have a graph-id set.");
+	}
+      graphId = nodeTypeNode.getAttribute("graph-id")!;
+    }
+    else {
+	if (nodeTypeNode.hasAttribute("graph-id")) {
+	  return this.parseError(SerializerErrorCode.NODE_TYPE_GRAPH_ID_INAPPROPRIATE, nodeTypeNode, "Node type '" + id + "' is not a graph node, but a graph node was specified");
+	}
+    }
+    
     var nodeType: NodeType = new NodeType();
     nodeType.setId(id, this.mNodeModule.getPackage());
     nodeType.setVisibility(visibility);
     nodeType.setType(type);
+    nodeType.setGraphId(graphId);
 
     var override_attribute: string | null = nodeTypeNode.getAttribute("allow-port-override");
     if (override_attribute != null) {

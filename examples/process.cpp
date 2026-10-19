@@ -56,6 +56,7 @@ int main(int argc, char **argv)
     po::options_description desc("Usage: process [options] module-name");
     desc.add_options()
 	("module-name", po::value<std::string>(), "Module to load")
+	("entrypoint", po::value<std::string>(), "Entrypoint (graph-id)")
 	("arg", po::value<std::vector<std::string>>(), "Define a value")
 	("help", "produce help message")
 	;
@@ -83,18 +84,23 @@ int main(int argc, char **argv)
     if (vm.count("module-name") != 1) {
 	return usage(desc);
     }
+    std::string entrypoint = "main";
+    if (vm.count("entrypoint") != 0) {
+	entrypoint = vm["entrypoint"].as<std::string>();
+    }
 
     const std::string & moduleName = vm["module-name"].as<std::string>();
 
-    fprintf(stderr, "Processing module %s\n", moduleName.c_str());
+    fprintf(stderr, "Processing module %s : %s\n", moduleName.c_str(), entrypoint.c_str());
 
     const SerializerXML & ser = SerializerXML::instance();
-
     auto pathLoader = std::make_unique<ModuleLoaderNodeJSPath>();
     ModuleLoader loader(std::move(pathLoader));
     SerializerErrorReporterStream err(std::cerr);
 
-    NodeModule *nodeModule = loader.loadModule(std::string(argv[1]), err);
+    fprintf(stderr, "Loading module\n");
+    NodeModule *nodeModule = loader.loadModule(moduleName, err);
+    fprintf(stderr, "Loaded module\n");
     if (!nodeModule) {
 	fprintf(stderr, "No such module found.  Please check NODEJS_PATH\n");
 	return 1;
@@ -112,11 +118,11 @@ int main(int argc, char **argv)
 	}
     }
     //input.setValue("inval", "Input value from graph");
-    
+
     ConnectionData output;
-    NodeGraph *graph = nodeModule->getGraph("simple");
+    NodeGraph *graph = nodeModule->getGraph(entrypoint);
     if (!graph) {
-	fprintf(stderr, "Graph 'main' not found in module '%s'\n", argv[1]);
+	fprintf(stderr, "Graph 'main' not found in module '%s'\n", entrypoint.c_str());
 	return 2;
     }
     
@@ -124,7 +130,6 @@ int main(int argc, char **argv)
     processor.setNativeImpl(NodeProcessor_concatenate::ID, std::make_unique<NodeProcessor_concatenate>());
     processor.setNativeImpl(NodeProcessor_input::ID, std::make_unique<NodeProcessor_input>());
     processor.setNativeImpl(NodeProcessor_output::ID, std::make_unique<NodeProcessor_output>());
-
 
     processor.processGraph(*graph, input, output);
 

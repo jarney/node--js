@@ -21,6 +21,17 @@ NodeType::setId(std::string id, std::string package)
     mFullyQualifiedId = package + std::string(".") + id;
 }
 
+void
+NodeType::setGraphId(std::string graphId)
+{
+    mGraphId = graphId;
+}
+const std::string &
+NodeType::getGraphId() const
+{
+    return mGraphId;
+}
+
 NodeJS::core::NodeType::Visibility
 NodeType::getVisibility(void) const
 {

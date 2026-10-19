@@ -17,7 +17,7 @@
     </node-type>
   </node-types>
   <graphs>
-    <graph id="simple">
+    <graph id="main">
       <nodes>
 	<node id="input" type="org.ensor.nodejs.core.input">
 	  <outputs>
@@ -32,8 +32,8 @@
 	  <value key="string">B String</value>
 	</node>
 
-	<node id="concatenate" type="org.ensor.nodejs.core.concatenate">
-	</node>
+	<node id="call-a-function1" type="subgraph-call"/>
+	<node id="call-a-function2" type="subgraph-call"/>
 
 	<node id="output" type="org.ensor.nodejs.core.output">
 	  <inputs>
@@ -44,16 +44,17 @@
 	</node>
       </nodes>
       <edges>
-	<edge from-node="aval" from-port="value" to-node="concatenate" to-port="a"/>
-	<edge from-node="bval" from-port="value" to-node="concatenate" to-port="b"/>
-	<edge from-node="concatenate" from-port="out" to-node="output" to-port="out"/>
+	<edge from-node="aval" from-port="value" to-node="call-a-function1" to-port="a"/>
+	<edge from-node="bval" from-port="value" to-node="call-a-function1" to-port="b"/>
+	<edge from-node="call-a-function1" from-port="out" to-node="call-a-function2" to-port="a"/>
+	<edge from-node="input" from-port="inval" to-node="call-a-function2" to-port="b"/>
+	<edge from-node="call-a-function2" from-port="out" to-node="output" to-port="out"/>
 	<edge from-node="aval" from-port="value" to-node="output" to-port="fromconst"/>
-	<edge from-node="input" from-port="inval" to-node="output" to-port="frominput"/>
       </edges>
     </graph>
     <graph id="subgraph">
       <nodes>
-	<node id="input" type="org.ensor.nodejs.core.input">
+	    <node id="input" type="org.ensor.nodejs.core.input">
 	  <outputs>
             <port id="a" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
             <port id="b" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
@@ -68,12 +69,12 @@
             <port id="out" description="" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
 	  </inputs>
 	</node>
-	<edges>
-          <edge from-node="input" from-port="a" to-node="concatenate" to-port="a"/>
-          <edge from-node="input" from-port="b" to-node="concatenate" to-port="b"/>
-	  <edge from-node="concatenate" from-port="out" to-node="output" to-port="out"/>
-	</edges>
       </nodes>
+      <edges>
+        <edge from-node="input" from-port="a" to-node="concatenate" to-port="a"/>
+        <edge from-node="input" from-port="b" to-node="concatenate" to-port="b"/>
+	<edge from-node="concatenate" from-port="out" to-node="output" to-port="out"/>
+      </edges>
     </graph>
   </graphs>
 </node-module>

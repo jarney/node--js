@@ -1125,7 +1125,7 @@
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="graph" visibility="public" type="graph">
+    <node-type id="graph" visibility="public" type="graph" graph-id="foo">
       <inputs>
       </inputs>
       <outputs>

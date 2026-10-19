@@ -142,10 +142,18 @@ Processor::processNodeType(
 	processor.process(*this, node, fromData, toData);
 	//dumpDict("output: ", toData);
     }
+    else if (nodeType.getType() == NodeType::Type::ALIAS) {
+	// We still need an implementation here.  It just basically
+	// needs to be a recursive call to another type, but
+	// we don't actually have the type ID stored so we can make the call.
+	char *p = 0;
+	*p = 0;
+    }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
-	NodeModule & module = graph.getModule();
-	NodeGraph *subgraph = module.getGraph(nodeType.getLocalId());
+	NodeModule & nodeModule = graph.getModule();
+	NodeGraph *subgraph = nodeModule.getGraph(nodeType.getGraphId());
 	if (subgraph == nullptr) {
+	    fprintf(stderr, "No such graph found %s\n", nodeType.getGraphId().c_str());
 	    default_processor(*this, node, fromData, toData);
 	    return;
 	}

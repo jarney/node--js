@@ -142,6 +142,7 @@ SerializerXMLWriter::writeNodeType(
     }
     if (node_type.getType() == NodeType::Type::GRAPH) {
 	nodeType.setAttribute("type", "graph");
+	nodeType.setAttribute("graph-id", node_type.getGraphId());
     }
     else {
 	nodeType.setAttribute("type", "native");

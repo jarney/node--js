@@ -299,10 +299,24 @@ SerializerXMLReader::parseNodeType(
 	return parseError(SerializerErrorCode::NODE_TYPE_TYPE_INVALID, nodeTypeNode, "Type qualifier '" + type_attr + "' is unrecognized on node type '" + id + "'");
     }
 
+    std::string graphId("");
+    if (type == NodeType::Type::GRAPH) {
+	if (!nodeTypeNode.hasAttribute("graph-id")) {
+	    return parseError(SerializerErrorCode::NODE_TYPE_GRAPH_ID_MISSING, nodeTypeNode, "Node type '" + id + "' is a graph node, but does not have a graph-id set.");
+	}
+	graphId = nodeTypeNode.getAttribute("graph-id");
+    }
+    else {
+	if (nodeTypeNode.hasAttribute("graph-id")) {
+	    return parseError(SerializerErrorCode::NODE_TYPE_GRAPH_ID_INAPPROPRIATE, nodeTypeNode, "Node type '" + id + "' is not a graph node, but a graph node was specified");
+	}
+    }
+    
     std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
     nodeType->setId(id, mNodeModule.getPackage());
     nodeType->setVisibility(visibility);
     nodeType->setType(type);
+    nodeType->setGraphId(graphId);
 
     if (nodeTypeNode.hasAttribute("allow-port-override")) {
 	bool allowOverride = nodeTypeNode.getAttribute("allow-port-override") == "true";

@@ -122,6 +122,9 @@ namespace NodeJS {
 	     */
 	    void setType(NodeJS::core::NodeType::Type impl);
 
+	    void setGraphId(std::string graphId);
+	    const std::string & getGraphId() const;
+	    
 	    const NamedPorts & getInputs() const;
 	    const NamedPorts & getOutputs() const;
 
@@ -145,6 +148,7 @@ namespace NodeJS {
 	private:
 	    std::string mId;
 	    std::string mFullyQualifiedId;
+	    std::string mGraphId;
 	    Visibility mVisibility;
 	    Type mType;
 	    bool mAllowPortOverride;

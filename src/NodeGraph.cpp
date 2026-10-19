@@ -302,7 +302,6 @@ NodeGraph::getNodeIdsInTopologicalOrder(void) const
 	    }
 	    state[node] = TOPOSORT_STATE_IN_PROGRESS;
 	    stack.push_back(std::make_pair(node, true));
-
 	    for ( const auto & neighbor : getNeighborNodeIds(node)) {
 		if (state[neighbor] == TOPOSORT_STATE_IN_PROGRESS) {
 		    return std::optional<std::vector<NodeId>>();
