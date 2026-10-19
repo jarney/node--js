@@ -11,6 +11,8 @@
 #include "node--js/Processor.hpp"
 #include "node--js/Natives.hpp"
 
+#include "node--js/engines/openscad/Builtins.hpp"
+
 using namespace NodeJS::core;
 using namespace NodeJS::xml;
 
@@ -131,6 +133,9 @@ int main(int argc, char **argv)
     processor.setNativeImpl(NodeProcessor_input::ID, std::make_unique<NodeProcessor_input>());
     processor.setNativeImpl(NodeProcessor_output::ID, std::make_unique<NodeProcessor_output>());
 
+    NodeJS::openscad::Builtins::registerProcessors(processor);
+
+    
     processor.processGraph(*graph, input, output);
 
     std::string output_str = output.getValue("out");

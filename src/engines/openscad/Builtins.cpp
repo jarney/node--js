@@ -4,7 +4,7 @@ using namespace NodeJS::openscad;
 using namespace NodeJS::core;
 
 #define _OPENSCAD_NODE_REGISTER(name, val) \
-    processor.setNativeImpl(name, std::make_unique<NodeProcessor_##val##_fn>());
+    processor.setNativeImpl("org.ensor.nodejs.openscad." name, std::make_unique<NodeProcessor_##val##_fn>());
 
 void
 Builtins::registerProcessors(Processor & processor)
