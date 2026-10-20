@@ -9,6 +9,13 @@ using namespace NodeJS::core;
 void
 Builtins::registerProcessors(Processor & processor)
 {
+    // CORE: so we can implement all of the openscad stuff in terms of
+    // these primitives.
+    _OPENSCAD_NODE_REGISTER("convert-openscad-string-to-variable", core_string_to_variable);
+    _OPENSCAD_NODE_REGISTER("convert-openscad-variable-to-string", core_variable_to_string);
+    _OPENSCAD_NODE_REGISTER("convert-openscad-string-to-module", core_string_to_module_instantiation);
+    _OPENSCAD_NODE_REGISTER("convert-openscad-string-to-assignment", core_string_to_module_instantiation);
+    
     // Syntax
     _OPENSCAD_NODE_REGISTER("assign", syntax_assign);
 //    _OPENSCAD_NODE_REGISTER(syntax_assign_list);

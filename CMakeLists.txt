@@ -77,6 +77,7 @@ set(CPP_SOURCE_FILES
   src/engines/openscad/Builtins2D.cpp
   src/engines/openscad/Builtins3D.cpp
   src/engines/openscad/BuiltinsBooleanOperations.cpp
+  src/engines/openscad/BuiltinsCore.cpp
   src/engines/openscad/BuiltinsConstants.cpp
   src/engines/openscad/BuiltinsFlowControl.cpp
   src/engines/openscad/BuiltinsFunctions.cpp

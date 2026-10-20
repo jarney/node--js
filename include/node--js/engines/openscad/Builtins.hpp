@@ -39,6 +39,13 @@ public:
 		);                                                   \
 	};
 
+    // So we can implement openscad in terms of just
+    // the core constructs.
+    _OPENSCAD_NODE_DECL(core_string_to_variable);
+    _OPENSCAD_NODE_DECL(core_variable_to_string);
+    _OPENSCAD_NODE_DECL(core_string_to_module_instantiation);
+    _OPENSCAD_NODE_DECL(core_string_to_assignment);
+    
     // Syntax
     _OPENSCAD_NODE_DECL(syntax_assign);
     _OPENSCAD_NODE_DECL(syntax_assign_list);

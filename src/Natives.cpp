@@ -15,7 +15,7 @@ name::process(		   \
 // This provides a constant string literal.
 DEFINE_PROCESSOR(NodeProcessor_string, "org.ensor.nodejs.core.string")
 {
-    toData.setValue("value", node.getData().getValue("string"));
+    toData.setValue("value", node.getData().getValue("value"));
 }
 
 // This concatenates two strings

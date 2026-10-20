@@ -8,6 +8,9 @@
     - in OpenSCAD to NodeJS language and vice-versa.
     -->
   <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins" version="1"/>
+  <scope>
+    <package id="org.ensor.nodejs.core"/>
+  </scope>
 
   <metadata>
     <data namespace="http://jarney.github.io/nodejs/editor">
@@ -36,6 +39,71 @@
       - are added by a native implementation library.
   -->
   <node-types>
+    <!-- Core Impl -->
+    <node-type id="convert-openscad-variable-to-string" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Core</value>
+          <value key="name">Variable to string</value>
+          <value key="description">Converts a string to a variable assignment expression.</value>
+        </data>
+      </metadata>
+      <inputs>
+        <port id="in" description="Input" data-type="variable" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="Output" data-type="org.ensor.nodejs.core.string" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+
+    <node-type id="convert-openscad-string-to-variable" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Core</value>
+          <value key="name">String to variable</value>
+          <value key="description">Converts a string to a variable assignment expression.</value>
+        </data>
+      </metadata>
+      <inputs>
+        <port id="in" description="Input" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="Output" data-type="variable" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    
+    <node-type id="convert-openscad-string-to-module" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Core</value>
+          <value key="name">String to module instantiation</value>
+          <value key="description">Converts a string to a module instantiation expression.</value>
+        </data>
+      </metadata>
+      <inputs>
+        <port id="in" description="Input" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="Output" data-type="module-instantiation" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+
+    <node-type id="convert-openscad-string-to-assignment" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Core</value>
+          <value key="name">String to assignment</value>
+          <value key="description">Converts a string to a variable assignment expression.</value>
+        </data>
+      </metadata>
+      <inputs>
+        <port id="in" description="Input" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+      </inputs>
+      <outputs>
+        <port id="out" description="Output" data-type="assignment" connection-policy="multi"/>
+      </outputs>
+    </node-type>
+    
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">
       <metadata>
