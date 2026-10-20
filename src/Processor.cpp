@@ -143,11 +143,12 @@ Processor::processNodeType(
 	//dumpDict("output: ", toData);
     }
     else if (nodeType.getType() == NodeType::Type::ALIAS) {
-	// We still need an implementation here.  It just basically
-	// needs to be a recursive call to another type, but
-	// we don't actually have the type ID stored so we can make the call.
-	char *p = 0;
-	*p = 0;
+	const NodeType *aliasForNode = graph.getModule().getNodeType(nodeType.getAliasNodeTypeId());
+	if (!aliasForNode) {
+	    default_processor(*this, node, fromData, toData);
+	    return;
+	}
+	processNodeType(graph, *aliasForNode, node, fromData, toData);
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
 	NodeModule & nodeModule = graph.getModule();

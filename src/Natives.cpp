@@ -18,6 +18,15 @@ DEFINE_PROCESSOR(NodeProcessor_string, "org.ensor.nodejs.core.string")
     toData.setValue("value", node.getData().getValue("value"));
 }
 
+// Get information from the node type (or its alias, more usefully)
+// Is this really going to work?
+// Still need to think about this some more.....
+//DEFINE_PROCESSOR(NodeProcessor_getvalue, "org.ensor.nodejs.core.getvalue")
+//{
+//    std::string value = node.getType().getDefaultNodeData().getValue(fromData.getValue("key"));
+//    toData.setValue("value", value);
+//}
+
 // This concatenates two strings
 DEFINE_PROCESSOR(NodeProcessor_concatenate, "org.ensor.nodejs.core.concatenate")
 {

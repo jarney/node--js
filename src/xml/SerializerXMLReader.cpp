@@ -299,24 +299,34 @@ SerializerXMLReader::parseNodeType(
 	return parseError(SerializerErrorCode::NODE_TYPE_TYPE_INVALID, nodeTypeNode, "Type qualifier '" + type_attr + "' is unrecognized on node type '" + id + "'");
     }
 
-    std::string graphId("");
+    std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
+    nodeType->setId(id, mNodeModule.getPackage());
+    nodeType->setVisibility(visibility);
+    nodeType->setType(type);
+    
     if (type == NodeType::Type::GRAPH) {
 	if (!nodeTypeNode.hasAttribute("graph-id")) {
 	    return parseError(SerializerErrorCode::NODE_TYPE_GRAPH_ID_MISSING, nodeTypeNode, "Node type '" + id + "' is a graph node, but does not have a graph-id set.");
 	}
-	graphId = nodeTypeNode.getAttribute("graph-id");
+	std::string graphId = nodeTypeNode.getAttribute("graph-id");
+	nodeType->setGraphId(graphId);
+    }
+    else if (type == NodeType::Type::ALIAS) {
+	if (!nodeTypeNode.hasAttribute("alias-node-type-id")) {
+	    return parseError(SerializerErrorCode::NODE_TYPE_ALIAS_NODE_TYPE_ID_MISSING, nodeTypeNode, "Node type '" + id + "' is an alias node but does not have a 'alias-node-type-id' attribute.");
+	}
+	std::string aliasNodeTypeId = nodeTypeNode.getAttribute("alias-node-type-id");
+	nodeType->setAliasNodeTypeId(aliasNodeTypeId);
     }
     else {
 	if (nodeTypeNode.hasAttribute("graph-id")) {
 	    return parseError(SerializerErrorCode::NODE_TYPE_GRAPH_ID_INAPPROPRIATE, nodeTypeNode, "Node type '" + id + "' is not a graph node, but a graph node was specified");
 	}
+	if (nodeTypeNode.hasAttribute("alias-node-type-id")) {
+	    return parseError(SerializerErrorCode::NODE_TYPE_ALIAS_NODE_TYPE_ID_INAPPROPRIATE, nodeTypeNode, "Node type '" + id + "' is not an alias node, but an 'alias-node-type-id'");
+	}
     }
     
-    std::unique_ptr<NodeType> nodeType = std::make_unique<NodeType>();
-    nodeType->setId(id, mNodeModule.getPackage());
-    nodeType->setVisibility(visibility);
-    nodeType->setType(type);
-    nodeType->setGraphId(graphId);
 
     if (nodeTypeNode.hasAttribute("allow-port-override")) {
 	bool allowOverride = nodeTypeNode.getAttribute("allow-port-override") == "true";

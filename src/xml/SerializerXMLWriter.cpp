@@ -144,6 +144,10 @@ SerializerXMLWriter::writeNodeType(
 	nodeType.setAttribute("type", "graph");
 	nodeType.setAttribute("graph-id", node_type.getGraphId());
     }
+    else if (node_type.getType() == NodeType::Type::ALIAS) {
+	nodeType.setAttribute("type", "alias");
+	nodeType.setAttribute("alias-node-type-id", node_type.getAliasNodeTypeId());
+    }
     else {
 	nodeType.setAttribute("type", "native");
     }

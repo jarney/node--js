@@ -31,6 +31,18 @@ NodeType::getGraphId() const
 {
     return mGraphId;
 }
+void
+NodeType::setAliasNodeTypeId(std::string aAliasNodeTypeId)
+{
+    mAliasNodeTypeId = aAliasNodeTypeId;
+}
+
+const std::string &
+NodeType::getAliasNodeTypeId() const
+{
+    return mAliasNodeTypeId;
+}
+
 
 NodeJS::core::NodeType::Visibility
 NodeType::getVisibility(void) const

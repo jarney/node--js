@@ -124,6 +124,9 @@ namespace NodeJS {
 
 	    void setGraphId(std::string graphId);
 	    const std::string & getGraphId() const;
+
+	    void setAliasNodeTypeId(std::string aAliasNodeTypeId);
+	    const std::string & getAliasNodeTypeId() const;
 	    
 	    const NamedPorts & getInputs() const;
 	    const NamedPorts & getOutputs() const;
@@ -149,6 +152,7 @@ namespace NodeJS {
 	    std::string mId;
 	    std::string mFullyQualifiedId;
 	    std::string mGraphId;
+	    std::string mAliasNodeTypeId;
 	    Visibility mVisibility;
 	    Type mType;
 	    bool mAllowPortOverride;
