@@ -10,8 +10,10 @@
   <package id="org.ensor.nodejs.openscad" description="OpenSCAD Builtins" version="1"/>
 
   <metadata>
-    <data namespace="module-level metadata">
-      <value key="version">2.4</value>
+    <data namespace="http://jarney.github.io/nodejs/editor">
+      <value key="version">1.0</value>
+      <value key="name">OpenSCAD</value>
+      <value key="description">OpenSCAD core syntax and builtins.</value>
     </data>
   </metadata>
   
@@ -34,30 +36,13 @@
       - are added by a native implementation library.
   -->
   <node-types>
-    <!-- Output to be rendered -->
-    <node-type id="output" visibility="public" type="native">
-      <inputs>
-        <port id="assignments" description="Variable Assignments" data-type="assignment" connection-policy="multi"></port>
-        <port id="function-definitions" description="Function Definitions" data-type="function-definition" connection-policy="multi"/>
-        <port id="module-definitions" description="Module Definitions" data-type="module-definition" connection-policy="multi"/>
-        <port id="module-instantiations" description="Output to render" data-type="module-instantiation" connection-policy="multi"/>
-      </inputs>
-      <outputs/>
-      <metadata>
-        <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="caption">Output</value>
-          <value key="tooltip">
-            This is the output node that formats the data from the graph into an OpenSCAD file for rendering.
-          </value>
-        </data>
-      </metadata>
-    </node-type>
     <!-- 2D Primitives -->
     <node-type id="circle" visibility="public" type="native">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="caption">Circle</value>
-          <value key="tooltip">Produces a 2d circle based on either a radius or diameter.</value>
+	  <value key="category">2D Primitives</value>
+          <value key="name">Circle</value>
+          <value key="description">Produces a 2d circle based on either a radius or diameter.</value>
         </data>
       </metadata>
       <inputs>
@@ -71,8 +56,9 @@
     <node-type id="square" visibility="public" type="native">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="caption">Square</value>
-          <value key="tooltip">Produces a 2d square with a given size.
+	  <value key="category">2D Primitives</value>
+          <value key="name">Square</value>
+          <value key="description">Produces a 2d square with a given size.
           Starts at the origin and goes to positive x,y unless 'center'
           is selected, in which case it centers.</value>
         </data>
@@ -86,6 +72,13 @@
       </outputs>
     </node-type>
     <node-type id="polygon" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">2D Primitives</value>
+          <value key="name">Polygon</value>
+          <value key="description">Takes a list of points and renders a 2d polygon</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="points" description="points" data-type="variable" connection-policy="one"/>
         <port id="paths" description="paths" data-type="variable" connection-policy="one"/>
@@ -96,6 +89,13 @@
       </outputs>
     </node-type>
     <node-type id="text" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">2D Primitives</value>
+          <value key="name">Text</value>
+          <value key="description">Takes a number of text parameters and renders text</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="text" description="text" data-type="variable" connection-policy="one"/>
         <port id="size" description="size" data-type="variable" connection-policy="one"/>
@@ -113,6 +113,13 @@
       </outputs>
     </node-type>
     <node-type id="projection" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">2D Primitives</value>
+          <value key="name">Projection</value>
+          <value key="description">Projects a 3d solid into 2d along a cut axis.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="cut" description="cut" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -122,6 +129,13 @@
     </node-type>
     <!-- 3d Primitives -->
     <node-type id="sphere" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Sphere</value>
+	  <value key="description">Renders a sphere with either a radius or diamter given</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="r" description="r" data-type="variable" connection-policy="one"/>
         <port id="d" description="d" data-type="variable" connection-policy="one"/>
@@ -129,13 +143,15 @@
       <outputs>
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
-      <metadata>
-        <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="caption">Sphere</value>
-        </data>
-      </metadata>
     </node-type>
     <node-type id="cube" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Cube</value>
+	  <value key="description">Renders a 3d cube with height, width, and depth specified</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="size" description="size" data-type="variable" connection-policy="one"/>
         <port id="center" description="center" data-type="variable" connection-policy="one"/>
@@ -145,6 +161,13 @@
       </outputs>
     </node-type>
     <node-type id="cylinder" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Cylinder</value>
+	  <value key="description">Renders a cylinder or cone given a height and possibly two radii or diameters</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="h" description="h" data-type="variable" connection-policy="one"/>
         <port id="r1" description="r1" data-type="variable" connection-policy="one"/>
@@ -160,6 +183,13 @@
       </outputs>
     </node-type>
     <node-type id="polyhedron" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Polyhedron</value>
+	  <value key="description">Gets a list of points and faces and produces a 3d polyhedron</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="points" description="points" data-type="variable" connection-policy="one"/>
         <port id="faces" description="faces" data-type="variable" connection-policy="one"/>
@@ -170,6 +200,13 @@
       </outputs>
     </node-type>
     <node-type id="import" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Import</value>
+	  <value key="description">Imports a 3d solid from a DXF or STL file</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="file" description="file" data-type="variable" connection-policy="one"/>
         <port id="center" description="center" data-type="variable" connection-policy="one"/>
@@ -185,6 +222,13 @@
       </outputs>
     </node-type>
     <node-type id="linear_extrude" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Linear Extrude</value>
+	  <value key="description">Extrudes a 2D shape along an axis</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="height" description="height" data-type="variable" connection-policy="one"/>
         <port id="v" description="v" data-type="variable" connection-policy="one"/>
@@ -202,6 +246,13 @@
       </outputs>
     </node-type>
     <node-type id="rotate_extrude" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Rotate Extrude</value>
+	  <value key="description">Extrudes a 2D shape around an axis ay an angular amount</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="angle" description="angle" data-type="variable" connection-policy="one"/>
         <port id="start" description="start" data-type="variable" connection-policy="one"/>
@@ -213,6 +264,13 @@
       </outputs>
     </node-type>
     <node-type id="surface" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Surface</value>
+	  <value key="description">Creates a surface from a height map file.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="file" description="file" data-type="variable" connection-policy="one"/>
         <port id="center" description="center" data-type="variable" connection-policy="one"/>
@@ -224,6 +282,13 @@
       </outputs>
     </node-type>
     <node-type id="dxf_dim" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Get DXF Dimension</value>
+	  <value key="description">Retrieves a reference value from a DXF file.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="file" description="file" data-type="variable" connection-policy="one"/>
         <port id="name" description="name" data-type="variable" connection-policy="one"/>
@@ -236,6 +301,13 @@
       </outputs>
     </node-type>
     <node-type id="dxf_cross" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">3D Primitives</value>
+          <value key="name">Get DXF Cross</value>
+	  <value key="description">Retrieves the origin reference value from a DXF file.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="file" description="file" data-type="variable" connection-policy="one"/>
         <port id="layer" description="layer" data-type="variable" connection-policy="one"/>
@@ -248,6 +320,13 @@
     </node-type>
     <!-- Constants -->
     <node-type id="true" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">True (boolean)</value>
+	  <value key="description">Constant True value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -255,6 +334,13 @@
       </outputs>
     </node-type>
     <node-type id="false" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">False (boolean)</value>
+	  <value key="description">Constant False value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -262,6 +348,13 @@
       </outputs>
     </node-type>
     <node-type id="const_int" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">Integer</value>
+	  <value key="description">Constant integer value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -269,6 +362,13 @@
       </outputs>
     </node-type>
     <node-type id="const_float" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">Float</value>
+	  <value key="description">Constant floating-point value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -276,6 +376,13 @@
       </outputs>
     </node-type>
     <node-type id="const_string" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">String</value>
+	  <value key="description">Constant string value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -283,6 +390,13 @@
       </outputs>
     </node-type>
     <node-type id="undef" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Constants</value>
+          <value key="name">Undefined</value>
+	  <value key="description">Constant (undefined) value</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -291,6 +405,13 @@
     </node-type>
     <!-- Flow Control -->
     <node-type id="for" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">For Loop</value>
+	  <value key="description">Iterates each element in a range and calls another graph with a that element.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="range" description="range" data-type="variable" connection-policy="one"/>
         <port id="start" description="start" data-type="variable" connection-policy="one"/>
@@ -302,6 +423,13 @@
       </outputs>
     </node-type>
     <node-type id="intersection_for" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">Intersection For</value>
+	  <value key="description">Iterates each element in a range and performs a CSG intersection on each module.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="var" description="var" data-type="variable" connection-policy="one"/>
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
@@ -311,6 +439,13 @@
       </outputs>
     </node-type>
     <node-type id="if" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">If (conditional module)</value>
+	  <value key="description">If condition is true, output is first module, otherwise second module's value is used</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="condition" description="condition" data-type="variable" connection-policy="one"/>
         <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
@@ -321,6 +456,13 @@
       </outputs>
     </node-type>
     <node-type id="let" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">Let (variable scope)</value>
+	  <value key="description">Declares one or more variable and starts a sub-graph with that scope</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="var" description="var" data-type="variable" connection-policy="one"/>
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
@@ -330,12 +472,26 @@
       </outputs>
     </node-type>
     <node-type id="comment" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">Comment</value>
+	  <value key="description">Has no effect, but you can use it to mark comments in your graph.</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
       </outputs>
     </node-type>
     <node-type id="group" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Flow Control</value>
+          <value key="name">Group</value>
+	  <value key="description">Creates a group of geometry.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="a" description="a" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
@@ -343,7 +499,8 @@
         <port id="Geometry" description="Geometry" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="module_output" visibility="public" type="native">
+    <!--
+	<node-type id="module_output" visibility="public" type="native">
       <inputs>
         <port id="out" description="" data-type="module-instantiation" connection-policy="multi"/>
       </inputs>
@@ -356,9 +513,17 @@
       </inputs>
       <outputs>
       </outputs>
-    </node-type>
+      </node-type>
+      -->
     <!-- Functions -->
     <node-type id="concat" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Concatenate</value>
+	  <value key="description">Concatenates two OpenSCAD values together.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="a" description="" data-type="variable" connection-policy="one"/>
         <port id="b" description="" data-type="variable" connection-policy="one"/>
@@ -368,6 +533,13 @@
       </outputs>
     </node-type>
     <node-type id="lookup" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Lookup</value>
+	  <value key="description">Looks for a specific 'value' in a given 'table' of other values.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="value" description="" data-type="variable" connection-policy="one"/>
         <port id="table" description="" data-type="variable" connection-policy="one"/>
@@ -377,6 +549,13 @@
       </outputs>
     </node-type>
     <node-type id="str" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">str</value>
+	  <value key="description">Converts variable to a string.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -385,6 +564,13 @@
       </outputs>
     </node-type>
     <node-type id="chr" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">chr</value>
+	  <value key="description">Converts a number or vector of numbers to a string in UTF-8 encoding.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -393,6 +579,13 @@
       </outputs>
     </node-type>
     <node-type id="ord" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">ord</value>
+	  <value key="description">Converts a string to a sequence of UTF-8 numbers.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -401,6 +594,13 @@
       </outputs>
     </node-type>
     <node-type id="search" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Search</value>
+	  <value key="description">Finds a needle in the given haystack</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="needle" description="" data-type="variable" connection-policy="one"/>
         <port id="haystack" description="" data-type="variable" connection-policy="one"/>
@@ -410,6 +610,13 @@
       </outputs>
     </node-type>
     <node-type id="version" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Version</value>
+	  <value key="description">Returns the current OpenSCAD version string.</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -417,6 +624,13 @@
       </outputs>
     </node-type>
     <node-type id="version_num" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Version Number</value>
+	  <value key="description">Returns the current OpenSCAD version as a number.</value>
+        </data>
+      </metadata>
       <inputs>
       </inputs>
       <outputs>
@@ -424,6 +638,13 @@
       </outputs>
     </node-type>
     <node-type id="parent_module" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Functions</value>
+          <value key="name">Parent Module</value>
+	  <value key="description">Returns the geometry for the parent's module.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="index" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -433,6 +654,13 @@
     </node-type>
     <!-- List -->
     <node-type id="__builtin_list_index" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">List Element by Index</value>
+	  <value key="description">Returns list element at the given index.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="list" description="list" data-type="variable" connection-policy="one"/>
         <port id="index" description="index" data-type="variable" connection-policy="one"/>
@@ -442,6 +670,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_get_xyz" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Get XYZ</value>
+	  <value key="description">Returns x,y,z elements from a list (assuming there are 3)</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="list" description="list" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -452,6 +687,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_set_xyz" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Create XYZ</value>
+	  <value key="description">Creates a list of [x,y,z] coordinates.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="x" data-type="variable" connection-policy="one"/>
         <port id="y" description="y" data-type="variable" connection-policy="one"/>
@@ -462,6 +704,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_get_xy" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Get XY</value>
+	  <value key="description">Get x,y from list.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="list" description="list" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -471,6 +720,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_set_xy" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Create XY</value>
+	  <value key="description">Creates a list of [x,y] coordinates.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="x" data-type="variable" connection-policy="one"/>
         <port id="y" description="y" data-type="variable" connection-policy="one"/>
@@ -480,6 +736,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_get_rgba" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Get RGBA</value>
+	  <value key="description">Gets r,g,b,a color information from list.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="list" description="list" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -491,6 +754,13 @@
       </outputs>
     </node-type>
     <node-type id="__builtin_list_set_range" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Lists</value>
+          <value key="name">Set Range</value>
+	  <value key="description">Creates a range of [start:end] for looping.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="start" description="start" data-type="variable" connection-policy="one"/>
         <port id="end" description="end" data-type="variable" connection-policy="one"/>
@@ -502,6 +772,13 @@
     </node-type>
     <!-- Mathematical -->
     <node-type id="abs" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Absoluate Value</value>
+	  <value key="description">Returns positive number even if value is negative.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -510,6 +787,13 @@
       </outputs>
     </node-type>
     <node-type id="sign" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Signum</value>
+	  <value key="description">Returns 1 if positive and -1 if negative, or 0 if 0.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -518,6 +802,13 @@
       </outputs>
     </node-type>
     <node-type id="sin" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Sine</value>
+	  <value key="description">Sine of angle in degrees.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -526,6 +817,13 @@
       </outputs>
     </node-type>
     <node-type id="cos" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Cosine</value>
+	  <value key="description">Cosine of angle in degrees.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -534,6 +832,13 @@
       </outputs>
     </node-type>
     <node-type id="tan" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Tangent</value>
+	  <value key="description">Tangent of angle in degrees.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -542,6 +847,13 @@
       </outputs>
     </node-type>
     <node-type id="acos" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Arc Cosine</value>
+	  <value key="description">Inverse Cosine, in degrees.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -550,6 +862,13 @@
       </outputs>
     </node-type>
     <node-type id="asin" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Arc Sine</value>
+	  <value key="description">Inverse Sine, in degrees.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -558,6 +877,13 @@
       </outputs>
     </node-type>
     <node-type id="atan" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Arc Tangent</value>
+	  <value key="description">Inverse Tangent, in degrees.  Note, this can be ambiguous, see atan2.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -566,6 +892,13 @@
       </outputs>
     </node-type>
     <node-type id="atan2" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Arc Tangent2</value>
+	  <value key="description">Inverse Tangent, in degrees with both x,y values.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
         <port id="y" description="" data-type="variable" connection-policy="one"/>
@@ -575,6 +908,13 @@
       </outputs>
     </node-type>
     <node-type id="floor" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Floor</value>
+	  <value key="description">Nearest integer smaller than value.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -583,6 +923,13 @@
       </outputs>
     </node-type>
     <node-type id="round" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Round</value>
+	  <value key="description">Nearest integer to value.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -591,6 +938,13 @@
       </outputs>
     </node-type>
     <node-type id="ceil" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Ceiling</value>
+	  <value key="description">Nearest integer larger than value.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -599,6 +953,13 @@
       </outputs>
     </node-type>
     <node-type id="ln" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Natural Log</value>
+	  <value key="description">Natural Logarithm.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -607,6 +968,13 @@
       </outputs>
     </node-type>
     <node-type id="len" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Length</value>
+	  <value key="description">Length of string or array (number of elements).</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -615,6 +983,13 @@
       </outputs>
     </node-type>
     <node-type id="log" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Log10</value>
+	  <value key="description">Logarithm base 10.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -623,6 +998,13 @@
       </outputs>
     </node-type>
     <node-type id="pow" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Power a^b</value>
+	  <value key="description">A raised to the power B.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="a" description="" data-type="variable" connection-policy="one"/>
         <port id="b" description="" data-type="variable" connection-policy="one"/>
@@ -632,6 +1014,13 @@
       </outputs>
     </node-type>
     <node-type id="sqrt" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Square Root</value>
+	  <value key="description">Square Root of value.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -640,6 +1029,13 @@
       </outputs>
     </node-type>
     <node-type id="exp" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Exponential</value>
+	  <value key="description">The exponential function, 'e' raised to the given power.</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -648,6 +1044,13 @@
       </outputs>
     </node-type>
     <node-type id="rands" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Random Sequence</value>
+	  <value key="description">Sequence of (pseudo-)random numbers</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="min" description="min" data-type="variable" connection-policy="one"/>
         <port id="max" description="max" data-type="variable" connection-policy="one"/>
@@ -659,6 +1062,13 @@
       </outputs>
     </node-type>
     <node-type id="min" visibility="public" type="native">
+      <metadata>
+        <data namespace="http://jarney.github.io/nodejs/editor">
+	  <value key="category">Math</value>
+          <value key="name">Minimum</value>
+	  <value key="description">Minimum of two values</value>
+        </data>
+      </metadata>
       <inputs>
         <port id="a" description="" data-type="variable" connection-policy="one"/>
         <port id="b" description="" data-type="variable" connection-policy="one"/>
