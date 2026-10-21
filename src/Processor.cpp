@@ -194,10 +194,17 @@ Processor::processNodeType(
 			nodeType.getDefaultNodeData().getValue(arg.nodePortName).c_str());
 		break;
 	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_DATA:
-		graphInputData.setValue(arg.graphPortName, node.getData().getValue(arg.nodePortName));
+		graphInputData.setValue(
+		    arg.graphPortName,
+		    node.getData().getValue(
+			arg.nodePortName,  // Get data from the node
+			nodeType.getDefaultNodeData().getValue(arg.nodePortName) // Using the node type as backup/default.
+			)
+		    ); 
 		fprintf(stderr, "Sending data from node itself %s %s\n",
 			arg.graphPortName.c_str(),
-			node.getData().getValue(arg.nodePortName).c_str());
+			nodeType.getDefaultNodeData().getValue(arg.nodePortName).c_str() // Using the node type as backup/default.
+		    );
 		break;
 	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_PORT:
 		graphInputData.setValue(arg.graphPortName, fromData.getValue(arg.nodePortName));

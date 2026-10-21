@@ -78,7 +78,6 @@ set(CPP_SOURCE_FILES
   src/engines/openscad/Builtins3D.cpp
   src/engines/openscad/BuiltinsBooleanOperations.cpp
   src/engines/openscad/BuiltinsCore.cpp
-  src/engines/openscad/BuiltinsConstants.cpp
   src/engines/openscad/BuiltinsFlowControl.cpp
   src/engines/openscad/BuiltinsFunctions.cpp
   src/engines/openscad/BuiltinsList.cpp
@@ -87,7 +86,6 @@ set(CPP_SOURCE_FILES
   src/engines/openscad/BuiltinsOther.cpp
   src/engines/openscad/BuiltinsSyntax.cpp
   src/engines/openscad/BuiltinsTransforms.cpp
-  src/engines/openscad/BuiltinsTypeTest.cpp
 )
 
 set(HPP_HEADER_FILES

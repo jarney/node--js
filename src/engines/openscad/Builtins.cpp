@@ -29,12 +29,7 @@ Builtins::registerProcessors(Processor & processor)
     _OPENSCAD_NODE_REGISTER("custom_node", syntax_custom_node);
 
     // Constants
-    _OPENSCAD_NODE_REGISTER("true", const_true);
-    _OPENSCAD_NODE_REGISTER("false", const_false);
-    _OPENSCAD_NODE_REGISTER("const_int", const_int);
-    _OPENSCAD_NODE_REGISTER("const_float", const_float);
-    _OPENSCAD_NODE_REGISTER("const_string", const_string);
-    _OPENSCAD_NODE_REGISTER("undef", const_string);
+    //     All of these are implemented as graphs now.
 
     // Operators
     _OPENSCAD_NODE_REGISTER("add", operator_add);         // parsed
@@ -117,12 +112,7 @@ Builtins::registerProcessors(Processor & processor)
     _OPENSCAD_NODE_REGISTER("function_output", flow_function_output);          // N/A
     
     // Type Test functions
-    _OPENSCAD_NODE_REGISTER("is_bool", typetest_is_bool);     // parsed
-    _OPENSCAD_NODE_REGISTER("is_string", typetest_is_string);   // parsed
-    _OPENSCAD_NODE_REGISTER("is_num", typetest_is_num);      // parsed
-    _OPENSCAD_NODE_REGISTER("is_function", typetest_is_function); // parsed
-    _OPENSCAD_NODE_REGISTER("is_list", typetest_is_list);     // parsed
-    _OPENSCAD_NODE_REGISTER("is_undef", typetest_is_undef);    // parsed
+    //     All of these are implemented as graphs now.
 
     // Other
     _OPENSCAD_NODE_REGISTER("echo", other_echo);

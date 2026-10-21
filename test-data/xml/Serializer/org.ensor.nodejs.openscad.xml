@@ -387,7 +387,10 @@
       </outputs>
     </node-type>
     <!-- Constants -->
-    <node-type id="true" visibility="public" type="native">
+    <node-type id="true" visibility="public" type="graph" graph-id="__internal_constant">
+      <value key="value">true</value>
+      <graph-argument id="in" type="node-type-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -401,7 +404,10 @@
         <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="false" visibility="public" type="native">
+    <node-type id="false" visibility="public" type="graph" graph-id="__internal_constant">
+      <value key="value">false</value>
+      <graph-argument id="in" type="node-type-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -415,7 +421,10 @@
         <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_int" visibility="public" type="native">
+    <node-type id="const_int" visibility="public" type="graph" graph-id="__internal_constant">
+      <value key="value">0</value>
+      <graph-argument id="in" type="node-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -429,7 +438,10 @@
         <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_float" visibility="public" type="native">
+    <node-type id="const_float" visibility="public" type="graph" graph-id="__internal_constant">
+      <value key="value">0.0</value>
+      <graph-argument id="in" type="node-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -443,7 +455,10 @@
         <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="const_string" visibility="public" type="native">
+    <node-type id="const_string" visibility="public" type="graph" graph-id="__internal_string_constant">
+      <value key="value">default-string</value>
+      <graph-argument id="in" type="node-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -457,7 +472,10 @@
         <port id="value" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="undef" visibility="public" type="native">
+    <node-type id="undef" visibility="public" type="graph" graph-id="__internal_constant">
+      <value key="value">undef</value>
+      <graph-argument id="in" type="node-type-data" value="value"/>
+      <graph-result id="out" value="value"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -839,7 +857,7 @@
       </outputs>
     </node-type>
     <!-- Mathematical -->
-    <node-type id="abs" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="abs" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">abs</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -858,7 +876,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sign" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="sign" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">sign</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -877,7 +895,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sin" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="sin" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">sin</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -896,7 +914,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="cos" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="cos" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">cos</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -915,7 +933,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="tan" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="tan" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">tan</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -934,7 +952,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="acos" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="acos" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">acos</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -953,7 +971,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="asin" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="asin" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">asin</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -972,7 +990,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="atan" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="atan" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">atan</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1007,7 +1025,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="floor" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="floor" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">floor</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1026,7 +1044,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="round" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="round" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">round</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1045,7 +1063,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="ceil" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="ceil" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">ceil</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1064,7 +1082,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="ln" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="ln" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">ln</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1083,7 +1101,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="len" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="len" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">len</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1102,7 +1120,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="log" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="log" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">log</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1137,7 +1155,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sqrt" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="sqrt" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">sqrt</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1156,7 +1174,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="exp" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="exp" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">exp</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1218,7 +1236,7 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="norm" visibility="public" type="graph" graph-id="__internal_function">
+    <node-type id="norm" visibility="public" type="graph" graph-id="__internal_unary_function">
       <value key="function">norm</value>
       <graph-argument id="function" type="node-type-data" value="function"/>
       <graph-argument id="in" type="port" value="x"/>
@@ -1458,7 +1476,7 @@
         <port id="value" description="" data-type="variable" connection-policy="one"/>
       </inputs>
       <outputs>
-        <port id="out" description="" data-type="variable" connection-policy="multi"/>
+        <port id="out" description="" data-type="module-instantiation" connection-policy="multi"/>
       </outputs>
     </node-type>
     <node-type id="render" visibility="public" type="native">
@@ -1519,7 +1537,11 @@
       </outputs>
     </node-type>
     <!-- Type Test -->
-    <node-type id="is_bool" visibility="public" type="native">
+    <node-type id="is_bool" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_bool</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1527,7 +1549,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="is_string" visibility="public" type="native">
+    <node-type id="is_string" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_string</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1535,7 +1561,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="is_num" visibility="public" type="native">
+    <node-type id="is_num" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_num</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1543,7 +1573,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="is_function" visibility="public" type="native">
+    <node-type id="is_function" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_function</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1551,7 +1585,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="is_list" visibility="public" type="native">
+    <node-type id="is_list" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_list</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1559,7 +1597,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="is_undef" visibility="public" type="native">
+    <node-type id="is_undef" visibility="public" type="graph" graph-id="__internal_unary_function">
+      <value key="function">is_undef</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1681,7 +1723,7 @@
     </node-type>
   </node-types>
   <graphs>
-    <graph id="__internal_function">
+    <graph id="__internal_unary_function">
       <nodes>
         <node id="concatenate" type="org.ensor.nodejs.core.concatenate">
           <metadata>
@@ -1793,6 +1835,130 @@
         <edge from-node="input" from-port="in" to-node="convert-openscad-variable-to-string" to-port="in"/>
         <edge from-node="string-0" from-port="value" to-node="concatenate-1" to-port="b"/>
         <edge from-node="string" from-port="value" to-node="concatenate" to-port="b"/>
+      </edges>
+    </graph>
+
+    <graph id="__internal_constant">
+      <nodes>
+        <node id="convert-openscad-string-to-variable" type="convert-openscad-string-to-variable">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">84.901680</value>
+              <value key="pos-y">-15.856699</value>
+              <value key="width">302</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="input" type="org.ensor.nodejs.core.input">
+          <outputs>
+            <port id="in" description="in" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+          </outputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">-232.023209</value>
+              <value key="pos-y">-52.580872</value>
+              <value key="width">169</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="output" type="org.ensor.nodejs.core.output">
+          <inputs>
+            <port id="out" description="out" data-type="variable" connection-policy="one"/>
+          </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">492.000000</value>
+              <value key="pos-y">-22.000000</value>
+              <value key="width">173</value>
+            </data>
+          </metadata>
+        </node>
+      </nodes>
+      <edges>
+        <edge from-node="convert-openscad-string-to-variable" from-port="out" to-node="output" to-port="out"/>
+        <edge from-node="input" from-port="in" to-node="convert-openscad-string-to-variable" to-port="in"/>
+      </edges>
+    </graph>
+    <graph id="__internal_string_constant">
+      <nodes>
+        <node id="concatenate" type="org.ensor.nodejs.core.concatenate">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">155.520004</value>
+              <value key="pos-y">-181.647354</value>
+              <value key="width">298</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="concatenate-0" type="org.ensor.nodejs.core.concatenate">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">172.938232</value>
+              <value key="pos-y">57.231361</value>
+              <value key="width">298</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="convert-openscad-string-to-variable" type="convert-openscad-string-to-variable">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">606.204712</value>
+              <value key="pos-y">28.933060</value>
+              <value key="width">302</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="input" type="org.ensor.nodejs.core.input">
+          <outputs>
+            <port id="in" description="in" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+          </outputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">-232.023209</value>
+              <value key="pos-y">-52.580872</value>
+              <value key="width">169</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="output" type="org.ensor.nodejs.core.output">
+          <inputs>
+            <port id="out" description="out" data-type="variable" connection-policy="one"/>
+          </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">923.723572</value>
+              <value key="pos-y">65.091202</value>
+              <value key="width">173</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="string" type="org.ensor.nodejs.core.string">
+          <value key="value">"</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">-293.621765</value>
+              <value key="pos-y">-165.473282</value>
+              <value key="width">369</value>
+            </data>
+          </metadata>
+        </node>
+      </nodes>
+      <edges>
+        <edge from-node="concatenate-0" from-port="out" to-node="convert-openscad-string-to-variable" to-port="in"/>
+        <edge from-node="concatenate" from-port="out" to-node="concatenate-0" to-port="a"/>
+        <edge from-node="convert-openscad-string-to-variable" from-port="out" to-node="output" to-port="out"/>
+        <edge from-node="input" from-port="in" to-node="concatenate" to-port="b"/>
+        <edge from-node="string" from-port="value" to-node="concatenate-0" to-port="b"/>
+        <edge from-node="string" from-port="value" to-node="concatenate" to-port="a"/>
       </edges>
     </graph>
   </graphs>  
