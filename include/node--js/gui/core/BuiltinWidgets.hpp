@@ -3,10 +3,10 @@
 #include <QtCore/QObject>
 #include <QtWidgets/QLabel>
 
-#include "node--js/NodeType.hpp"
-#include "node--js/Node.hpp"
+#include <node--js/NodeType.hpp>
+#include <node--js/Node.hpp>
 
-#include "nodes/gui/NodeEditorWidget.hpp"
+#include <node--js/gui/NodeEditorWidget.hpp>
 
 namespace NodeJS {
     namespace gui {

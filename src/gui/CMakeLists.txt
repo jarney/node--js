@@ -31,6 +31,8 @@ set(NODEJS_QT_GUI_CPP_SOURCE_FILES
     GraphModelAdapter.cpp
     GraphicsScene.cpp
     NodeEditorWidget.cpp
+    core/BuiltinWidgets.cpp
+    openscad/BuiltinWidgets.cpp
 )
 
 set(NODEJS_QT_GUI_HPP_HEADER_FILES
@@ -38,6 +40,8 @@ set(NODEJS_QT_GUI_HPP_HEADER_FILES
     ${PROJECT_SOURCE_DIR}/include/node--js/gui/GraphModelAdapter.hpp
     ${PROJECT_SOURCE_DIR}/include/node--js/gui/GraphicsScene.hpp
     ${PROJECT_SOURCE_DIR}/include/node--js/gui/NodeEditorWidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/node--js/gui/core/BuiltinWidgets.hpp
+    ${PROJECT_SOURCE_DIR}/include/node--js/gui/openscad/BuiltinWidgets.hpp
 )
 
 # If we want to give the option to build a static library,
@@ -98,4 +102,9 @@ set_target_properties(NodeJSGuiQt
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
-
+# Some magic QT stuff for widgets and such.
+set_target_properties(NodeJSGuiQt PROPERTIES
+  AUTOMOC ON
+  AUTOUIC ON
+  AUTORCC ON
+)

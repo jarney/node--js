@@ -32,11 +32,23 @@ option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DEBUG_POSTFIX_D "Append d suffix to debug libraries" OFF)
 option(BUILD_QT_GUI "Build QT GUI" OFF)
+option(BUILD_IDE "Built IDE (implies QT and nodes)" ON)
 option(BUILD_TESTING "Build tests" ON)
 option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
 option(BUILD_MEMCHECK "Valgrind Memory Check" ON)
 
 option(BUILD_PYTHON "Python Module" ON)
+
+# If we're building the IDE, we need the components
+# to build it with.
+if (BUILD_IDE)
+  if (NOT BUILD_QT_GUI)
+      message("Enabling QT GUI (forced on by BUILD_IDE)")
+  else()
+      message("Enabling QT GUI")
+  endif()
+  set(BUILD_QT_GUI ON)
+endif()
 
 if(QT_NODES_DEVELOPER_DEFAULTS)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -166,14 +178,21 @@ set_target_properties(NodeJS
 
 
 ###########
-# Gui/IDE using QtNodes
+# Gui QT components/widgets using QtNodes and Qt6
 ##
 if(BUILD_QT_GUI)
-  message("Enabling QT GUI")
   add_subdirectory(submodules/nodeeditor EXCLUDE_FROM_ALL)
   target_compile_options(QtNodes PUBLIC -DNODE_EDITOR_SHARED)
 
   add_subdirectory(src/gui)
+endif()
+
+###########
+# IDE using widgets above.
+##
+if (BUILD_IDE)
+  message("Enabling IDE")
+  add_subdirectory(src/ide)
 endif()
 
 ###########

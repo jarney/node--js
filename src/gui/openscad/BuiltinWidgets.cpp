@@ -1,4 +1,4 @@
-#include "BuiltinWidgets.hpp"
+#include <node--js/gui/openscad/BuiltinWidgets.hpp>
 
 #include <QtWidgets/QLineEdit>
 #include <QIntValidator>
