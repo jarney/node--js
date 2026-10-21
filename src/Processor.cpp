@@ -2,6 +2,7 @@
 #include "node--js/NodeGraph.hpp"
 #include "node--js/NodeModule.hpp"
 #include "node--js/Natives.hpp"
+#include "node--js/QualifiedIdentifier.hpp"
 #include <optional>
 
 using namespace NodeJS::core;
@@ -152,12 +153,24 @@ Processor::processNodeType(
     }
     else if (nodeType.getType() == NodeType::Type::GRAPH) {
 	NodeModule & nodeModule = graph.getModule();
-	NodeGraph *subgraph = nodeModule.getGraph(nodeType.getGraphId());
+	
+	QualifiedIdentifier qualifiedName(nodeType.getGraphId());
+	std::string qualifiedGraphId;
+	if (qualifiedName.isQualified()) {
+	    qualifiedGraphId = nodeType.getGraphId();
+	}
+	else {
+	    qualifiedGraphId = nodeType.getPackage() + "." + qualifiedName.getName();
+	    fprintf(stderr, "Graph is not qualified, so we should qualify it with our package name %s\n", qualifiedGraphId.c_str());
+	}
+	
+	NodeGraph *subgraph = nodeModule.getGraph(qualifiedGraphId);
 	if (subgraph == nullptr) {
 	    fprintf(stderr, "No such graph found %s\n", nodeType.getGraphId().c_str());
 	    default_processor(*this, node, fromData, toData);
 	    return;
 	}
+	
 	// Rules:
 	// - Only one terminal node called "output".
 	// - Each output corresponds to the node type's output ports.
@@ -167,7 +180,40 @@ Processor::processNodeType(
 	// - Module Instantiation must be a value by itself (this is 'geometry')
 	// - Function definition is also its own thing producing a value.
 	// - Module definition also produces its own thing.
-	processGraph(*subgraph, fromData, toData);
+
+	// Move data from here into ports if available to
+	// provide "extra" inputs to graphs.
+	ConnectionData graphInputData;
+	for (const auto & it : nodeType.getGraphArguments()) {
+	    const NodeTypeGraphArgument & arg = it.second;
+	    switch (arg.argType) {
+	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_TYPE_DATA:
+		graphInputData.setValue(arg.graphPortName, nodeType.getDefaultNodeData().getValue(arg.nodePortName));
+		fprintf(stderr, "Sending data from node type %s %s\n",
+			arg.graphPortName.c_str(),
+			nodeType.getDefaultNodeData().getValue(arg.nodePortName).c_str());
+		break;
+	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_DATA:
+		graphInputData.setValue(arg.graphPortName, node.getData().getValue(arg.nodePortName));
+		fprintf(stderr, "Sending data from node itself %s %s\n",
+			arg.graphPortName.c_str(),
+			node.getData().getValue(arg.nodePortName).c_str());
+		break;
+	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_PORT:
+		graphInputData.setValue(arg.graphPortName, fromData.getValue(arg.nodePortName));
+		fprintf(stderr, "Sending data from node's input port %s %s\n",
+			arg.graphPortName.c_str(),
+			node.getData().getValue(arg.nodePortName).c_str());
+		break;
+	    }
+	}
+	ConnectionData graphOutputData;
+	processGraph(*subgraph, graphInputData, graphOutputData);
+	for (const auto & it : nodeType.getGraphResults()) {
+	    const NodeTypeGraphArgument & arg = it.second;
+	    toData.setValue(arg.nodePortName, graphOutputData.getValue(arg.graphPortName));
+	}
+	
     }
 }
 

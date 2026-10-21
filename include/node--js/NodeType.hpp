@@ -28,6 +28,19 @@ namespace NodeJS {
 	 */
 	typedef std::string PortId;
 	typedef std::string NodeTypeId;
+
+	class NodeTypeGraphArgument {
+	public:
+	    typedef enum {
+		NODE_TYPE_DATA = 0,
+		NODE_DATA = 1,
+		NODE_PORT = 2
+	    } Type;
+	    
+	    std::string graphPortName;
+	    Type argType;
+	    std::string nodePortName;
+	};
 	
 	class NodeType {
 	public:
@@ -79,6 +92,7 @@ namespace NodeJS {
 	    ~NodeType() = default;
 
 	    const PortId & getLocalId() const;
+	    const std::string & getPackage() const;
 	    const PortId & getFullyQualifiedId() const;
 	    void setId(PortId id, PortId package);
 	    
@@ -147,9 +161,20 @@ namespace NodeJS {
 	     */
 	    const Metadata & getMetadata(void) const;
 	    Metadata & getMetadata(void);
+
+	    void setGraphArgument(std::string graphPortName,
+				  NodeTypeGraphArgument::Type argType,
+				  std::string nodePortName);
+	    void setGraphResult(std::string graphPortName,
+				NodeTypeGraphArgument::Type argType,
+				std::string nodePortName);
+
+	    const std::map<std::string, NodeTypeGraphArgument> & getGraphArguments() const;
+	    const std::map<std::string, NodeTypeGraphArgument> & getGraphResults() const;
 	    
 	private:
 	    std::string mId;
+	    std::string mPackage;
 	    std::string mFullyQualifiedId;
 	    std::string mGraphId;
 	    std::string mAliasNodeTypeId;
@@ -164,6 +189,8 @@ namespace NodeJS {
 	    ConnectionData mDefaultNodeData;
 	    
 	    Metadata mMetadata;
+	    std::map<std::string, NodeTypeGraphArgument> mGraphArgMap;
+	    std::map<std::string, NodeTypeGraphArgument> mGraphResultMap;
 	};
     }
 }

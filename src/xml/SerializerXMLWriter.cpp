@@ -143,6 +143,34 @@ SerializerXMLWriter::writeNodeType(
     if (node_type.getType() == NodeType::Type::GRAPH) {
 	nodeType.setAttribute("type", "graph");
 	nodeType.setAttribute("graph-id", node_type.getGraphId());
+	for (const auto & it : node_type.getGraphArguments()) {
+	    const NodeTypeGraphArgument & arg = it.second;
+	    XmlNodeWrapper graphArg("graph-argument");
+	    std::string argTypeStr;
+	    switch (arg.argType) {
+	    case NodeTypeGraphArgument::Type::NODE_TYPE_DATA:
+		argTypeStr = "node-type-data";
+		break;
+	    case NodeTypeGraphArgument::Type::NODE_DATA:
+		argTypeStr = "node-data";
+		break;
+	    case NodeTypeGraphArgument::Type::NODE_PORT:
+	    default:
+		argTypeStr = "port";
+		break;
+	    }
+	    graphArg.setAttribute("id", arg.graphPortName);
+	    graphArg.setAttribute("type", argTypeStr);
+	    graphArg.setAttribute("value", arg.nodePortName);
+	    nodeType.addChild(graphArg);
+	}
+	for (const auto & it : node_type.getGraphResults()) {
+	    const NodeTypeGraphArgument & arg = it.second;
+	    XmlNodeWrapper graphResult("graph-result");
+	    graphResult.setAttribute("id", arg.graphPortName);
+	    graphResult.setAttribute("value", arg.nodePortName);
+	    nodeType.addChild(graphResult);
+	}
     }
     else if (node_type.getType() == NodeType::Type::ALIAS) {
 	nodeType.setAttribute("type", "alias");
@@ -168,7 +196,7 @@ SerializerXMLWriter::writeNodeType(
 	writeGraphNodeData(defaultNodeData, defaultNodeDataNode);
 	nodeType.addChild(defaultNodeDataNode);
     }
-    
+
     nodeTypesNode.addChild(nodeType);
 }
 

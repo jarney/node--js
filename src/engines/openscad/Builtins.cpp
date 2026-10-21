@@ -142,28 +142,13 @@ Builtins::registerProcessors(Processor & processor)
     _OPENSCAD_NODE_REGISTER("parent_module", function_parent_module); // parsed
     
     // Math functions:
-    _OPENSCAD_NODE_REGISTER("abs", math_abs);             // parsed
-    _OPENSCAD_NODE_REGISTER("sign", math_sign);            // parsed
-    _OPENSCAD_NODE_REGISTER("sin", math_sin);             // parsed
-    _OPENSCAD_NODE_REGISTER("cos", math_cos);             // parsed
-    _OPENSCAD_NODE_REGISTER("tan", math_tan);             // parsed
-    _OPENSCAD_NODE_REGISTER("acos", math_acos);            // parsed
-    _OPENSCAD_NODE_REGISTER("asin", math_asin);            // parsed
-    _OPENSCAD_NODE_REGISTER("atan", math_atan);            // parsed
+    // Most of these are implemented as
+    // graphs, just a few are still natives.
     _OPENSCAD_NODE_REGISTER("atan2", math_atan2);           // parsed
-    _OPENSCAD_NODE_REGISTER("floor", math_floor);           // parsed
-    _OPENSCAD_NODE_REGISTER("round", math_round);           // parsed
-    _OPENSCAD_NODE_REGISTER("ceil", math_ceil);            // parsed
-    _OPENSCAD_NODE_REGISTER("ln", math_ln);              // parsed
-    _OPENSCAD_NODE_REGISTER("len", math_len);             // parsed
-    _OPENSCAD_NODE_REGISTER("log", math_log);             // parsed
     _OPENSCAD_NODE_REGISTER("pow", math_pow);             // parsed
-    _OPENSCAD_NODE_REGISTER("sqrt", math_sqrt);            // parsed
-    _OPENSCAD_NODE_REGISTER("exp", math_exp);             // parsed
     _OPENSCAD_NODE_REGISTER("rands", math_rands);           // parsed
     _OPENSCAD_NODE_REGISTER("min", math_min);             // parsed
     _OPENSCAD_NODE_REGISTER("max", math_max);             // parsed
-    _OPENSCAD_NODE_REGISTER("norm", math_norm);            // parsed
     _OPENSCAD_NODE_REGISTER("cross", math_cross);           // parsed
 }
 

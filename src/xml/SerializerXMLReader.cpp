@@ -310,6 +310,42 @@ SerializerXMLReader::parseNodeType(
 	}
 	std::string graphId = nodeTypeNode.getAttribute("graph-id");
 	nodeType->setGraphId(graphId);
+	for (XmlNodeWrapper graphArgumentNode : nodeTypeNode.getChildrenByTagName("graph-argument")) {
+	    if (graphArgumentNode.hasAttribute("id") &&
+		graphArgumentNode.hasAttribute("value") &&
+		graphArgumentNode.hasAttribute("type")) {
+		
+		NodeTypeGraphArgument::Type argType = NodeTypeGraphArgument::Type::NODE_PORT;
+		std::string argTypeStr = graphArgumentNode.getAttribute("type");
+		if (argTypeStr == "node-type-data") {
+		    argType = NodeTypeGraphArgument::Type::NODE_TYPE_DATA;
+		}
+		else if (argTypeStr == "node-data") {
+		    argType = NodeTypeGraphArgument::Type::NODE_DATA;
+		}
+		else if (argTypeStr == "port") {
+		    argType = NodeTypeGraphArgument::Type::NODE_PORT;
+		}
+		else {
+		    return parseError(SerializerErrorCode::NODE_TYPE_GRAPH_ARGUMENT_TYPE_INVALID, graphArgumentNode, "Node type '" + id + "' has graph argument with invalid type '" + argTypeStr + "'.");
+		}
+		nodeType->setGraphArgument(
+		    graphArgumentNode.getAttribute("id"),
+		    argType,
+		    graphArgumentNode.getAttribute("value")
+		    );
+	    }
+	}
+	for (XmlNodeWrapper graphArgumentNode : nodeTypeNode.getChildrenByTagName("graph-result")) {
+	    if (graphArgumentNode.hasAttribute("id") &&
+		graphArgumentNode.hasAttribute("value")) {
+		nodeType->setGraphResult(
+		    graphArgumentNode.getAttribute("id"),
+		    NodeTypeGraphArgument::Type::NODE_PORT, // This is the only type that makes sense for results, but we wanted to re-use the data-structure
+		    graphArgumentNode.getAttribute("value")
+		    );
+	    }
+	}
     }
     else if (type == NodeType::Type::ALIAS) {
 	if (!nodeTypeNode.hasAttribute("alias-node-type-id")) {

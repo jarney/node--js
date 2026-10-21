@@ -14,10 +14,17 @@ NodeType::getFullyQualifiedId() const
     return mFullyQualifiedId;
 }
 
+const std::string &
+NodeType::getPackage() const
+{
+    return mPackage;
+}
+
 void
 NodeType::setId(std::string id, std::string package)
 {
     mId = id;
+    mPackage = package;
     mFullyQualifiedId = package + std::string(".") + id;
 }
 
@@ -119,3 +126,41 @@ NodeType::getMetadata(void)
 {
     return mMetadata;
 }
+
+void
+NodeType::setGraphArgument(std::string graphPortName,
+			   NodeTypeGraphArgument::Type argType,
+			   std::string nodePortName)
+{
+    NodeTypeGraphArgument arg;
+    arg.graphPortName = graphPortName;
+    arg.argType = argType;
+    arg.nodePortName = nodePortName;
+    mGraphArgMap[graphPortName] = arg;
+}
+void
+NodeType::setGraphResult(std::string graphPortName,
+			   NodeTypeGraphArgument::Type argType,
+			   std::string nodePortName)
+{
+    NodeTypeGraphArgument arg;
+    arg.graphPortName = graphPortName;
+    arg.argType = argType;
+    arg.nodePortName = nodePortName;
+    mGraphResultMap[graphPortName] = arg;
+}
+
+
+const std::map<std::string, NodeTypeGraphArgument> &
+NodeType::getGraphArguments() const
+{
+    return mGraphArgMap;
+}
+
+const std::map<std::string, NodeTypeGraphArgument> &
+NodeType::getGraphResults() const
+{
+    return mGraphResultMap;
+}
+
+	    

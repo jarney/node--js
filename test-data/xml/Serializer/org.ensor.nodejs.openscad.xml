@@ -839,7 +839,11 @@
       </outputs>
     </node-type>
     <!-- Mathematical -->
-    <node-type id="abs" visibility="public" type="native">
+    <node-type id="abs" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">abs</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -854,7 +858,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sign" visibility="public" type="native">
+    <node-type id="sign" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">sign</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -869,7 +877,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sin" visibility="public" type="native">
+    <node-type id="sin" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">sin</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -884,7 +896,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="cos" visibility="public" type="native">
+    <node-type id="cos" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">cos</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -899,7 +915,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="tan" visibility="public" type="native">
+    <node-type id="tan" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">tan</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -914,7 +934,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="acos" visibility="public" type="native">
+    <node-type id="acos" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">acos</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -929,7 +953,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="asin" visibility="public" type="native">
+    <node-type id="asin" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">asin</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -944,7 +972,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="atan" visibility="public" type="native">
+    <node-type id="atan" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">atan</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -975,7 +1007,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="floor" visibility="public" type="native">
+    <node-type id="floor" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">floor</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -990,7 +1026,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="round" visibility="public" type="native">
+    <node-type id="round" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">round</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1005,7 +1045,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="ceil" visibility="public" type="native">
+    <node-type id="ceil" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">ceil</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1020,7 +1064,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="ln" visibility="public" type="native">
+    <node-type id="ln" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">ln</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1035,7 +1083,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="len" visibility="public" type="native">
+    <node-type id="len" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">len</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1050,7 +1102,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="log" visibility="public" type="native">
+    <node-type id="log" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">log</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1081,7 +1137,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="sqrt" visibility="public" type="native">
+    <node-type id="sqrt" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">sqrt</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1096,7 +1156,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="exp" visibility="public" type="native">
+    <node-type id="exp" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">exp</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1154,7 +1218,11 @@
         <port id="out" description="" data-type="variable" connection-policy="multi"/>
       </outputs>
     </node-type>
-    <node-type id="norm" visibility="public" type="native">
+    <node-type id="norm" visibility="public" type="graph" graph-id="__internal_function">
+      <value key="function">norm</value>
+      <graph-argument id="function" type="node-type-data" value="function"/>
+      <graph-argument id="in" type="port" value="x"/>
+      <graph-result id="out" value="out"/>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1612,4 +1680,120 @@
       </outputs>
     </node-type>
   </node-types>
+  <graphs>
+    <graph id="__internal_function">
+      <nodes>
+        <node id="concatenate" type="org.ensor.nodejs.core.concatenate">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">720.000000</value>
+              <value key="pos-y">110.000000</value>
+              <value key="width">298</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="concatenate-0" type="org.ensor.nodejs.core.concatenate">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">706.000000</value>
+              <value key="pos-y">289.000000</value>
+              <value key="width">298</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="concatenate-1" type="org.ensor.nodejs.core.concatenate">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">768.000000</value>
+              <value key="pos-y">457.000000</value>
+              <value key="width">298</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="convert-openscad-string-to-variable" type="convert-openscad-string-to-variable">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">1183.649780</value>
+              <value key="pos-y">334.803802</value>
+              <value key="width">302</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="convert-openscad-variable-to-string" type="convert-openscad-variable-to-string">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">316.203583</value>
+              <value key="pos-y">326.349182</value>
+              <value key="width">302</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="input" type="org.ensor.nodejs.core.input">
+          <outputs>
+            <port id="in" description="out" data-type="variable" connection-policy="one"/>
+            <port id="function" description="out" data-type="org.ensor.nodejs.core.string" connection-policy="one"/>
+          </outputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">-17.481159</value>
+              <value key="pos-y">241.189651</value>
+              <value key="width">173</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="output" type="org.ensor.nodejs.core.output">
+          <inputs>
+            <port id="out" description="out" data-type="variable" connection-policy="one"/>
+          </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">1615.401855</value>
+              <value key="pos-y">323.709930</value>
+              <value key="width">173</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="string" type="org.ensor.nodejs.core.string">
+          <value key="value">(</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">103.513130</value>
+              <value key="pos-y">87.362511</value>
+              <value key="width">369</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="string-0" type="org.ensor.nodejs.core.string">
+          <value key="value">)</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">156.295090</value>
+              <value key="pos-y">509.493011</value>
+              <value key="width">369</value>
+            </data>
+          </metadata>
+        </node>
+      </nodes>
+      <edges>
+        <edge from-node="concatenate-0" from-port="out" to-node="concatenate-1" to-port="a"/>
+        <edge from-node="concatenate-1" from-port="out" to-node="convert-openscad-string-to-variable" to-port="in"/>
+        <edge from-node="concatenate" from-port="out" to-node="concatenate-0" to-port="a"/>
+        <edge from-node="convert-openscad-string-to-variable" from-port="out" to-node="output" to-port="out"/>
+        <edge from-node="convert-openscad-variable-to-string" from-port="out" to-node="concatenate-0" to-port="b"/>
+        <edge from-node="input" from-port="function" to-node="concatenate" to-port="a"/>
+        <edge from-node="input" from-port="in" to-node="convert-openscad-variable-to-string" to-port="in"/>
+        <edge from-node="string-0" from-port="value" to-node="concatenate-1" to-port="b"/>
+        <edge from-node="string" from-port="value" to-node="concatenate" to-port="b"/>
+      </edges>
+    </graph>
+  </graphs>  
 </node-module>

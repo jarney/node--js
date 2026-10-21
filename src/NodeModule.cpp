@@ -171,13 +171,24 @@ NodeModule::addGraph(std::string id)
 }
 
 NodeGraph *
-NodeModule::getGraph(std::string id) const
+NodeModule::getGraph(std::string name) const
 {
-    const auto & it = mGraphs.find(id);
-    if (it == mGraphs.end()) {
-	return nullptr;
+    QualifiedIdentifier qualifiedName(name);
+    if (qualifiedName.isQualified() && qualifiedName.getNamespace() != mPackage) {
+	// Search the scopes.
+	const NodeModule *searchedModule = getImportModule(qualifiedName.getNamespace());
+	if (searchedModule == nullptr) {
+	    return nullptr;
+	}
+	return searchedModule->getGraph(qualifiedName.getName());
     }
-    return it->second.get();
+    else {
+	const auto & it = mGraphs.find(qualifiedName.getName());
+	if (it == mGraphs.end()) {
+	    return nullptr;
+	}
+	return it->second.get();
+    }
 }
 
 bool
