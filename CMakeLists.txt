@@ -23,13 +23,15 @@ else()
   set(is_root_project ON)
 endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+
 set(NODEJS_DEVELOPER_DEFAULTS "${is_root_project}" CACHE BOOL "Turns on default settings for development of NodeJS")
 
 option(BUILD_EXAMPLES "Build Examples" ON)
 option(BUILD_DOCS "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DEBUG_POSTFIX_D "Append d suffix to debug libraries" OFF)
-
+option(BUILD_QT_GUI "Build QT GUI" OFF)
 option(BUILD_TESTING "Build tests" ON)
 option(BUILD_CODE_COVERAGE "Built code-coverage" "${NODEJS_DEVELOPER_DEFAULTS}")
 option(BUILD_MEMCHECK "Valgrind Memory Check" ON)
@@ -50,7 +52,7 @@ if(BUILD_DEBUG_POSTFIX_D)
 endif()
 
 
-set(CPP_SOURCE_FILES
+set(NODEJS_CORE_CPP_SOURCE_FILES
   src/main.cpp
   src/DataType.cpp
   src/QualifiedIdentifier.cpp
@@ -88,7 +90,7 @@ set(CPP_SOURCE_FILES
   src/engines/openscad/BuiltinsTransforms.cpp
 )
 
-set(HPP_HEADER_FILES
+set(NODEJS_CORE_HPP_HEADER_FILES
     include/node--js/main.hpp
     include/node--js/DataType.hpp
     include/node--js/NodeType.hpp
@@ -107,8 +109,8 @@ set(HPP_HEADER_FILES
 # If we want to give the option to build a static library,
 # set BUILD_SHARED_LIBS option to OFF
 add_library(NodeJS
-  ${CPP_SOURCE_FILES}
-  ${HPP_HEADER_FILES}
+  ${NODEJS_CORE_CPP_SOURCE_FILES}
+  ${NODEJS_CORE_HPP_HEADER_FILES}
 )
 
 add_library(NodeJS::NodeJS ALIAS NodeJS)
@@ -162,10 +164,23 @@ set_target_properties(NodeJS
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
+
+###########
+# Gui/IDE using QtNodes
+##
+if(BUILD_QT_GUI)
+  message("Enabling QT GUI")
+  add_subdirectory(submodules/nodeeditor EXCLUDE_FROM_ALL)
+  target_compile_options(QtNodes PUBLIC -DNODE_EDITOR_SHARED)
+
+  add_subdirectory(src/gui)
+endif()
+
 ###########
 # Examples
 ##
 if(BUILD_EXAMPLES)
+  message("Enabling Examples")
   add_subdirectory(examples)
 endif()
 
