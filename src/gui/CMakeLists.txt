@@ -1,29 +1,29 @@
-  find_package(Qt6 COMPONENTS Core Core5Compat Widgets Multimedia OpenGL OpenGLWidgets Concurrent Network Svg ${QT_TEST_IF_ANY} REQUIRED QUIET)
-    message(STATUS "Qt6: ${Qt6_VERSION}")
+find_package(Qt6 COMPONENTS Core Core5Compat Widgets Multimedia OpenGL OpenGLWidgets Concurrent Network Svg ${QT_TEST_IF_ANY} REQUIRED QUIET)
+message(STATUS "Qt6: ${Qt6_VERSION}")
 
-    if (Qt6_POSITION_INDEPENDENT_CODE)
-      set_target_properties(OpenSCADLibInternal svg OpenSCADExe PROPERTIES
-	POSITION_INDEPENDENT_CODE ON
-      )
-    endif()
+if (Qt6_POSITION_INDEPENDENT_CODE)
+  set_target_properties(OpenSCADLibInternal svg OpenSCADExe PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+  )
+endif()
 
-    find_package(Qt6QScintilla 2.8.0 REQUIRED)
-    message(STATUS "QScintilla: ${QT6QSCINTILLA_VERSION_STRING}")
+find_package(Qt6QScintilla 2.8.0 REQUIRED)
+message(STATUS "QScintilla: ${QT6QSCINTILLA_VERSION_STRING}")
 
-    if(ENABLE_QTDBUS)
-      find_package(Qt6DBus QUIET)
-      if (Qt6DBus_FOUND)
-        message(STATUS "DBus input driver enabled")
-        target_compile_definitions(OpenSCADLibInternal PUBLIC ENABLE_DBUS)
-        set(INPUT_DRIVER_DBUS_SOURCES src/gui/input/DBusInputDriver.cc)
-        qt6_add_dbus_interface(INPUT_DRIVER_DBUS_SOURCES org.openscad.OpenSCAD.xml openscad_interface)
-        qt6_add_dbus_adaptor(INPUT_DRIVER_DBUS_SOURCES org.openscad.OpenSCAD.xml gui/input/DBusInputDriver.h DBusInputDriver openscad_adaptor)
-      else()
-        message(STATUS "DBus input driver disabled as the QtDBus module could not be found.")
-      endif()
-    else()
-      message(STATUS "DBus input driver disabled per user request.")
-    endif()
+if(ENABLE_QTDBUS)
+  find_package(Qt6DBus QUIET)
+  if (Qt6DBus_FOUND)
+    message(STATUS "DBus input driver enabled")
+    target_compile_definitions(OpenSCADLibInternal PUBLIC ENABLE_DBUS)
+    set(INPUT_DRIVER_DBUS_SOURCES src/gui/input/DBusInputDriver.cc)
+    qt6_add_dbus_interface(INPUT_DRIVER_DBUS_SOURCES org.openscad.OpenSCAD.xml openscad_interface)
+    qt6_add_dbus_adaptor(INPUT_DRIVER_DBUS_SOURCES org.openscad.OpenSCAD.xml gui/input/DBusInputDriver.h DBusInputDriver openscad_adaptor)
+  else()
+    message(STATUS "DBus input driver disabled as the QtDBus module could not be found.")
+  endif()
+else()
+  message(STATUS "DBus input driver disabled per user request.")
+endif()
 
 
 set(NODEJS_QT_GUI_CPP_SOURCE_FILES

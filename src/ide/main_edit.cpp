@@ -11,7 +11,12 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QTabWidget>
+
+// For project navigation tree on left.
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QHeaderView>
 
 #include <QtGui/QScreen>
 #include <iostream>
@@ -39,6 +44,29 @@ write_module_to_source_tab(const NodeModule & nodeModule, QsciScintilla *qsci_so
 
 void
 write_module_to_output_tab(const NodeModule & nodeModule, QsciScintilla *qsci_output, std::string graphId);
+
+
+class EditorContainerWidget : public QWidget {
+public:
+    EditorContainerWidget();
+    ~EditorContainerWidget() = default;
+    QHBoxLayout & getLayout() const;
+private:
+    std::unique_ptr<QHBoxLayout> layout;
+};
+
+QHBoxLayout &
+EditorContainerWidget::getLayout() const
+{
+    return *layout.get();
+}
+
+EditorContainerWidget::EditorContainerWidget()
+{
+    layout = std::make_unique<QHBoxLayout>(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+}
 
 int main(int argc, char *argv[])
 {
@@ -68,26 +96,67 @@ int main(int argc, char *argv[])
 
     QWidget mainWidget;
 
+    
+    // Menu stuff should move to be on it own
+    // maintained separately.
+
     auto menuBar = new QMenuBar();
     QMenu *menu = menuBar->addMenu("File");
 
-    auto saveAction = menu->addAction("Save Scene");
-    saveAction->setShortcut(QKeySequence::Save);
-
-    auto loadAction = menu->addAction("Load Scene");
+    auto loadAction = menu->addAction("Load...");
     loadAction->setShortcut(QKeySequence::Open);
 
-    auto groupAction = menu->addAction("Create Group");
-    groupAction->setShortcut(QKeySequence::Close);
+    auto saveAction = menu->addAction("Save Module");
+    saveAction->setShortcut(QKeySequence::Save);
 
+    auto saveAsAction = menu->addAction("Save As...");
+
+    auto closeAction = menu->addAction("Close");
+    closeAction->setShortcut(QKeySequence::Close);
+
+    auto quitAction = menu->addAction("Quit");
+    quitAction->setShortcut(QKeySequence::Quit);
+    
     QVBoxLayout *l = new QVBoxLayout(&mainWidget);
     l->setContentsMargins(0, 0, 0, 0);
     l->setSpacing(0);
     l->addWidget(menuBar);
 
+    EditorContainerWidget *editorWidget = new EditorContainerWidget();
+
+    {
+	// Tree view should be moved to its own class,
+	// this contains a list of all the 'open' modules.
+	QTreeWidget *treeView = new QTreeWidget(editorWidget);
+	treeView->header()->close();
+	editorWidget->getLayout().addWidget(treeView);
+
+        auto moduleItem = new QTreeWidgetItem(treeView);
+	moduleItem->setExpanded(true); // We want to see all of the modules.
+	moduleItem->setText(0, "org.ensor.nodejs.openscad");
+	moduleItem->setToolTip(0, "Tool Tip for item");
+
+	auto dataTypesItem = new QTreeWidgetItem(moduleItem);
+	dataTypesItem->setText(0, "Data Types");
+
+	auto dataType0Item = new QTreeWidgetItem(dataTypesItem);
+	dataType0Item->setText(0, "variable");
+	
+	auto nodeTypesItem = new QTreeWidgetItem(moduleItem);
+	nodeTypesItem->setText(0, "Node Types");
+
+	auto nodeType0Item = new QTreeWidgetItem(nodeTypesItem);
+	nodeType0Item->setText(0, "String");
+
+	auto graphsItem = new QTreeWidgetItem(moduleItem);
+	graphsItem->setText(0, "Graphs");
+    }
+    
     auto qtab = new QTabWidget(&mainWidget);
     auto qtabLayout = new QVBoxLayout(qtab);
-    l->addWidget(qtab);
+    editorWidget->getLayout().addWidget(qtab);
+
+    l->addWidget(editorWidget);
 
     std::string graphId(argv[2]);
     NodeEditorWidget *jw = new NodeEditorWidget(nodeModule);
@@ -136,12 +205,17 @@ int main(int argc, char *argv[])
 #endif
     });
 
-    QObject::connect(groupAction, &QAction::triggered, [jw]() {
-	std::vector<QtNodes::NodeGraphicsObject*> groupNodes = jw->selectedNodes();
-	jw->createGroup(groupNodes, QString("Some Group"));
+    QObject::connect(closeAction, &QAction::triggered, [jw, qtab]() {
+	// This isn't the right action, but it's close until we
+	// redo the whole tab system to include different modules.
+	qtab->removeTab(0);
+	fprintf(stderr, "Closing module\n");
     });
-    
-    mainWidget.setWindowTitle("[*]Data Flow: simplest calculator");
+    QObject::connect(quitAction, &QAction::triggered, [jw]() {
+	QApplication::quit();
+    });
+
+    mainWidget.setWindowTitle("[*]node--js IDE");
     mainWidget.resize(800, 600);
     // Center window.
     mainWidget.move(QApplication::primaryScreen()->availableGeometry().center()
