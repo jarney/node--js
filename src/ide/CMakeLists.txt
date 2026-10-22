@@ -10,7 +10,8 @@ set(NODEJS_IDE_SOURCE_FILES
 
 set(NODEJS_IDE_HEADER_FILES )
 
-add_executable(NodeJSIDE ${NODEJS_IDE_SOURCE_FILES})
+add_executable(NodeJSIDE ${NODEJS_IDE_SOURCE_FILES}
+  grapheditpanel.h grapheditpanel.cpp grapheditpanel.ui)
 set_target_properties(NodeJSIDE PROPERTIES
   OUTPUT_NAME "ide"
 )

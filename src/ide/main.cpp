@@ -8,6 +8,8 @@ int main(int argc, char *argv[])
     Ui::MainWindow ui;
     ui.setupUi(&widget);
 
+
+    
     widget.show();
     return app.exec();
 }
