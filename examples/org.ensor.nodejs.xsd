@@ -22,13 +22,13 @@
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="value" codegen:name="values" type="node:NameValuePair"/>
     </xsd:sequence>
-    <xsd:attribute name="namespace"/>
+    <xsd:attribute name="namespace" codegen:name="ns"/>
   </xsd:complexType>
   
   <xsd:complexType name="Metadata">
-    <xsd:all>
-      <xsd:element name="data" type="node:MetadataWithNamespace" minOccurs="0"/>
-    </xsd:all>
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="data" type="node:MetadataWithNamespace" codegen:map-by="ns"/>
+    </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="Package">
@@ -88,7 +88,7 @@
 
   <xsd:complexType name="GraphResultList">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="graph-result" type="node:GraphResult"/>
+      <xsd:element name="graph-result" codegen:name="graphResults" type="node:GraphResult"/>
     </xsd:sequence>
   </xsd:complexType>
 
@@ -113,13 +113,26 @@
     </xsd:restriction>
   </xsd:simpleType>
   
+  <xsd:complexType name="Port">
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="description"/>
+    <xsd:attribute name="data-type" codegen:name="dataType"/>
+    <xsd:attribute name="connection-policy" codegen:name="connectionPolicy" type="node:PortConnectionPolicy"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="PortList">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="port" codegen:name="ports" type="node:Port"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
   <xsd:complexType name="NodeType">
     <xsd:all>
-      <xsd:element name="inputs" type="node:InputList" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="outputs" type="node:OutputList" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="inputs" type="node:PortList" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="outputs" type="node:PortList" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="metadata" type="node:Metadata" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="graph-arguments" codegen:name="graphArguments" type="node:GraphArgumentList" minOccurs="0"/>
-      <xsd:element name="graph-results" codegen:name="graphArguments" type="node:GraphResultList" minOccurs="0"/>
+      <xsd:element name="graph-results" codegen:name="graphResults" type="node:GraphResultList" minOccurs="0"/>
       <xsd:element name="data" type="node:MetadataWithoutNamespace" minOccurs="0"/>
     </xsd:all>
     <xsd:attribute name="id"/>
@@ -142,29 +155,10 @@
     </xsd:restriction>
   </xsd:simpleType>
   
-  <xsd:complexType name="Port">
-    <xsd:attribute name="id"/>
-    <xsd:attribute name="description"/>
-    <xsd:attribute name="data-type"/>
-    <xsd:attribute name="connection-policy" type="node:PortConnectionPolicy"/>
-  </xsd:complexType>
-  
-  <xsd:complexType name="InputList">
-    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="port" type="node:Port"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  
-  <xsd:complexType name="OutputList">
-    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-    <xsd:element name="port" type="node:Port"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  
   <xsd:complexType name="Node">
     <xsd:all>
-      <xsd:element name="inputs" type="node:InputList" minOccurs="0"/>
-      <xsd:element name="outputs" type="node:OutputList" minOccurs="0"/>
+      <xsd:element name="inputs" type="node:PortList" minOccurs="0"/>
+      <xsd:element name="outputs" type="node:PortList" minOccurs="0"/>
       <xsd:element name="data" type="node:MetadataWithoutNamespace" minOccurs="0"/>
       <xsd:element name="metadata" type="node:Metadata" minOccurs="0"/>
     </xsd:all>
@@ -179,10 +173,10 @@
   </xsd:complexType>
 
   <xsd:complexType name="Edge">
-    <xsd:attribute name="from-node"/>
-    <xsd:attribute name="from-port"/>
-    <xsd:attribute name="to-node"/>
-    <xsd:attribute name="to-port"/>
+    <xsd:attribute name="from-node" codegen:name="fromNode"/>
+    <xsd:attribute name="from-port" codegen:name="fromPort"/>
+    <xsd:attribute name="to-node" codegen:name="toNode"/>
+    <xsd:attribute name="to-port" codegen:name="toPort"/>
   </xsd:complexType>
   
   <xsd:complexType name="EdgeList">

@@ -63,3 +63,14 @@ target_include_directories(process PUBLIC ${Boost_INCLUDE_DIR} )
 
 target_link_libraries(process NodeJS ${Boost_LIBRARIES})
 
+#########################################
+# Generated header.
+#########################################
+add_executable(gen)
+add_custom_command(
+  OUTPUT generated.hpp
+  COMMAND xsltproc ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl ${CMAKE_CURRENT_SOURCE_DIR}/org.ensor.nodejs.xsd > ${CMAKE_CURRENT_SOURCE_DIR}/generated.hpp
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl ${CMAKE_CURRENT_SOURCE_DIR}/org.ensor.nodejs.xsd
+  VERBATIM
+)
+target_sources(gen PRIVATE gen.cpp generated.hpp)
