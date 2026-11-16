@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	   xmlns:node="http://jarney.github.io/nodejs/schema"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+
+  <xsd:complexType name="metadata">
+    <xsd:all>
+      <xsd:element name="data" minOccurs="0"/>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="package">
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="description"/>
+    <xsd:attribute name="version"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="import">
+    <xsd:attribute name="id"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="scope">
+    <xsd:sequence>
+      <xsd:element name="package" type="node:import" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="data-type">
+    <xsd:all>
+      <xsd:element name="metadata" type="node:metadata" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="name"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="data-types">
+    <xsd:sequence  minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="data-type" type="node:data-type"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="graph-arguments">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="graph-argument"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="graph-results">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="graph-result"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="data">
+    <xsd:sequence>
+      <xsd:element name="value"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="node-type">
+    <xsd:all>
+      <xsd:element name="inputs" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="outputs" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="metadata" type="node:metadata" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="graph-arguments" type="node:graph-arguments" minOccurs="0"/>
+      <xsd:element name="graph-results" type="node:graph-results" minOccurs="0"/>
+      <xsd:element name="data" type="node:data" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="visibility"/>
+    <xsd:attribute name="type"/>
+    <xsd:attribute name="graph-id"/>
+    <xsd:attribute name="allow-port-override"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="node-types">
+     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="node-type" type="node:node-type"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="nodes">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="node"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="edges">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="edge"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="graph">
+    <xsd:all>
+      <xsd:element name="nodes" type="node:nodes"/>
+      <xsd:element name="edges" type="node:edges"/>
+      <xsd:element name="metadata" type="node:metadata" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="graphs">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="graph" type="node:graph"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:element name="node-module">
+    <xsd:complexType>
+      <xsd:all>
+	<xsd:element name="package" type="node:package" maxOccurs="1" minOccurs="1"/>
+	<xsd:element name="scope" type="node:scope" maxOccurs="1" minOccurs="0"/>
+	<xsd:element name="data-types" type="node:data-types" maxOccurs="1" minOccurs="0"/>
+	<xsd:element name="node-types" type="node:node-types" maxOccurs="1" minOccurs="0"/>
+	<xsd:element name="graphs" type="node:graphs" maxOccurs="1" minOccurs="0"/>
+	<xsd:element name="metadata" type="node:metadata" maxOccurs="1" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>

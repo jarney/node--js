@@ -388,9 +388,15 @@
     </node-type>
     <!-- Constants -->
     <node-type id="true" visibility="public" type="graph" graph-id="__internal_constant">
-      <value key="value">true</value>
-      <graph-argument id="in" type="node-type-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">true</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-type-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -405,9 +411,15 @@
       </outputs>
     </node-type>
     <node-type id="false" visibility="public" type="graph" graph-id="__internal_constant">
-      <value key="value">false</value>
-      <graph-argument id="in" type="node-type-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">false</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-type-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -422,9 +434,15 @@
       </outputs>
     </node-type>
     <node-type id="const_int" visibility="public" type="graph" graph-id="__internal_constant">
-      <value key="value">0</value>
-      <graph-argument id="in" type="node-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">0</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -439,9 +457,15 @@
       </outputs>
     </node-type>
     <node-type id="const_float" visibility="public" type="graph" graph-id="__internal_constant">
-      <value key="value">0.0</value>
-      <graph-argument id="in" type="node-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">0.0</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -456,9 +480,15 @@
       </outputs>
     </node-type>
     <node-type id="const_string" visibility="public" type="graph" graph-id="__internal_string_constant">
-      <value key="value">default-string</value>
-      <graph-argument id="in" type="node-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">default-string</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -473,9 +503,15 @@
       </outputs>
     </node-type>
     <node-type id="undef" visibility="public" type="graph" graph-id="__internal_constant">
-      <value key="value">undef</value>
-      <graph-argument id="in" type="node-type-data" value="value"/>
-      <graph-result id="out" value="value"/>
+      <data>
+	<value key="value">undef</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="in" type="node-type-data" value="value"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="value"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Constants</value>
@@ -858,10 +894,16 @@
     </node-type>
     <!-- Mathematical -->
     <node-type id="abs" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">abs</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">abs</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -877,10 +919,16 @@
       </outputs>
     </node-type>
     <node-type id="sign" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">sign</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">sign</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -896,10 +944,16 @@
       </outputs>
     </node-type>
     <node-type id="sin" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">sin</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">sin</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -915,10 +969,16 @@
       </outputs>
     </node-type>
     <node-type id="cos" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">cos</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">cos</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -934,10 +994,16 @@
       </outputs>
     </node-type>
     <node-type id="tan" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">tan</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">tan</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -953,10 +1019,16 @@
       </outputs>
     </node-type>
     <node-type id="acos" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">acos</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">acos</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -972,10 +1044,16 @@
       </outputs>
     </node-type>
     <node-type id="asin" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">asin</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">asin</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -991,10 +1069,16 @@
       </outputs>
     </node-type>
     <node-type id="atan" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">atan</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">atan</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1026,10 +1110,16 @@
       </outputs>
     </node-type>
     <node-type id="floor" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">floor</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">floor</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1045,10 +1135,16 @@
       </outputs>
     </node-type>
     <node-type id="round" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">round</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">round</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1064,10 +1160,16 @@
       </outputs>
     </node-type>
     <node-type id="ceil" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">ceil</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">ceil</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1083,10 +1185,16 @@
       </outputs>
     </node-type>
     <node-type id="ln" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">ln</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">ln</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1102,10 +1210,16 @@
       </outputs>
     </node-type>
     <node-type id="len" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">len</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">len</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1121,10 +1235,16 @@
       </outputs>
     </node-type>
     <node-type id="log" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">log</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">log</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1156,10 +1276,16 @@
       </outputs>
     </node-type>
     <node-type id="sqrt" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">sqrt</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">sqrt</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1175,10 +1301,16 @@
       </outputs>
     </node-type>
     <node-type id="exp" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">exp</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">exp</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
 	  <value key="category">Math</value>
@@ -1237,10 +1369,16 @@
       </outputs>
     </node-type>
     <node-type id="norm" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">norm</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">norm</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1538,10 +1676,16 @@
     </node-type>
     <!-- Type Test -->
     <node-type id="is_bool" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_bool</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">is_bool</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1550,10 +1694,16 @@
       </outputs>
     </node-type>
     <node-type id="is_string" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_string</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">is_string</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1562,10 +1712,16 @@
       </outputs>
     </node-type>
     <node-type id="is_num" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_num</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">is_num</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1574,10 +1730,16 @@
       </outputs>
     </node-type>
     <node-type id="is_function" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_function</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">is_function</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1586,10 +1748,16 @@
       </outputs>
     </node-type>
     <node-type id="is_list" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_list</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+	<value key="function">is_list</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>
@@ -1598,10 +1766,16 @@
       </outputs>
     </node-type>
     <node-type id="is_undef" visibility="public" type="graph" graph-id="__internal_unary_function">
-      <value key="function">is_undef</value>
-      <graph-argument id="function" type="node-type-data" value="function"/>
-      <graph-argument id="in" type="port" value="x"/>
-      <graph-result id="out" value="out"/>
+      <data>
+        <value key="function">is_undef</value>
+      </data>
+      <graph-arguments>
+	<graph-argument id="function" type="node-type-data" value="function"/>
+	<graph-argument id="in" type="port" value="x"/>
+      </graph-arguments>
+      <graph-results>
+	<graph-result id="out" value="out"/>
+      </graph-results>
       <inputs>
         <port id="x" description="" data-type="variable" connection-policy="one"/>
       </inputs>

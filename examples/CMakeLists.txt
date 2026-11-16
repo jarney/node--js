@@ -1,3 +1,21 @@
+#########################################
+# Validator utility to validate xml files
+# and make sure they comply with the
+# official schema.
+#########################################
+set(VALIDATOR_SOURCE_FILES
+    val.cpp
+)
+set(VALIDATOR_HEADER_FILES
+
+)
+
+add_executable(validator
+  ${VALIDATOR_SOURCE_FILES}
+  ${VALIDATOR_HEADER_FILES}
+)
+
+target_link_libraries(validator NodeJS)
 
 #########################################
 # This is a simple 'loopback'
@@ -44,3 +62,4 @@ add_executable(process
 target_include_directories(process PUBLIC ${Boost_INCLUDE_DIR} )
 
 target_link_libraries(process NodeJS ${Boost_LIBRARIES})
+

@@ -108,7 +108,7 @@
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>
-           <widget class="GraphEditPanel" name="editorPane" native="true">
+           <widget class="QWidget" name="editorPane" native="true">
             <property name="minimumSize">
              <size>
               <width>512</width>
@@ -118,7 +118,7 @@
            </widget>
            <widget class="QToolBox" name="toolBox">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="page_7">
              <property name="geometry">
@@ -197,14 +197,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>GraphEditPanel</class>
-   <extends>QWidget</extends>
-   <header location="local">ui_grapheditpanel.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

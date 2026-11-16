@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<node-module xmlns="http://jarney.github.io/nodejs/schema">
+  <package id="valid-graph" description="Uncategorized" version="1"/>
+  <data-types>
+    <data-type id="variable"/>
+    <data-type id="wrong"/>
+  </data-types>
+</node-module>
