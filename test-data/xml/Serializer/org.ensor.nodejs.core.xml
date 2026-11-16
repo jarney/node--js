@@ -9,9 +9,9 @@
 
   <metadata>
     <data namespace="http://jarney.github.io/nodejs/editor">
-      <value key="version">1.0</value>
-      <value key="name">Node--js</value>
-      <value key="description">Core nodes for Visual Programming</value>
+      <value key="version" value="1.0"/>
+      <value key="name" value="Node--js"/>
+      <value key="description" value="Core nodes for Visual Programming"/>
     </data>
   </metadata>
   
@@ -41,8 +41,8 @@
     <node-type id="input" visibility="public" type="native" allow-port-override="true">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="name">Input</value>
-          <value key="description">This is data given to the graph as parameters for execution</value>
+          <value key="name" value="Input"/>
+          <value key="description" value="This is data given to the graph as parameters for execution"/>
         </data>
       </metadata>
     </node-type>
@@ -50,8 +50,8 @@
     <node-type id="output" visibility="public" type="native" allow-port-override="true">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="name">Output</value>
-          <value key="description">This is the output node that is the result of executing any graph.</value>
+          <value key="name" value="Output"/>
+          <value key="description" value="This is the output node that is the result of executing any graph."/>
         </data>
       </metadata>
     </node-type>
@@ -59,8 +59,8 @@
     <node-type id="concatenate" visibility="public" type="native">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="name">Concatenate</value>
-          <value key="description">Concatenates two strings</value>
+          <value key="name" value="Concatenate"/>
+          <value key="description" value="Concatenates two strings"/>
         </data>
       </metadata>
       <inputs>
@@ -75,8 +75,8 @@
     <node-type id="string" visibility="public" type="native">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="name">String</value>
-          <value key="description">Literal string constant</value>
+          <value key="name" value="String"/>
+          <value key="description" value="Literal string constant"/>
         </data>
       </metadata>
       <inputs>
@@ -90,8 +90,8 @@
     <node-type id="graph-call" visibility="public" type="native" allow-port-override="true">
       <metadata>
         <data namespace="http://jarney.github.io/nodejs/editor">
-          <value key="name">Call Graph</value>
-          <value key="description">Makes a call to another graph.  Inputs to this node go to the graph's input node and the output of the graph comes to the output of this node.</value>
+          <value key="name" value="Call Graph"/>
+          <value key="description" value="Makes a call to another graph.  Inputs to this node go to the graph's input node and the output of the graph comes to the output of this node."/>
         </data>
       </metadata>
     </node-type>

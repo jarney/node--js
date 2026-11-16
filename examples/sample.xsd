@@ -5,9 +5,27 @@
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
 
+  <xsd:complexType name="value">
+    <xsd:attribute name="key"/>
+    <xsd:attribute name="value"/>
+  </xsd:complexType>
+      
+  <xsd:complexType name="data-without-namespace">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="value" type="node:value"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="data-with-namespace">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="value" type="node:value"/>
+    </xsd:sequence>
+    <xsd:attribute name="namespace"/>
+  </xsd:complexType>
+  
   <xsd:complexType name="metadata">
     <xsd:all>
-      <xsd:element name="data" minOccurs="0"/>
+      <xsd:element name="data" type="node:data-with-namespace" minOccurs="0"/>
     </xsd:all>
   </xsd:complexType>
 
@@ -41,38 +59,72 @@
     </xsd:sequence>
   </xsd:complexType>
 
+  <xsd:simpleType name="graph-argument-type">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="port"/>
+      <xsd:enumeration value="node-data"/>
+      <xsd:enumeration value="node-type-data"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:complexType name="graph-argument">
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="type" type="node:graph-argument-type"/>
+    <xsd:attribute name="value"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="graph-result">
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="value"/>
+  </xsd:complexType>
+  
   <xsd:complexType name="graph-arguments">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="graph-argument"/>
+      <xsd:element name="graph-argument" type="node:graph-argument"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="graph-results">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="graph-result"/>
+      <xsd:element name="graph-result" type="node:graph-result"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="data">
-    <xsd:sequence>
-      <xsd:element name="value"/>
-    </xsd:sequence>
-  </xsd:complexType>
+  <xsd:simpleType name="node-type-visibility">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="public"/>
+      <xsd:enumeration value="private"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="node-type-type">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="graph"/>
+      <xsd:enumeration value="native"/>
+    </xsd:restriction>
+  </xsd:simpleType>
 
+  <xsd:simpleType name="node-type-allow-port-override">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="true"/>
+      <xsd:enumeration value="false"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
   <xsd:complexType name="node-type">
     <xsd:all>
-      <xsd:element name="inputs" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="outputs" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="inputs" type="node:inputs" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="outputs" type="node:outputs" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="metadata" type="node:metadata" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="graph-arguments" type="node:graph-arguments" minOccurs="0"/>
       <xsd:element name="graph-results" type="node:graph-results" minOccurs="0"/>
-      <xsd:element name="data" type="node:data" minOccurs="0"/>
+      <xsd:element name="data" type="node:data-without-namespace" minOccurs="0"/>
     </xsd:all>
     <xsd:attribute name="id"/>
-    <xsd:attribute name="visibility"/>
-    <xsd:attribute name="type"/>
+    <xsd:attribute name="visibility" type="node:node-type-visibility"/>
+    <xsd:attribute name="type" type="node:node-type-type"/>
     <xsd:attribute name="graph-id"/>
-    <xsd:attribute name="allow-port-override"/>
+    <xsd:attribute name="allow-port-override" type="node:node-type-allow-port-override"/>
   </xsd:complexType>
   
   <xsd:complexType name="node-types">
@@ -81,15 +133,59 @@
     </xsd:sequence>
   </xsd:complexType>
 
+  <xsd:simpleType name="port-connection-policy">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="one"/>
+      <xsd:enumeration value="multi"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:complexType name="port">
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="description"/>
+    <xsd:attribute name="data-type"/>
+    <xsd:attribute name="connection-policy" type="node:port-connection-policy"/>
+  </xsd:complexType>
+  
+  <xsd:complexType name="inputs">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="port" type="node:port"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="outputs">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+    <xsd:element name="port" type="node:port"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:complexType name="node">
+    <xsd:all>
+      <xsd:element name="inputs" type="node:inputs" minOccurs="0"/>
+      <xsd:element name="outputs" type="node:outputs" minOccurs="0"/>
+      <xsd:element name="data" type="node:data-without-namespace" minOccurs="0"/>
+      <xsd:element name="metadata" type="node:metadata" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="type"/>
+  </xsd:complexType>
+  
   <xsd:complexType name="nodes">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="node"/>
+      <xsd:element name="node" type="node:node"/>
     </xsd:sequence>
   </xsd:complexType>
 
+  <xsd:complexType name="edge">
+    <xsd:attribute name="from-node"/>
+    <xsd:attribute name="from-port"/>
+    <xsd:attribute name="to-node"/>
+    <xsd:attribute name="to-port"/>
+  </xsd:complexType>
+  
   <xsd:complexType name="edges">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="edge"/>
+      <xsd:element name="edge" type="node:edge"/>
     </xsd:sequence>
   </xsd:complexType>
   
