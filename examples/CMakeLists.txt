@@ -67,42 +67,145 @@ target_link_libraries(process NodeJS ${Boost_LIBRARIES})
 # Generated header.
 #########################################
 add_executable(gen)
+
+set(GENERATED_INCLUDE_DIR ${PROJECT_BINARY_DIR}/generated/include)
+set(GENERATED_SRC_DIR ${PROJECT_BINARY_DIR}/generated/src)
+set(GENERATED_XSD_DIR ${PROJECT_BINARY_DIR}/generated/xsd)
+
 add_custom_command(
-  OUTPUT generated.hpp
-  COMMAND xsltproc ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl ${CMAKE_CURRENT_SOURCE_DIR}/xsd/org.ensor.nodejs.xsd > ${CMAKE_CURRENT_SOURCE_DIR}/generated.hpp
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl ${CMAKE_CURRENT_SOURCE_DIR}/xsd/org.ensor.nodejs.xsd
+    OUTPUT
+        ${GENERATED_INCLUDE_DIR}/DataType.hpp
+        ${GENERATED_INCLUDE_DIR}/DataTypeList.hpp
+        ${GENERATED_INCLUDE_DIR}/Edge.hpp
+        ${GENERATED_INCLUDE_DIR}/EdgeList.hpp
+        ${GENERATED_INCLUDE_DIR}/Graph.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphArgument.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphArgumentList.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphArgumentType.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphList.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphResult.hpp
+        ${GENERATED_INCLUDE_DIR}/GraphResultList.hpp
+        ${GENERATED_INCLUDE_DIR}/Import.hpp
+        ${GENERATED_INCLUDE_DIR}/Metadata.hpp
+        ${GENERATED_INCLUDE_DIR}/MetadataWithNamespace.hpp
+        ${GENERATED_INCLUDE_DIR}/MetadataWithoutNamespace.hpp
+        ${GENERATED_INCLUDE_DIR}/NameValuePair.hpp
+        ${GENERATED_INCLUDE_DIR}/Node.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeList.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeModule.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeType.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeTypeAllowPortOverride.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeTypeList.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeTypeType.hpp
+        ${GENERATED_INCLUDE_DIR}/NodeTypeVisibility.hpp
+        ${GENERATED_INCLUDE_DIR}/Package.hpp
+        ${GENERATED_INCLUDE_DIR}/Port.hpp
+        ${GENERATED_INCLUDE_DIR}/PortConnectionPolicy.hpp
+        ${GENERATED_INCLUDE_DIR}/PortList.hpp
+        ${GENERATED_INCLUDE_DIR}/Scope.hpp
+
+        ${GENERATED_SRC_DIR}/DataType.cpp
+        ${GENERATED_SRC_DIR}/DataTypeList.cpp
+        ${GENERATED_SRC_DIR}/Edge.cpp
+        ${GENERATED_SRC_DIR}/EdgeList.cpp
+        ${GENERATED_SRC_DIR}/Graph.cpp
+        ${GENERATED_SRC_DIR}/GraphArgument.cpp
+        ${GENERATED_SRC_DIR}/GraphArgumentList.cpp
+        ${GENERATED_SRC_DIR}/GraphArgumentType.cpp
+        ${GENERATED_SRC_DIR}/GraphList.cpp
+        ${GENERATED_SRC_DIR}/GraphResult.cpp
+        ${GENERATED_SRC_DIR}/GraphResultList.cpp
+        ${GENERATED_SRC_DIR}/Import.cpp
+        ${GENERATED_SRC_DIR}/Metadata.cpp
+        ${GENERATED_SRC_DIR}/MetadataWithNamespace.cpp
+        ${GENERATED_SRC_DIR}/MetadataWithoutNamespace.cpp
+        ${GENERATED_SRC_DIR}/NameValuePair.cpp
+        ${GENERATED_SRC_DIR}/Node.cpp
+        ${GENERATED_SRC_DIR}/NodeList.cpp
+        ${GENERATED_SRC_DIR}/NodeModule.cpp
+        ${GENERATED_SRC_DIR}/NodeType.cpp
+        ${GENERATED_SRC_DIR}/NodeTypeAllowPortOverride.cpp
+        ${GENERATED_SRC_DIR}/NodeTypeList.cpp
+        ${GENERATED_SRC_DIR}/NodeTypeType.cpp
+        ${GENERATED_SRC_DIR}/NodeTypeVisibility.cpp
+        ${GENERATED_SRC_DIR}/Package.cpp
+        ${GENERATED_SRC_DIR}/Port.cpp
+        ${GENERATED_SRC_DIR}/PortConnectionPolicy.cpp
+        ${GENERATED_SRC_DIR}/PortList.cpp
+        ${GENERATED_SRC_DIR}/Scope.cpp
+    COMMAND
+        sh ${PROJECT_SOURCE_DIR}/examples/generate-schema.sh
+	    ${PROJECT_SOURCE_DIR}/schema
+	    ${PROJECT_SOURCE_DIR}/examples
+	    ${GENERATED_XSD_DIR}
+	    ${GENERATED_INCLUDE_DIR}
+	    ${GENERATED_SRC_DIR}
+    DEPENDS
+        ${PROJECT_SOURCE_DIR}/schema/DataType.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/DataTypeList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Edge.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/EdgeList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Graph.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphArgument.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphArgumentList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphArgumentType.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphResult.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/GraphResultList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Import.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Metadata.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/MetadataWithNamespace.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/MetadataWithoutNamespace.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NameValuePair.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Node.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeModule.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeType.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeTypeAllowPortOverride.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeTypeList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeTypeType.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/NodeTypeVisibility.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Package.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Port.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/PortConnectionPolicy.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/PortList.nodejs-schema
+        ${PROJECT_SOURCE_DIR}/schema/Scope.nodejs-schema
+        ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl
+        ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-cpp.xsl
+        ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-xsd.xsl
   VERBATIM
-)
-target_include_directories(gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    )
+
+target_include_directories(gen PUBLIC ${GENERATED_INCLUDE_DIR})
 target_sources(gen PRIVATE
     gen.cpp 
-    src/DataType.cpp
-    src/DataTypeList.cpp
-    src/Edge.cpp
-    src/EdgeList.cpp
-    src/Graph.cpp
-    src/GraphArgument.cpp
-    src/GraphArgumentList.cpp
-    src/GraphArgumentType.cpp
-    src/GraphList.cpp
-    src/GraphResult.cpp
-    src/GraphResultList.cpp
-    src/Import.cpp
-    src/Metadata.cpp
-    src/MetadataWithNamespace.cpp
-    src/MetadataWithoutNamespace.cpp
-    src/NameValuePair.cpp
-    src/Node.cpp
-    src/NodeList.cpp
-    src/NodeModule.cpp
-    src/NodeType.cpp
-    src/NodeTypeAllowPortOverride.cpp
-    src/NodeTypeList.cpp
-    src/NodeTypeType.cpp
-    src/NodeTypeVisibility.cpp
-    src/Package.cpp
-    src/Port.cpp
-    src/PortConnectionPolicy.cpp
-    src/PortList.cpp
-    src/Scope.cpp
+    ${GENERATED_SRC_DIR}/DataType.cpp
+    ${GENERATED_SRC_DIR}/DataTypeList.cpp
+    ${GENERATED_SRC_DIR}/Edge.cpp
+    ${GENERATED_SRC_DIR}/EdgeList.cpp
+    ${GENERATED_SRC_DIR}/Graph.cpp
+    ${GENERATED_SRC_DIR}/GraphArgument.cpp
+    ${GENERATED_SRC_DIR}/GraphArgumentList.cpp
+    ${GENERATED_SRC_DIR}/GraphArgumentType.cpp
+    ${GENERATED_SRC_DIR}/GraphList.cpp
+    ${GENERATED_SRC_DIR}/GraphResult.cpp
+    ${GENERATED_SRC_DIR}/GraphResultList.cpp
+    ${GENERATED_SRC_DIR}/Import.cpp
+    ${GENERATED_SRC_DIR}/Metadata.cpp
+    ${GENERATED_SRC_DIR}/MetadataWithNamespace.cpp
+    ${GENERATED_SRC_DIR}/MetadataWithoutNamespace.cpp
+    ${GENERATED_SRC_DIR}/NameValuePair.cpp
+    ${GENERATED_SRC_DIR}/Node.cpp
+    ${GENERATED_SRC_DIR}/NodeList.cpp
+    ${GENERATED_SRC_DIR}/NodeModule.cpp
+    ${GENERATED_SRC_DIR}/NodeType.cpp
+    ${GENERATED_SRC_DIR}/NodeTypeAllowPortOverride.cpp
+    ${GENERATED_SRC_DIR}/NodeTypeList.cpp
+    ${GENERATED_SRC_DIR}/NodeTypeType.cpp
+    ${GENERATED_SRC_DIR}/NodeTypeVisibility.cpp
+    ${GENERATED_SRC_DIR}/Package.cpp
+    ${GENERATED_SRC_DIR}/Port.cpp
+    ${GENERATED_SRC_DIR}/PortConnectionPolicy.cpp
+    ${GENERATED_SRC_DIR}/PortList.cpp
+    ${GENERATED_SRC_DIR}/Scope.cpp
     )
