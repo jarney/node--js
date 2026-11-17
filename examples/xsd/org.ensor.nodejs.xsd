@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+
+  <xsd:include schemaLocation="NameValuePair.xsd"/>
+  <xsd:include schemaLocation="MetadataWithoutNamespace.xsd"/>
+  <xsd:include schemaLocation="MetadataWithNamespace.xsd"/>
+  <xsd:include schemaLocation="Metadata.xsd"/>
+  <xsd:include schemaLocation="Package.xsd"/>
+  <xsd:include schemaLocation="Import.xsd"/>
+  <xsd:include schemaLocation="Scope.xsd"/>
+  <xsd:include schemaLocation="DataType.xsd"/>
+  <xsd:include schemaLocation="DataTypeList.xsd"/>
+  <xsd:include schemaLocation="GraphArgumentType.xsd"/>
+  <xsd:include schemaLocation="GraphArgument.xsd"/>
+  <xsd:include schemaLocation="GraphResult.xsd"/>
+  <xsd:include schemaLocation="GraphArgumentList.xsd"/>
+  <xsd:include schemaLocation="GraphResultList.xsd"/>
+  <xsd:include schemaLocation="NodeTypeVisibility.xsd"/>
+  <xsd:include schemaLocation="NodeTypeType.xsd"/>
+  <xsd:include schemaLocation="NodeTypeAllowPortOverride.xsd"/>
+  <xsd:include schemaLocation="Port.xsd"/>
+  <xsd:include schemaLocation="PortList.xsd"/>
+  <xsd:include schemaLocation="NodeType.xsd"/>
+  <xsd:include schemaLocation="NodeTypeList.xsd"/>
+  <xsd:include schemaLocation="PortConnectionPolicy.xsd"/>
+  <xsd:include schemaLocation="Node.xsd"/>
+  <xsd:include schemaLocation="NodeList.xsd"/>
+  <xsd:include schemaLocation="Edge.xsd"/>
+  <xsd:include schemaLocation="EdgeList.xsd"/>
+  <xsd:include schemaLocation="Graph.xsd"/>
+  <xsd:include schemaLocation="GraphList.xsd"/>
+  <xsd:include schemaLocation="NodeModule.xsd"/>
+  <xsd:element name="node-module" type="node:NodeModule"/>
+</xsd:schema>
