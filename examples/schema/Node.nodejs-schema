@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+  <xsd:complexType name="Node">
+    <xsd:all>
+      <xsd:element name="inputs" type="node:PortList" minOccurs="0"/>
+      <xsd:element name="outputs" type="node:PortList" minOccurs="0"/>
+      <xsd:element name="data" type="node:MetadataWithoutNamespace" minOccurs="0"/>
+      <xsd:element name="metadata" type="node:Metadata" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="type"/>
+  </xsd:complexType>
+</xsd:schema>

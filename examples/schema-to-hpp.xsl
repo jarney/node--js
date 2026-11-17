@@ -5,7 +5,7 @@
 	    xmlns:codegen="http://jarney.github.io/nodejs/comment">
   <xsl:output method="text"
 	  indent="no"
-	  encoding="string"
+	  encoding="UTF-8"
 	  media-type="string"/>
 <xsl:template match="/">
 

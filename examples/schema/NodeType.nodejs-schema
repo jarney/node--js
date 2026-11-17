@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+  <xsd:complexType name="NodeType">
+    <xsd:all>
+      <xsd:element name="inputs" type="node:PortList" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="outputs" type="node:PortList" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="metadata" type="node:Metadata" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="graph-arguments" codegen:name="graphArguments" type="node:GraphArgumentList" minOccurs="0"/>
+      <xsd:element name="graph-results" codegen:name="graphResults" type="node:GraphResultList" minOccurs="0"/>
+      <xsd:element name="data" type="node:MetadataWithoutNamespace" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="id"/>
+    <xsd:attribute name="visibility" type="node:NodeTypeVisibility"/>
+    <xsd:attribute name="type" type="node:NodeTypeType"/>
+    <xsd:attribute name="graph-id" codegen:name="graphId"/>
+    <xsd:attribute name="allow-port-override" codegen:name="allowPortOverride" type="node:NodeTypeAllowPortOverride"/>
+  </xsd:complexType>
+</xsd:schema>

@@ -19,25 +19,26 @@ int validation_schema(xmlDocPtr doc, const char *xml_schema, int afficher_erreur
     xmlSchemaParserCtxtPtr pctxt;
 
     // Ouverture du fichier XML Schema
+    fprintf(stderr, "Creating schema parser\n");
     if ((pctxt = xmlSchemaNewParserCtxt(xml_schema)) == NULL) {
         return ERROR_OCCURED;
     }
-    // Chargement du contenu du XML Schema
+    fprintf(stderr, "Parsing schema\n");
     schema = xmlSchemaParse(pctxt);
     xmlSchemaFreeParserCtxt(pctxt);
     if (schema == NULL) {
         return ERROR_OCCURED;
     }
-    // Création du contexte de validation
+    fprintf(stderr, "Creating validation context\n");
     if ((vctxt = xmlSchemaNewValidCtxt(schema)) == NULL) {
         xmlSchemaFree(schema);
         return ERROR_OCCURED;
     }
-    // Traitement des erreurs de validation
-    if (afficher_erreurs) {
-        xmlSchemaSetValidErrors(vctxt, (xmlSchemaValidityErrorFunc) fprintf, (xmlSchemaValidityWarningFunc) fprintf, stderr);
-    }
+    fprintf(stderr, "Setting validation error handlers\n");
+    xmlSchemaSetValidErrors(vctxt, (xmlSchemaValidityErrorFunc) fprintf, (xmlSchemaValidityWarningFunc) fprintf, stderr);
+
     // Validation
+    fprintf(stderr, "Performing validation\n");
     ret = (xmlSchemaValidateDoc(vctxt, doc) == 0 ? VALID : NOT_VALID);
     // Libération de la mémoire
     xmlSchemaFree(schema);
