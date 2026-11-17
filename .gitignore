@@ -3,6 +3,8 @@ build/
 __pycache__
 .coverage
 javascript/logs
+examples/include
+examples/generated.hpp
 examples/xsd/DataType.xsd
 examples/xsd/DataTypeList.xsd
 examples/xsd/Edge.xsd
