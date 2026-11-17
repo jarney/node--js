@@ -7,8 +7,8 @@
 	   attributeFormDefault="unqualified">
   <xsd:simpleType name="NodeTypeAllowPortOverride">
     <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="true"/>
-      <xsd:enumeration value="false"/>
+      <xsd:enumeration value="true" codegen:name="True"/>
+      <xsd:enumeration value="false" codegen:name="False"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

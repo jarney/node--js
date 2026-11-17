@@ -7,9 +7,9 @@
 	    attributeFormDefault="unqualified">
   <xsd:simpleType name="GraphArgumentType">
     <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="port"/>
-      <xsd:enumeration value="node-data"/>
-      <xsd:enumeration value="node-type-data"/>
+      <xsd:enumeration value="port" codegen:name="Port"/>
+      <xsd:enumeration value="node-data" codegen:name="NodeData"/>
+      <xsd:enumeration value="node-type-data" codegen:name="NodeTypeData"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

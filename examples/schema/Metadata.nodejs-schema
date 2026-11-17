@@ -4,7 +4,10 @@
 	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
-	    attributeFormDefault="unqualified">  
+	    attributeFormDefault="unqualified">
+  
+  <codegen:include name="MetadataWithNamespace"/>
+  
   <xsd:complexType name="Metadata">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="data" type="node:MetadataWithNamespace" codegen:map-by="ns"/>

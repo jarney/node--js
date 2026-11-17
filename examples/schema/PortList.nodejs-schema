@@ -5,6 +5,9 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+
+  <codegen:include name="Port"/>
+  
   <xsd:complexType name="PortList">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="port" codegen:name="ports" type="node:Port"/>

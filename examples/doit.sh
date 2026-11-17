@@ -39,6 +39,8 @@ done
 ../build/examples/validator xsd/org.ensor.nodejs.xsd ../test-data/xml/Serializer/org.ensor.nodejs.openscad.xml
 
 mkdir -p include
+mkdir -p src
 for schema_object in ${SCHEMA_OBJECTS} ; do
     xsltproc schema-to-hpp.xsl schema/${schema_object}.nodejs-schema >include/${schema_object}.hpp
+    xsltproc schema-to-cpp.xsl schema/${schema_object}.nodejs-schema >src/${schema_object}.cpp
 done

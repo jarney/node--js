@@ -7,8 +7,8 @@
 	   attributeFormDefault="unqualified">
   <xsd:simpleType name="PortConnectionPolicy">
     <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="one"/>
-      <xsd:enumeration value="multi"/>
+      <xsd:enumeration value="one" codegen:name="One"/>
+      <xsd:enumeration value="multi" codegen:name="Multi"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

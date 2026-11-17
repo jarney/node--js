@@ -73,4 +73,36 @@ add_custom_command(
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/schema-to-hpp.xsl ${CMAKE_CURRENT_SOURCE_DIR}/xsd/org.ensor.nodejs.xsd
   VERBATIM
 )
-target_sources(gen PRIVATE gen.cpp generated.hpp)
+target_include_directories(gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_sources(gen PRIVATE
+    gen.cpp 
+    src/DataType.cpp
+    src/DataTypeList.cpp
+    src/Edge.cpp
+    src/EdgeList.cpp
+    src/Graph.cpp
+    src/GraphArgument.cpp
+    src/GraphArgumentList.cpp
+    src/GraphArgumentType.cpp
+    src/GraphList.cpp
+    src/GraphResult.cpp
+    src/GraphResultList.cpp
+    src/Import.cpp
+    src/Metadata.cpp
+    src/MetadataWithNamespace.cpp
+    src/MetadataWithoutNamespace.cpp
+    src/NameValuePair.cpp
+    src/Node.cpp
+    src/NodeList.cpp
+    src/NodeModule.cpp
+    src/NodeType.cpp
+    src/NodeTypeAllowPortOverride.cpp
+    src/NodeTypeList.cpp
+    src/NodeTypeType.cpp
+    src/NodeTypeVisibility.cpp
+    src/Package.cpp
+    src/Port.cpp
+    src/PortConnectionPolicy.cpp
+    src/PortList.cpp
+    src/Scope.cpp
+    )

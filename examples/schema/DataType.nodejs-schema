@@ -5,6 +5,9 @@
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
 	    attributeFormDefault="unqualified">
+  
+  <codegen:include name="Metadata"/>
+  
   <xsd:complexType name="DataType">
     <xsd:all>
       <xsd:element name="metadata" type="node:Metadata" minOccurs="0" maxOccurs="1"/>

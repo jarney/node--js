@@ -5,6 +5,14 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+
+  <codegen:include name="Package"/>
+  <codegen:include name="Scope"/>
+  <codegen:include name="DataTypeList"/>
+  <codegen:include name="NodeTypeList"/>
+  <codegen:include name="GraphList"/>
+  <codegen:include name="Metadata"/>
+  
   <xsd:complexType name="NodeModule">
     <xsd:all>
       <xsd:element name="package" codegen:name="package" type="node:Package" maxOccurs="1" minOccurs="1"/>

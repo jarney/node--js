@@ -4,6 +4,7 @@ __pycache__
 .coverage
 javascript/logs
 examples/include
+examples/src
 examples/generated.hpp
 examples/xsd/DataType.xsd
 examples/xsd/DataTypeList.xsd

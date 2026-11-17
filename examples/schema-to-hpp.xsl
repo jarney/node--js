@@ -9,7 +9,7 @@
 	  media-type="string"/>
 <xsl:template match="/">
 
-  <xsl:text disable-output-escaping="yes">
+  <xsl:text>
 #pragma once
 
 #include &lt;string&gt;
@@ -17,10 +17,40 @@
 #include &lt;vector&gt;
 #include &lt;memory&gt;
 
+</xsl:text>
+
+<xsl:for-each select="xsd:schema/codegen:include">
+  <xsl:text>#include "</xsl:text>
+  <xsl:value-of select="@name"/>
+  <xsl:text>.hpp"&#xa;</xsl:text>
+</xsl:for-each>
+
+<xsl:text>
 namespace NodeJS {
     namespace core {
 </xsl:text>
 
+  <!-- Enumerations -->
+  <xsl:for-each select="xsd:schema/xsd:simpleType">
+    <xsl:if test="count(xsd:restriction/xsd:enumeration) &gt; 0">
+      <xsl:text>typedef enum {&#xa;</xsl:text>
+      <xsl:for-each select="xsd:restriction/xsd:enumeration">
+	<xsl:text>    </xsl:text>
+	<xsl:value-of select="@codegen:name"/>
+	<xsl:if test="position() != last()">
+	  <xsl:text>,</xsl:text>
+	</xsl:if>
+	<xsl:text>&#xa;</xsl:text>
+      </xsl:for-each>
+      <xsl:text>} </xsl:text>
+      <xsl:call-template name="get-name">
+	<xsl:with-param name="element" select="."/>
+      </xsl:call-template>
+      <xsl:text>;&#xa;</xsl:text>
+    </xsl:if>
+  </xsl:for-each>
+
+  <!-- Composite Types -->
   <xsl:for-each select="xsd:schema/xsd:complexType">
     <xsl:text>/**&#xa;</xsl:text>
     <xsl:text> *&#xa;</xsl:text>
@@ -58,7 +88,12 @@ namespace NodeJS {
       <xsl:value-of select="codegen:comment"/>
       <xsl:text>     */&#xa;</xsl:text>
 
-      <xsl:text>    std::string get_</xsl:text>
+      <xsl:text>    </xsl:text>
+      <xsl:call-template name="get-type">
+	<xsl:with-param name="type" select="@type"/>
+      </xsl:call-template>
+      <xsl:text> &amp;get_</xsl:text>
+      
       <xsl:call-template name="get-name">
         <xsl:with-param name="element" select="."/>
       </xsl:call-template>
@@ -68,7 +103,11 @@ namespace NodeJS {
       <xsl:call-template name="get-name">
         <xsl:with-param name="element" select="."/>
       </xsl:call-template>
-      <xsl:text>(std::string value);&#xa;</xsl:text>
+      <xsl:text>(</xsl:text>
+      <xsl:call-template name="get-type">
+	<xsl:with-param name="type" select="@type"/>
+      </xsl:call-template>
+      <xsl:text> value);&#xa;</xsl:text>
     </xsl:for-each>
 
     <xsl:text>private:&#xa;</xsl:text>
@@ -107,7 +146,11 @@ namespace NodeJS {
     </xsl:choose>
 
     <xsl:for-each select="xsd:attribute">
-      <xsl:text>    std::string </xsl:text>
+      <xsl:text>    </xsl:text>
+      <xsl:call-template name="get-type">
+	<xsl:with-param name="type" select="@type"/>
+      </xsl:call-template>
+      <xsl:text> </xsl:text>
       <xsl:call-template name="get-name">
         <xsl:with-param name="element" select="."/>
       </xsl:call-template>
@@ -150,6 +193,20 @@ namespace NodeJS {
       </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$element/@name"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template name="get-type">
+  <xsl:param name="type"/>
+  <xsl:choose>
+    <xsl:when test="string-length($type) &gt; 0">
+      <xsl:call-template name="strip-node-prefix">
+	<xsl:with-param name="value" select="$type"/>
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>std::string</xsl:text>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>

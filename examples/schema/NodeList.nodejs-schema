@@ -5,6 +5,9 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+
+  <codegen:include name="Node"/>
+  
   <xsd:complexType name="NodeList">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="node" type="node:Node"/>

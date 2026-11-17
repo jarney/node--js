@@ -5,6 +5,11 @@
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
 	    attributeFormDefault="unqualified">
+
+  <codegen:include name="NodeList"/>
+  <codegen:include name="EdgeList"/>
+  <codegen:include name="Metadata"/>
+  
   <xsd:complexType name="Graph">
     <xsd:all>
       <xsd:element name="nodes" type="node:NodeList"/>

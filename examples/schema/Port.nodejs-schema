@@ -5,6 +5,9 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+  
+  <codegen:include name="PortConnectionPolicy"/>
+  
   <xsd:complexType name="Port">
     <xsd:attribute name="id"/>
     <xsd:attribute name="description"/>

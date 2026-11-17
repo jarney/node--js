@@ -5,6 +5,9 @@
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
 	    attributeFormDefault="unqualified">
+  
+  <codegen:include name="GraphArgumentType"/>
+  
   <xsd:complexType name="GraphArgument">
     <xsd:attribute name="id"/>
     <xsd:attribute name="type" type="node:GraphArgumentType"/>

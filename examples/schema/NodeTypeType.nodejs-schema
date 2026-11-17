@@ -7,8 +7,9 @@
 	   attributeFormDefault="unqualified">
   <xsd:simpleType name="NodeTypeType">
     <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="graph"/>
-      <xsd:enumeration value="native"/>
+      <codegen:default value="native"/>
+      <xsd:enumeration value="graph" codegen:name="GRAPH"/>
+      <xsd:enumeration value="native" codegen:name="NATIVE"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

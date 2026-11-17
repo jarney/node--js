@@ -7,8 +7,8 @@
 	   attributeFormDefault="unqualified">
   <xsd:simpleType name="NodeTypeVisibility">
     <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="public"/>
-      <xsd:enumeration value="private"/>
+      <xsd:enumeration value="public" codegen:name="PUBLIC"/>
+      <xsd:enumeration value="private" codegen:name="PRIVATE"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

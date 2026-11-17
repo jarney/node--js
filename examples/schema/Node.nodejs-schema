@@ -5,6 +5,11 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+
+  <codegen:include name="PortList"/>
+  <codegen:include name="MetadataWithoutNamespace"/>
+  <codegen:include name="Metadata"/>
+  
   <xsd:complexType name="Node">
     <xsd:all>
       <xsd:element name="inputs" type="node:PortList" minOccurs="0"/>

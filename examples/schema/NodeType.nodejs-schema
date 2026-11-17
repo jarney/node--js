@@ -5,6 +5,15 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+  <codegen:include name="PortList"/>
+  <codegen:include name="Metadata"/>
+  <codegen:include name="GraphArgumentList"/>
+  <codegen:include name="GraphResultList"/>
+  <codegen:include name="MetadataWithoutNamespace"/>
+  <codegen:include name="NodeTypeVisibility"/>
+  <codegen:include name="NodeTypeType"/>
+  <codegen:include name="NodeTypeAllowPortOverride"/>
+  
   <xsd:complexType name="NodeType">
     <xsd:all>
       <xsd:element name="inputs" type="node:PortList" minOccurs="0" maxOccurs="1"/>
