@@ -5,6 +5,8 @@
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
 	    attributeFormDefault="unqualified">
+  <codegen:include name="Edge"/>
+
   <xsd:complexType name="EdgeList">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="edge" type="node:Edge"/>

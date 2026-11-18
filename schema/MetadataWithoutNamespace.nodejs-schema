@@ -5,6 +5,8 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+  <codegen:include name="NameValuePair"/>
+
   <xsd:complexType name="MetadataWithoutNamespace">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="value" codegen:name="values" type="node:NameValuePair"/>

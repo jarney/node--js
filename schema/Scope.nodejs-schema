@@ -5,6 +5,9 @@
 	   targetNamespace="http://jarney.github.io/nodejs/schema"
 	   elementFormDefault="qualified"
 	   attributeFormDefault="unqualified">
+  
+  <codegen:include name="Import"/>
+  
   <xsd:complexType name="Scope">
     <xsd:sequence>
       <xsd:element name="package" type="node:Import" minOccurs="0" maxOccurs="unbounded"/>

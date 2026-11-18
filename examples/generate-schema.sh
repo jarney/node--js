@@ -1,11 +1,10 @@
 #!/bin/sh
 
-echo "Arguments is " $#
-
 if [ $# -ne 5 ] ; then
     echo "Usage: generate-schema.sh schema-directory xsd-dir c-include-dir c-source-dir"
     exit 1
 fi
+set -e
     
 SCHEMA_DIRECTORY=$1
 STYLESHEET_DIRECTORY=$2

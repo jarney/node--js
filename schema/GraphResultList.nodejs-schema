@@ -5,6 +5,8 @@
 	    targetNamespace="http://jarney.github.io/nodejs/schema"
 	    elementFormDefault="qualified"
 	    attributeFormDefault="unqualified">
+  <codegen:include name="GraphResult"/>
+  
   <xsd:complexType name="GraphResultList">
     <xsd:sequence minOccurs="0" maxOccurs="unbounded">
       <xsd:element name="graph-result" codegen:name="graphResults" type="node:GraphResult"/>

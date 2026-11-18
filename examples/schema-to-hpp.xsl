@@ -83,30 +83,38 @@ namespace NodeJS {
     <xsl:text>() = default;&#xa;</xsl:text>
 
     <xsl:for-each select="xsd:attribute">
+      <xsl:variable name="memberType">
+	<xsl:call-template name="get-type">
+	  <xsl:with-param name="type" select="@type"/>
+	</xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="memberName">
+	<xsl:call-template name="get-name">
+          <xsl:with-param name="element" select="."/>
+	</xsl:call-template>
+      </xsl:variable>
+
       <xsl:text>    /**&#xa;</xsl:text>
       <xsl:text>     *&#xa;</xsl:text>
       <xsl:value-of select="codegen:comment"/>
       <xsl:text>     */&#xa;</xsl:text>
 
-      <xsl:text>    </xsl:text>
-      <xsl:call-template name="get-type">
-	<xsl:with-param name="type" select="@type"/>
-      </xsl:call-template>
+      <xsl:text>    const </xsl:text>
+      <xsl:value-of select="$memberType"/>
       <xsl:text> &amp;get_</xsl:text>
-      
-      <xsl:call-template name="get-name">
-        <xsl:with-param name="element" select="."/>
-      </xsl:call-template>
+      <xsl:value-of select="$memberName"/>
       <xsl:text>(void) const;&#xa;</xsl:text>
-	
+
+      <xsl:text>    </xsl:text>
+      <xsl:value-of select="$memberType"/>
+      <xsl:text> &amp;get_</xsl:text>
+      <xsl:value-of select="$memberName"/>
+      <xsl:text>(void);&#xa;</xsl:text>
+      
       <xsl:text>    void set_</xsl:text>
-      <xsl:call-template name="get-name">
-        <xsl:with-param name="element" select="."/>
-      </xsl:call-template>
+      <xsl:value-of select="$memberName"/>
       <xsl:text>(</xsl:text>
-      <xsl:call-template name="get-type">
-	<xsl:with-param name="type" select="@type"/>
-      </xsl:call-template>
+      <xsl:value-of select="$memberType"/>
       <xsl:text> value);&#xa;</xsl:text>
     </xsl:for-each>
 
@@ -180,35 +188,34 @@ namespace NodeJS {
 
 </xsl:template>
 
-<xsl:template name="strip-node-prefix">
-  <xsl:param name="value"/>
-  <xsl:value-of select="substring($value, 6)"/>
-</xsl:template>
-
-<xsl:template name="get-name">
-  <xsl:param name="element"/>
-  <xsl:choose>
+  <xsl:template name="strip-node-prefix">
+    <xsl:param name="value"/>
+    <xsl:value-of select="substring($value, 6)"/>
+  </xsl:template>
+  
+  <xsl:template name="get-name">
+    <xsl:param name="element"/>
+    <xsl:choose>
       <xsl:when test="string-length($element/@codegen:name) &gt; 0">
         <xsl:value-of select="$element/@codegen:name"/>
       </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$element/@name"/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="get-type">
-  <xsl:param name="type"/>
-  <xsl:choose>
-    <xsl:when test="string-length($type) &gt; 0">
-      <xsl:call-template name="strip-node-prefix">
-	<xsl:with-param name="value" select="$type"/>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:text>std::string</xsl:text>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
+      <xsl:otherwise>
+	<xsl:value-of select="$element/@name"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="get-type">
+    <xsl:param name="type"/>
+    <xsl:choose>
+      <xsl:when test="string-length($type) &gt; 0">
+	<xsl:call-template name="strip-node-prefix">
+	  <xsl:with-param name="value" select="$type"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:text>std::string</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>
