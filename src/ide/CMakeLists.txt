@@ -17,12 +17,12 @@ set_target_properties(NodeJSIDE PROPERTIES
 )
 target_link_libraries(NodeJSIDE NodeJSGuiQt)
 
-project(calculatorform LANGUAGES CXX)
-
-qt_add_executable(calculatorform main.cpp mainwindow2.ui)
-
-target_link_libraries(calculatorform  PUBLIC
-				      Qt::Core
-				      Qt::Gui
-				      Qt::Widgets
-)
+#project(calculatorform LANGUAGES CXX)
+#
+#qt_add_executable(calculatorform main.cpp mainwindow2.ui)
+#
+#target_link_libraries(calculatorform  PUBLIC
+#				      Qt::Core
+#				      Qt::Gui
+#				      Qt::Widgets
+#)
