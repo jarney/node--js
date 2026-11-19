@@ -220,7 +220,7 @@ SerializerXMLWriter::writeGraphNodeData(
 	XmlNodeWrapper valueNode("value");
 
 	valueNode.setAttribute("key", it.first);
-	valueNode.setContent(it.second);
+	valueNode.setAttribute("value", it.second);
 	
 	nodeNode.addChild(valueNode);
     }
@@ -244,7 +244,9 @@ SerializerXMLWriter::writeGraphNode(
     }
 
     nodeNode.setAttribute("type", writtenNodeType);
-    writeGraphNodeData(node.getData(), nodeNode);
+    XmlNodeWrapper dataNode("data");
+    writeGraphNodeData(node.getData(), dataNode);
+    nodeNode.addChild(dataNode);
     
     if (type.getAllowPortOverride()) {
 	if (node.hasOverrideInputs()) {

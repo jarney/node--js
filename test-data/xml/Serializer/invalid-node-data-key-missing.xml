@@ -27,7 +27,9 @@
     <graph id="main">
       <nodes>
 	<node id="first" type="one">
-	  <value>foo</value>
+	  <data>
+	    <value>foo</value>
+	  </data>
 	</node>
       </nodes>
       <edges>

@@ -67,14 +67,14 @@ SerializerXMLReader::parseConnectionData(
     ) const
 {
     for (XmlNodeWrapper valueElement : parent.getChildrenByTagName("value")) {
-	if (!valueElement.hasAttribute("key")) {
+	if (!valueElement.hasAttribute("key") || !valueElement.hasAttribute("value")) {
 	    return parseError(missingCode, valueElement, "Data value key is missing.");
 	}
 	std::string key = valueElement.getAttribute("key");
 	if (cd.hasValue(key)) {
 	    return parseError(duplicateCode, valueElement, "Data value key '" + key + "' is duplicated.");
 	}
-	cd.setValue(key, valueElement.getContent());
+	cd.setValue(key, valueElement.getAttribute("value"));
     }
     return true;
 }
@@ -372,11 +372,15 @@ SerializerXMLReader::parseNodeType(
     if (!parsePorts(nodeTypeNode, nodeType->getOutputs(), "outputs", "Output Port", nullptr)) return false;
 
     ConnectionData node_data;
-    if (!parseConnectionData(
-	    nodeTypeNode, node_data,
-	    SerializerErrorCode::NODE_TYPE_DATA_KEY_MISSING,
-	    SerializerErrorCode::NODE_TYPE_DATA_KEY_DUPLICATE
-	    )) return false;
+    if (nodeTypeNode.hasChildrenByTagName("data")) {
+	for (XmlNodeWrapper dataNode : nodeTypeNode.getChildrenByTagName("data")) {
+	    if (!parseConnectionData(
+		    dataNode, node_data,
+		    SerializerErrorCode::NODE_TYPE_DATA_KEY_MISSING,
+		    SerializerErrorCode::NODE_TYPE_DATA_KEY_DUPLICATE
+		    )) return false;
+	}
+    }
     nodeType->setDefaultNodeData(node_data);
     
     if (!parseMetadata(nodeTypeNode, nodeType->getMetadata())) return false;
@@ -421,12 +425,15 @@ SerializerXMLReader::parseNode(
     }
 
     ConnectionData nodeData;
-    if (!parseConnectionData(
-	    nodeNode, nodeData,
-	    SerializerErrorCode::NODE_DATA_KEY_MISSING,
-	    SerializerErrorCode::NODE_DATA_KEY_DUPLICATE
-	    )) return false;
-    
+    if (nodeNode.hasChildrenByTagName("data")) {
+	for (XmlNodeWrapper dataNode : nodeNode.getChildrenByTagName("data")) {
+	    if (!parseConnectionData(
+		    dataNode, nodeData,
+		    SerializerErrorCode::NODE_DATA_KEY_MISSING,
+		    SerializerErrorCode::NODE_DATA_KEY_DUPLICATE
+		    )) return false;
+	}
+    }
     Node & node = nodeGraph.newNode(
 	*nodeType,
 	nodeId,
