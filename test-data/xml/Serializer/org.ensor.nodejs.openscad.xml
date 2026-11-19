@@ -1961,5 +1961,60 @@
         <edge from-node="string" from-port="value" to-node="concatenate" to-port="a"/>
       </edges>
     </graph>
+        <graph id="main">
+      <nodes>
+        <node id="const_int" type="const_int">
+          <value key="value">2</value>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">60</value>
+              <value key="pos-x">-3.000000</value>
+              <value key="pos-y">128.000000</value>
+              <value key="width">373</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="cube" type="cube">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">87</value>
+              <value key="pos-x">472.000000</value>
+              <value key="pos-y">147.000000</value>
+              <value key="width">319</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="input" type="org.ensor.nodejs.core.input">
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">33</value>
+              <value key="pos-x">-130.000000</value>
+              <value key="pos-y">121.000000</value>
+              <value key="width">40</value>
+            </data>
+          </metadata>
+        </node>
+        <node id="output" type="org.ensor.nodejs.core.output">
+	  <inputs>
+            <port id="assignments" description="Input" data-type="assignment" connection-policy="multi"/>
+            <port id="function-definitions" description="Input" data-type="function-definition" connection-policy="multi"/>
+            <port id="module-definitions" description="Input" data-type="module-definition" connection-policy="multi"/>
+            <port id="module-instantiations" description="Input" data-type="module-instantiation" connection-policy="multi"/>
+	  </inputs>
+          <metadata>
+            <data namespace="http://jarney.github.io/nodejs/editor">
+              <value key="height">33</value>
+              <value key="pos-x">847.000000</value>
+              <value key="pos-y">176.000000</value>
+              <value key="width">45</value>
+            </data>
+          </metadata>
+        </node>
+      </nodes>
+      <edges>
+        <edge from-node="const_int" from-port="value" to-node="cube" to-port="size"/>
+        <edge from-node="cube" from-port="Geometry" to-node="output" to-port="module-instantiations"/>
+      </edges>
+    </graph>
   </graphs>  
 </node-module>
