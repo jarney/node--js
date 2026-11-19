@@ -65,7 +65,6 @@ endif()
 
 
 set(NODEJS_CORE_CPP_SOURCE_FILES
-  src/main.cpp
   src/DataType.cpp
   src/QualifiedIdentifier.cpp
   src/Edge.cpp

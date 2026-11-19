@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+
+  <codegen:include name="Package"/>
+  <codegen:include name="Scope"/>
+  <codegen:include name="DataTypeList"/>
+  <codegen:include name="NodeTypeList"/>
+  <codegen:include name="GraphList"/>
+  <codegen:include name="Metadata"/>
+  
+  <xsd:complexType name="NodeModule">
+    <xsd:all>
+      <xsd:element name="package" codegen:name="package" type="node:Package" maxOccurs="1" minOccurs="1"/>
+      <xsd:element name="scope" codegen:name="scope" type="node:Scope" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="data-types" codegen:name="dataTypes" type="node:DataTypeList" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="node-types" codegen:name="nodeTypes" type="node:NodeTypeList" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="graphs" codegen:name="graphs" type="node:GraphList" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="metadata" codegen:name="metadata" type="node:Metadata" maxOccurs="1" minOccurs="0"/>
+    </xsd:all>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+  <xsd:simpleType name="PortConnectionPolicy">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="one" codegen:name="One"/>
+      <xsd:enumeration value="multi" codegen:name="Multi"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

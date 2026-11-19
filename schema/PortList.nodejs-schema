@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	   targetNamespace="http://jarney.github.io/nodejs/schema"
+	   elementFormDefault="qualified"
+	   attributeFormDefault="unqualified">
+
+  <codegen:include name="Port"/>
+  
+  <xsd:complexType name="PortList">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="port" codegen:name="ports" type="node:Port"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

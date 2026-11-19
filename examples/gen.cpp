@@ -1,0 +1,35 @@
+#include "DataType.hpp"
+#include "DataTypeList.hpp"
+#include "Edge.hpp"
+#include "EdgeList.hpp"
+#include "Graph.hpp"
+#include "GraphArgument.hpp"
+#include "GraphArgumentList.hpp"
+#include "GraphArgumentType.hpp"
+#include "GraphList.hpp"
+#include "GraphResult.hpp"
+#include "GraphResultList.hpp"
+#include "Import.hpp"
+#include "Metadata.hpp"
+#include "MetadataWithNamespace.hpp"
+#include "MetadataWithoutNamespace.hpp"
+#include "NameValuePair.hpp"
+#include "Node.hpp"
+#include "NodeList.hpp"
+#include "NodeModule.hpp"
+#include "NodeType.hpp"
+#include "NodeTypeAllowPortOverride.hpp"
+#include "NodeTypeList.hpp"
+#include "NodeTypeType.hpp"
+#include "NodeTypeVisibility.hpp"
+#include "Package.hpp"
+#include "Port.hpp"
+#include "PortConnectionPolicy.hpp"
+#include "PortList.hpp"
+#include "Scope.hpp"
+
+int main(int argc, char **argv)
+{
+    return 0;
+}
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:node="http://jarney.github.io/nodejs/schema"
+	    xmlns:codegen="http://jarney.github.io/nodejs/comment"
+	    targetNamespace="http://jarney.github.io/nodejs/schema"
+	    elementFormDefault="qualified"
+	    attributeFormDefault="unqualified">
+  <xsd:simpleType name="GraphArgumentType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="port" codegen:name="Port"/>
+      <xsd:enumeration value="node-data" codegen:name="NodeData"/>
+      <xsd:enumeration value="node-type-data" codegen:name="NodeTypeData"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>
