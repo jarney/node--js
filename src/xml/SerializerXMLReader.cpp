@@ -96,7 +96,6 @@ SerializerXMLReader::parsePackage() const
 	std::string id;
 	if (!packageElement.hasAttribute("id")) {
 	    return parseError(SerializerErrorCode::PACKAGE_ID_MISSING, packageElement, std::string("Package 'id' is missing"));
-	    return false;
 	}
 	id = packageElement.getAttribute("id");
 	if (id != mFilename) {

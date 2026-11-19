@@ -53,9 +53,6 @@ Processor::processGraph(const NodeGraph & graph, const ConnectionData & input, C
     std::optional<NodeId> inputNodeId;
     std::optional<NodeId> outputNodeId;
 
-    static const std::string INPUT_NODE_TYPE("org.ensor.nodejs.core.input");
-    static const std::string OUTPUT_NODE_TYPE("org.ensor.nodejs.core.output");
-
     for (const NodeId & nodeId : nodeIds) {
 	const Node & node = *graph.getNode(nodeId);
 	if (node.getType().getFullyQualifiedId() == NodeProcessor_input::ID) {

@@ -13,13 +13,19 @@ using namespace NodeJS::test;
 
 static void testPackageFile(std::string packageName, std::function<void(bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter)> callback)
 {
-    std::ifstream xmlData(testFilename("../test-data/xml/Serializer/" + packageName + ".xml"));
+    const std::string TEST_DATA_PATH(testDirectory() + std::string("/xml/Serializer"));
+    
+    std::ifstream xmlData(testFilename("xml/Serializer/" + packageName + ".xml"));
   
     const auto & serializer = SerializerXML::instance();
 
     SerializerErrorReporterByCode errorReporter;
   
     ModuleLoader loader;
+    std::unique_ptr<ModuleLoaderNodeJSPath> plugin = std::make_unique<ModuleLoaderNodeJSPath>();
+    plugin->setNODEJS_PATH(TEST_DATA_PATH);
+    loader.setPlugin(std::move(plugin));
+    
     auto nodeModule = loader.newModule("");
   
     bool result = serializer.read(packageName, xmlData, *nodeModule, errorReporter);
@@ -37,7 +43,6 @@ TEST_CASE("test_SerializerXML_openscad_package", "[NodeJS][xml][Serializer]") {
       CHECK(nodeModule.getPackage() == packageName);
     });
 }
-
 TEST_CASE("test_SerializerXML_valid_graph", "[NodeJS][xml][Serializer]") {
     std::string packageName = "valid-graph";
     testPackageFile(packageName, [](bool result, NodeModule & nodeModule, SerializerErrorReporterByCode & errorReporter) {
@@ -413,4 +418,3 @@ TEST_CASE("test_SerializerXML_edge_connection_policy_to", "[NodeJS][xml][Seriali
       CHECK(errorReporter.hasErrorCode(SerializerErrorCode::EDGE_VIOLATES_POLICY));
     });
 }
-

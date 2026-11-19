@@ -6,7 +6,7 @@
     <data-type id="wrong"/>
   </data-types>
   <node-types>
-    <node-type id="private" visibility="private" type="alias">
+    <node-type id="private" visibility="private" type="alias" alias-node-type-id="const_int">
     </node-type>
     <node-type id="add" visibility="public" type="native">
       <inputs>
