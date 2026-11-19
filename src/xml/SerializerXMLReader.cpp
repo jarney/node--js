@@ -309,7 +309,8 @@ SerializerXMLReader::parseNodeType(
 	}
 	std::string graphId = nodeTypeNode.getAttribute("graph-id");
 	nodeType->setGraphId(graphId);
-	for (XmlNodeWrapper graphArgumentNode : nodeTypeNode.getChildrenByTagName("graph-argument")) {
+	for (XmlNodeWrapper graphArgumentsNode : nodeTypeNode.getChildrenByTagName("graph-arguments")) {
+	for (XmlNodeWrapper graphArgumentNode : graphArgumentsNode.getChildrenByTagName("graph-argument")) {
 	    if (graphArgumentNode.hasAttribute("id") &&
 		graphArgumentNode.hasAttribute("value") &&
 		graphArgumentNode.hasAttribute("type")) {
@@ -335,15 +336,18 @@ SerializerXMLReader::parseNodeType(
 		    );
 	    }
 	}
-	for (XmlNodeWrapper graphArgumentNode : nodeTypeNode.getChildrenByTagName("graph-result")) {
-	    if (graphArgumentNode.hasAttribute("id") &&
-		graphArgumentNode.hasAttribute("value")) {
+	}
+	for (XmlNodeWrapper graphResultsNode : nodeTypeNode.getChildrenByTagName("graph-results")) {
+	for (XmlNodeWrapper graphResultNode : graphResultsNode.getChildrenByTagName("graph-result")) {
+	    if (graphResultNode.hasAttribute("id") &&
+		graphResultNode.hasAttribute("value")) {
 		nodeType->setGraphResult(
-		    graphArgumentNode.getAttribute("id"),
+		    graphResultNode.getAttribute("id"),
 		    NodeTypeGraphArgument::Type::NODE_PORT, // This is the only type that makes sense for results, but we wanted to re-use the data-structure
-		    graphArgumentNode.getAttribute("value")
+		    graphResultNode.getAttribute("value")
 		    );
 	    }
+	}
 	}
     }
     else if (type == NodeType::Type::ALIAS) {

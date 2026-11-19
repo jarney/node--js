@@ -158,7 +158,6 @@ Processor::processNodeType(
 	}
 	else {
 	    qualifiedGraphId = nodeType.getPackage() + "." + qualifiedName.getName();
-	    fprintf(stderr, "Graph is not qualified, so we should qualify it with our package name %s\n", qualifiedGraphId.c_str());
 	}
 	
 	NodeGraph *subgraph = nodeModule.getGraph(qualifiedGraphId);
@@ -191,6 +190,13 @@ Processor::processNodeType(
 			nodeType.getDefaultNodeData().getValue(arg.nodePortName).c_str());
 		break;
 	    case NodeTypeGraphArgument::NodeTypeGraphArgument::NODE_DATA:
+		fprintf(stderr, "Sending data from node %s %s\n",
+			arg.graphPortName.c_str(),
+			node.getData().getValue(
+			    arg.nodePortName,
+			    nodeType.getDefaultNodeData().getValue(arg.nodePortName).c_str()
+			    )
+		    );
 		graphInputData.setValue(
 		    arg.graphPortName,
 		    node.getData().getValue(
@@ -209,6 +215,8 @@ Processor::processNodeType(
 			arg.graphPortName.c_str(),
 			node.getData().getValue(arg.nodePortName).c_str());
 		break;
+	    default:
+		fprintf(stderr, "We don't have any data to give\n");
 	    }
 	}
 	ConnectionData graphOutputData;
